@@ -12,26 +12,30 @@
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
-    "version": "npm run format && git add -A src",
-    "postversion": "git push && git push --tags",
+    "version": "npm run format && git checkout -B bump-$npm_package_version && git add -A src",
+    "postversion": "git push --set-upstream origin bump-$npm_package_version && git push --tags",
     "watch": "tsc-watch --onSuccess \"npm run test\""
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ndlib/ts-template.git"
+    "url": "git+https://github.com/ndlib/ndlib-cdk.git"
   },
   "keywords": [
     "aws",
     "cdk",
     "ndlib"
   ],
-  "author": "",
+  "author": {
+    "name": "Hesburgh Libraries, University of Notre Dame",
+    "url": "https://library.nd.edu"
+  },
   "license": "Apache 2.0",
   "bugs": {
-    "url": "https://github.com/ndlib/ts-template/issues"
+    "url": "https://github.com/ndlib/ndlib-cdk/issues"
   },
-  "homepage": "https://github.com/ndlib/ts-template#readme",
+  "homepage": "https://github.com/ndlib/ndlib-cdk#readme",
   "devDependencies": {
+    "@aws-cdk/assert": "^1.9.0",
     "@types/jest": "^24.0.18",
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
@@ -45,7 +49,6 @@
     "lib/**/*"
   ],
   "dependencies": {
-    "@aws-cdk/assert": "^1.9.0",
     "@aws-cdk/core": "^1.9.0"
   }
 }

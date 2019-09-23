@@ -1,7 +1,7 @@
 {
   "name": "ndlib-cdk",
   "version": "1.0.0",
-  "description": "TypeScript template used within Hesburgh Libraries of Notre Dame",
+  "description": "Reusable CDK modules used within Hesburgh Libraries of Notre Dame",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -43,5 +43,9 @@
   },
   "files": [
     "lib/**/*"
-  ]
+  ],
+  "dependencies": {
+    "@aws-cdk/assert": "^1.9.0",
+    "@aws-cdk/core": "^1.9.0"
+  }
 }

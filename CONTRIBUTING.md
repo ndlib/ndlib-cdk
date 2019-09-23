@@ -27,3 +27,16 @@ npm test
 npm run lint
 npm run format
 ```
+
+## Publishing
+1. Bump the version, ex:
+```shell
+npm version patch
+```
+This will create a tag for the new version and create/push a branch named 'bump-\<new-version\>'.
+1. Create a PR for this change.
+1. Once merged, publish the version to npm:
+```shell
+git checkout v1.0.1
+npm publish
+```

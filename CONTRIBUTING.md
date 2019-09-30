@@ -23,7 +23,7 @@ npm run watch
 Before submitting a PR, make sure to run all of the following:
 ```shell
 npm run build
-npm test
+npm run coverage && open coverage/lcov-report/index.html
 npm run lint
 npm run format
 ```

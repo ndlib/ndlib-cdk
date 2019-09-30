@@ -1,4 +1,5 @@
-import { App, Stack } from "@aws-cdk/core";
+import { SynthUtils } from '@aws-cdk/assert';
+import { App, Construct, Stack, } from "@aws-cdk/core";
 import { StackTags } from '../src/index';
 
 test('StackTags can be applied as an Aspect', () => {
@@ -27,6 +28,24 @@ test('StackTags visit adds all tags from context', () => {
     { 'Key': 'ProjectName', 'Value': 'projectName-value' },
   ];
   expectedTags.forEach(kvp => expect(stack.tags.renderTags()).toContainEqual(kvp));
+});
+
+test('StackTags visit ignores non-stacks', () => {
+  const app = new App();
+  const stack = new Stack(app, 'testStack');
+  const construct = new Construct(stack, 'testConstruct');
+  const visitor = new StackTags();
+  app.node.applyAspect(visitor);
+  jest.spyOn(visitor, "visit");
+
+  // Force cdk to do its processing and call the aspects
+  SynthUtils.synthesize(stack); 
+
+  // Not really sure of a better way to test this other than to add a few additional types of things and make
+  // sure it doesn't die inside of the visit function when it tries to add tags to an object that doesn't have tags
+  expect(visitor.visit).toHaveBeenCalledWith(app);
+  expect(visitor.visit).toHaveBeenCalledWith(stack);
+  expect(visitor.visit).toHaveBeenCalledWith(construct);
 });
 
 test('StackTags visit adds an error to the stack node if "owner" does not exist in context', () => {

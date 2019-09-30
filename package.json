@@ -1,11 +1,12 @@
 {
-  "name": "ndlib-cdk",
+  "name": "@ndlib/ndlib-cdk",
   "version": "1.0.2",
   "description": "Reusable CDK modules used within Hesburgh Libraries of Notre Dame",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "test": "jest --config jestconfig.json",
+    "coverage": "jest --config jestconfig.json --coverage",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
@@ -49,6 +50,7 @@
     "lib/**/*"
   ],
   "dependencies": {
+    "@aws-cdk/aws-elasticloadbalancingv2": "^1.9.0",
     "@aws-cdk/core": "^1.9.0"
   }
 }

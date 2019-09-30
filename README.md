@@ -15,7 +15,24 @@ Creates an Aspect that will apply stack level tags to all stacks in the applicat
 Example usage:
 ```typescript
 import cdk = require('@aws-cdk/core');
-import { StackTags } from 'ndlib-cdk';
+import { StackTags } from '@ndlib/ndlib-cdk';
 const app = new cdk.App();
 app.node.applyAspect(new StackTags());
+```
+
+## HTTPS Application Load Balancer
+Creates a common construction of an ALB that will redirect all traffic from HTTP to HTTPS, and will by default respond with a 404 until additional listener rules are added. This can be used within a single stack that routes to multiple services in that stack, or it can be created in a parent stack where one or more child stacks then attach new services to the ALB.
+
+Example usage:
+```typescript
+import cdk = require('@aws-cdk/core');
+import ec2 = require('@aws-cdk/aws-ec2');
+import { HttpsAlb } from '@ndlib/ndlib-cdk';
+const stack = new cdk.Stack();
+const vpc = new ec2.Vpc(stack, 'Vpc');
+const alb = new HttpsAlb(stack, 'PublicLoadBalancer', {
+  certificateArns: ['MyCertificateArn'],
+  internetFacing: true,
+  vpc,
+});
 ```

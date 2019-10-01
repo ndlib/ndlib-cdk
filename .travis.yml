@@ -10,5 +10,6 @@ before_script:
   - ./cc-test-reporter before-build
 script:
   - npm run coverage
+  - npm run lint
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

@@ -38,5 +38,5 @@ This will create a tag for the new version and create/push a branch named 'bump-
 1. Once merged, publish the version to npm:
 ```shell
 git checkout v1.0.1
-npm publish
+npm publish --access public
 ```

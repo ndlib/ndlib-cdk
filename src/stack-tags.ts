@@ -1,4 +1,4 @@
-import { ConstructNode, IAspect, IConstruct, Stack } from "@aws-cdk/core";
+import { ConstructNode, IAspect, IConstruct, Stack } from '@aws-cdk/core';
 
 /**
  * Aspect that adds our expected stack tags to all stacks using values from context
@@ -6,18 +6,18 @@ import { ConstructNode, IAspect, IConstruct, Stack } from "@aws-cdk/core";
 export class StackTags implements IAspect {
   public visit(node: IConstruct) {
     if (node instanceof Stack) {
-      const projectName = this.getContext("projectName", node.node);
+      const projectName = this.getContext('projectName', node.node);
       // Not sure this makes sense to do for multistack applications, but for now it applies only
       // one description to all stacks. Perhaps this should just change to test if this tag was added
-      const description = this.getContext("description", node.node);
-      const contact = this.getContext("contact", node.node);
-      const owner = this.getContext("owner", node.node);
+      const description = this.getContext('description', node.node);
+      const contact = this.getContext('contact', node.node);
+      const owner = this.getContext('owner', node.node);
 
-      node.tags.setTag("ProjectName", projectName);
-      node.tags.setTag("Name", node.stackName);
-      node.tags.setTag("Contact", contact);
-      node.tags.setTag("Owner", owner);
-      node.tags.setTag("Description", description);
+      node.tags.setTag('ProjectName', projectName);
+      node.tags.setTag('Name', node.stackName);
+      node.tags.setTag('Contact', contact);
+      node.tags.setTag('Owner', owner);
+      node.tags.setTag('Description', description);
     }
   }
 

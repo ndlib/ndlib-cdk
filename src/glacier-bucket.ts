@@ -1,13 +1,9 @@
 import s3 = require('@aws-cdk/aws-s3');
-import { StorageClass } from '@aws-cdk/aws-s3';
 import cdk = require('@aws-cdk/core');
-import { Duration } from '@aws-cdk/core';
 
-export interface IGlacierBucketProps extends s3.BucketProps {
-  readonly bucketname?: string[];
-}
+export interface IGlacierBucketProps extends s3.BucketProps {}
 
-const overrides = { blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL };
+const defaults = { blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL };
 
 export class GlacierBucket extends s3.Bucket {
   /* Class is designed to create a Glacier archival system - immediately transitioning
@@ -17,12 +13,12 @@ export class GlacierBucket extends s3.Bucket {
         into Glacier, which could be via console, CLI, or an API */
 
   constructor(scope: cdk.Construct, id: string, props: IGlacierBucketProps) {
-    super(scope, id, { ...overrides, ...props });
+    super(scope, id, { ...defaults, ...props });
     this.addLifecycleRule({
       transitions: [
         {
-          storageClass: StorageClass.GLACIER,
-          transitionAfter: Duration.hours(0),
+          storageClass: s3.StorageClass.GLACIER,
+          transitionAfter: cdk.Duration.hours(0),
         },
       ],
     });

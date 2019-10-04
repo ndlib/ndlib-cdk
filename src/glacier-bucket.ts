@@ -1,8 +1,6 @@
 import s3 = require('@aws-cdk/aws-s3');
 import cdk = require('@aws-cdk/core');
 
-export interface IGlacierBucketProps extends s3.BucketProps {}
-
 const defaults = { blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL };
 
 export class GlacierBucket extends s3.Bucket {
@@ -12,7 +10,7 @@ export class GlacierBucket extends s3.Bucket {
         remain in S3. It is merely designed to provide a mechanism to easily deposit items
         into Glacier, which could be via console, CLI, or an API */
 
-  constructor(scope: cdk.Construct, id: string, props: IGlacierBucketProps) {
+  constructor(scope: cdk.Construct, id: string, props: s3.BucketProps) {
     super(scope, id, { ...defaults, ...props });
     this.addLifecycleRule({
       transitions: [

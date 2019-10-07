@@ -36,3 +36,53 @@ const alb = new HttpsAlb(stack, 'PublicLoadBalancer', {
   vpc,
 });
 ```
+
+## Glacier-Enabled S3 Bucket
+
+Creates an S3 Bucket with no public access that immediately transitions all deposited object to Glacier. The public access policies can be overridden should it be necessary.
+
+Example usage:
+
+```typescript
+import cdk = require('@aws-cdk/core');
+import { GlacierBucket } from '@ndlib/ndlib-cdk';
+
+const stack = new cdk.Stack();
+const bucket = new GlacierBucket(stack, 'Bucket',{});
+```
+
+Example Override usage:
+
+```typescript
+import cdk = require('@aws-cdk/core');
+import { GlacierBucket } from '@ndlib/ndlib-cdk';
+
+const stack = new cdk.Stack();
+const overrides = { blockPublicAccess: undefined};
+const bucket = new GlacierBucket(stack, 'Bucket',{ ...overrides });
+```
+
+## Deep Archive Enabled S3 Bucket
+
+Creates an S3 Bucket with no public access that immediately transitions all deposited object to Glacier Deep Archive. The public access policies can be overridden should it be necessary.
+
+Example usage:
+
+```typescript
+import cdk = require('@aws-cdk/core');
+import { DeepArchiveBucket } from '@ndlib/ndlib-cdk';
+
+const stack = new cdk.Stack();
+const bucket = new DeepArchiveBucket(stack, 'Bucket',{});
+```
+
+Example Override usage:
+
+```typescript
+import cdk = require('@aws-cdk/core');
+import { DeepArchiveBucket } from '@ndlib/ndlib-cdk';
+
+const stack = new cdk.Stack();
+const overrides = { blockPublicAccess: undefined};
+const bucket = new DeepArchiveBucket(stack, 'Bucket',{ ...overrides });
+```

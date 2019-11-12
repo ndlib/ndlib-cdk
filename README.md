@@ -37,52 +37,27 @@ const alb = new HttpsAlb(stack, 'PublicLoadBalancer', {
 });
 ```
 
-## Glacier-Enabled S3 Bucket
+## Archive S3 Bucket
 
-Creates an S3 Bucket with no public access that immediately transitions all deposited object to Glacier. The public access policies can be overridden should it be necessary.
+Creates an S3 Bucket with no public access that immediately transitions all deposited objects to Glacier or Glacier Deep Archive. The public access policies can be overridden should it be necessary.
 
-Example usage:
-
-```typescript
-import cdk = require('@aws-cdk/core');
-import { GlacierBucket } from '@ndlib/ndlib-cdk';
-
-const stack = new cdk.Stack();
-const bucket = new GlacierBucket(stack, 'Bucket',{});
-```
-
-Example Override usage:
+The following example will immediately move objects to Glacier:
 
 ```typescript
 import cdk = require('@aws-cdk/core');
 import { GlacierBucket } from '@ndlib/ndlib-cdk';
 
 const stack = new cdk.Stack();
-const overrides = { blockPublicAccess: undefined};
-const bucket = new GlacierBucket(stack, 'Bucket',{ ...overrides });
+const bucket = new GlacierBucket(stack, 'Bucket');
 ```
 
-## Deep Archive Enabled S3 Bucket
-
-Creates an S3 Bucket with no public access that immediately transitions all deposited object to Glacier Deep Archive. The public access policies can be overridden should it be necessary.
-
-Example usage:
+The following example will immediately move objects to Glacier Deep Archive, while overriding the default public access behavior of the bucket:
 
 ```typescript
 import cdk = require('@aws-cdk/core');
-import { DeepArchiveBucket } from '@ndlib/ndlib-cdk';
+import { GlacierBucket } from '@ndlib/ndlib-cdk';
 
 const stack = new cdk.Stack();
-const bucket = new DeepArchiveBucket(stack, 'Bucket',{});
-```
-
-Example Override usage:
-
-```typescript
-import cdk = require('@aws-cdk/core');
-import { DeepArchiveBucket } from '@ndlib/ndlib-cdk';
-
-const stack = new cdk.Stack();
-const overrides = { blockPublicAccess: undefined};
-const bucket = new DeepArchiveBucket(stack, 'Bucket',{ ...overrides });
+const overrides = { blockPublicAccess: BlockPublicAccess.BLOCK_ACLS, deepArchive: true };
+const bucket = new GlacierBucket(stack, 'Bucket', { ...overrides });
 ```

@@ -1,11 +1,11 @@
 import { expect, haveResource } from '@aws-cdk/assert';
 import { Stack } from "@aws-cdk/core";
-import { DeepArchiveBucket, GlacierBucket } from '../src/index';
+import { ArchiveBucket } from '../src/index';
 import { BlockPublicAccess } from '@aws-cdk/aws-s3';
 
 test('Glacier S3 Bucket has Glacier Transition', () => {
   const stack = new Stack();
-  const bucket = new GlacierBucket(stack, 'Bucket',{});
+  const bucket = new ArchiveBucket(stack, 'Bucket');
     expect(stack).to(haveResource('AWS::S3::Bucket', {
         LifecycleConfiguration: {
             Rules: [{
@@ -19,7 +19,7 @@ test('Glacier S3 Bucket has Glacier Transition', () => {
 
 test('Glacier S3 Bucket is not publicly accessible', () => {
     const stack = new Stack();
-    const bucket = new GlacierBucket(stack, 'Bucket', {});
+    const bucket = new ArchiveBucket(stack, 'Bucket');
         expect(stack).to(haveResource('AWS::S3::Bucket',{
             PublicAccessBlockConfiguration: {
             BlockPublicAcls: true,
@@ -31,7 +31,7 @@ test('Glacier S3 Bucket is not publicly accessible', () => {
 
 test('Deep Archive S3 Bucket has Deep Archive Transition', () => {
     const stack = new Stack();
-    const bucket = new DeepArchiveBucket(stack, 'Bucket',{});
+    const bucket = new ArchiveBucket(stack, 'Bucket', { deepArchive: true });
         expect(stack).to(haveResource('AWS::S3::Bucket', {
             LifecycleConfiguration: {
                 Rules: [{
@@ -45,7 +45,7 @@ test('Deep Archive S3 Bucket has Deep Archive Transition', () => {
 
 test('Deep Archive S3 Bucket is not publicly accessible', () => {
     const stack = new Stack();
-    const bucket = new DeepArchiveBucket(stack, 'Bucket', {});
+    const bucket = new ArchiveBucket(stack, 'Bucket', { deepArchive: true });
         expect(stack).to(haveResource('AWS::S3::Bucket',{
             PublicAccessBlockConfiguration: {
                 BlockPublicAcls: true,
@@ -57,8 +57,8 @@ test('Deep Archive S3 Bucket is not publicly accessible', () => {
 
 test('Deep Archive S3 Bucket is publicly accessible when default is overridden as undefined', () => {
     const stack = new Stack();
-    const overrides = { blockPublicAccess: undefined}
-    const bucket = new DeepArchiveBucket(stack, 'Bucket', { ...overrides
+    const overrides = { blockPublicAccess: undefined, deepArchive: true }
+    const bucket = new ArchiveBucket(stack, 'Bucket', { ...overrides
         });
         expect(stack).notTo(haveResource('AWS::S3::Bucket',{
             PublicAccessBlockConfiguration: {
@@ -71,8 +71,8 @@ test('Deep Archive S3 Bucket is publicly accessible when default is overridden a
 
 test('Glacier S3 Bucket is publicly accessible when default is overridden as undefined', () => {
     const stack = new Stack();
-    const overrides = { blockPublicAccess: undefined}
-    const bucket = new GlacierBucket(stack, 'Bucket', { ...overrides
+    const overrides = { blockPublicAccess: undefined, deepArchive: true }
+    const bucket = new ArchiveBucket(stack, 'Bucket', { ...overrides
         });
         expect(stack).notTo(haveResource('AWS::S3::Bucket',{
             PublicAccessBlockConfiguration: {
@@ -85,8 +85,8 @@ test('Glacier S3 Bucket is publicly accessible when default is overridden as und
 
 test('Glacier S3 Bucket blocks Public ACLs when default is overridden to block ACLs', () => {
     const stack = new Stack();
-    const overrides = { blockPublicAccess: BlockPublicAccess.BLOCK_ACLS}
-    const bucket = new GlacierBucket(stack, 'Bucket', { ...overrides
+    const overrides = { blockPublicAccess: BlockPublicAccess.BLOCK_ACLS, deepArchive: true }
+    const bucket = new ArchiveBucket(stack, 'Bucket', { ...overrides
         });
         expect(stack).to(haveResource('AWS::S3::Bucket',{
             PublicAccessBlockConfiguration: {
@@ -98,8 +98,8 @@ test('Glacier S3 Bucket blocks Public ACLs when default is overridden to block A
 
 test('Glacier S3 Bucket does not block public access when default is overridden to block ACLs', () => {
     const stack = new Stack();
-    const overrides = { blockPublicAccess: BlockPublicAccess.BLOCK_ACLS}
-    const bucket = new GlacierBucket(stack, 'Bucket', { ...overrides
+    const overrides = { blockPublicAccess: BlockPublicAccess.BLOCK_ACLS, deepArchive: true }
+    const bucket = new ArchiveBucket(stack, 'Bucket', { ...overrides
         });
         expect(stack).notTo(haveResource('AWS::S3::Bucket',{
             PublicAccessBlockConfiguration: {
@@ -111,8 +111,8 @@ test('Glacier S3 Bucket does not block public access when default is overridden 
 
 test('Deep Archive S3 Bucket does not block public access when default is overridden to block ACLs', () => {
     const stack = new Stack();
-    const overrides = { blockPublicAccess: BlockPublicAccess.BLOCK_ACLS}
-    const bucket = new DeepArchiveBucket(stack, 'Bucket', { ...overrides
+    const overrides = { blockPublicAccess: BlockPublicAccess.BLOCK_ACLS, deepArchive: true }
+    const bucket = new ArchiveBucket(stack, 'Bucket', { ...overrides
         });
         expect(stack).notTo(haveResource('AWS::S3::Bucket',{
             PublicAccessBlockConfiguration: {
@@ -124,8 +124,8 @@ test('Deep Archive S3 Bucket does not block public access when default is overri
 
 test('Deep Archive Bucket blocks Public ACLs when default is overridden to block ACLs', () => {
     const stack = new Stack();
-    const overrides = { blockPublicAccess: BlockPublicAccess.BLOCK_ACLS}
-    const bucket = new GlacierBucket(stack, 'Bucket', { ...overrides
+    const overrides = { blockPublicAccess: BlockPublicAccess.BLOCK_ACLS, deepArchive: true }
+    const bucket = new ArchiveBucket(stack, 'Bucket', { ...overrides
         });
         expect(stack).to(haveResource('AWS::S3::Bucket',{
             PublicAccessBlockConfiguration: {

@@ -1,8 +1,10 @@
 # NDLIB CDK
+
 [![Maintainability](https://api.codeclimate.com/v1/badges/7404f79e4247119dbc59/maintainability)](https://codeclimate.com/github/ndlib/ndlib-cdk/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/7404f79e4247119dbc59/test_coverage)](https://codeclimate.com/github/ndlib/ndlib-cdk/test_coverage)
 
 ## Stack Tags
+
 Creates an Aspect that will apply stack level tags to all stacks in the application based on our defined required tags. Values for these tags are read from the following expected context keys:
 
 | Key | Value |
@@ -13,6 +15,7 @@ Creates an Aspect that will apply stack level tags to all stacks in the applicat
 | owner | Name or CLID of the person deploying this stack |
 
 Example usage:
+
 ```typescript
 import cdk = require('@aws-cdk/core');
 import { StackTags } from '@ndlib/ndlib-cdk';
@@ -21,9 +24,11 @@ app.node.applyAspect(new StackTags());
 ```
 
 ## HTTPS Application Load Balancer
+
 Creates a common construction of an ALB that will redirect all traffic from HTTP to HTTPS, and will by default respond with a 404 until additional listener rules are added. This can be used within a single stack that routes to multiple services in that stack, or it can be created in a parent stack where one or more child stacks then attach new services to the ALB.
 
 Example usage:
+
 ```typescript
 import cdk = require('@aws-cdk/core');
 import ec2 = require('@aws-cdk/aws-ec2');
@@ -60,4 +65,24 @@ import { GlacierBucket } from '@ndlib/ndlib-cdk';
 const stack = new cdk.Stack();
 const overrides = { blockPublicAccess: BlockPublicAccess.BLOCK_ACLS, deepArchive: true };
 const bucket = new GlacierBucket(stack, 'Bucket', { ...overrides });
+
+## CodePipeline Email Notifications
+
+Adds a basic email notification construct to watch a CodePipeline for state changes. Note: Currently does not watch any of the actions for specific state changes.
+
+Example message:
+>The pipeline my-test-pipeline-142PEPTENTABF has changed state to STARTED. To view the pipeline, go to https://us-east-1.console.aws.amazon.com/codepipeline/home?region=us-east-1#/view/my-test-pipeline-142PEPTENTABF.
+
+Example usage:
+
+```typescript
+import cdk = require('@aws-cdk/core');
+import { Pipeline } from '@aws-cdk/aws-codepipeline';
+import { PipelineNotifications } from '@ndlib/ndlib-cdk';
+const stack = new cdk.Stack();
+const pipeline = Pipeline(stack, { ... });
+const notifications = new PipelineNotifications(stack, 'TestPipelineNotifications', {
+  pipeline,
+  receivers: 'me@myhost.com'
+});
 ```

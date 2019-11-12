@@ -50,21 +50,21 @@ The following example will immediately move objects to Glacier:
 
 ```typescript
 import cdk = require('@aws-cdk/core');
-import { GlacierBucket } from '@ndlib/ndlib-cdk';
+import { ArchiveBucket } from '@ndlib/ndlib-cdk';
 
 const stack = new cdk.Stack();
-const bucket = new GlacierBucket(stack, 'Bucket');
+const bucket = new ArchiveBucket(stack, 'Bucket');
 ```
 
 The following example will immediately move objects to Glacier Deep Archive, while overriding the default public access behavior of the bucket:
 
 ```typescript
 import cdk = require('@aws-cdk/core');
-import { GlacierBucket } from '@ndlib/ndlib-cdk';
+import { ArchiveBucket } from '@ndlib/ndlib-cdk';
 
 const stack = new cdk.Stack();
 const overrides = { blockPublicAccess: BlockPublicAccess.BLOCK_ACLS, deepArchive: true };
-const bucket = new GlacierBucket(stack, 'Bucket', { ...overrides });
+const bucket = new ArchiveBucket(stack, 'Bucket', { ...overrides });
 ```
 
 ## CodePipeline Email Notifications

@@ -65,6 +65,7 @@ import { GlacierBucket } from '@ndlib/ndlib-cdk';
 const stack = new cdk.Stack();
 const overrides = { blockPublicAccess: BlockPublicAccess.BLOCK_ACLS, deepArchive: true };
 const bucket = new GlacierBucket(stack, 'Bucket', { ...overrides });
+```
 
 ## CodePipeline Email Notifications
 

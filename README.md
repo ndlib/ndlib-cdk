@@ -42,6 +42,30 @@ const alb = new HttpsAlb(stack, 'PublicLoadBalancer', {
 });
 ```
 
+## Archive S3 Bucket
+
+Creates an S3 Bucket with no public access that immediately transitions all deposited objects to Glacier or Glacier Deep Archive. The public access policies can be overridden should it be necessary.
+
+The following example will immediately move objects to Glacier:
+
+```typescript
+import cdk = require('@aws-cdk/core');
+import { GlacierBucket } from '@ndlib/ndlib-cdk';
+
+const stack = new cdk.Stack();
+const bucket = new GlacierBucket(stack, 'Bucket');
+```
+
+The following example will immediately move objects to Glacier Deep Archive, while overriding the default public access behavior of the bucket:
+
+```typescript
+import cdk = require('@aws-cdk/core');
+import { GlacierBucket } from '@ndlib/ndlib-cdk';
+
+const stack = new cdk.Stack();
+const overrides = { blockPublicAccess: BlockPublicAccess.BLOCK_ACLS, deepArchive: true };
+const bucket = new GlacierBucket(stack, 'Bucket', { ...overrides });
+
 ## CodePipeline Email Notifications
 
 Adds a basic email notification construct to watch a CodePipeline for state changes. Note: Currently does not watch any of the actions for specific state changes.

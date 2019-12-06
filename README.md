@@ -87,3 +87,25 @@ const notifications = new PipelineNotifications(stack, 'TestPipelineNotification
   receivers: 'me@myhost.com'
 });
 ```
+
+## CodePipeline Slack Approval
+
+Attaches a [Slack Approval Bot](https://github.com/ndlib/codepipeline-approvals/blob/master/slack_approval.md) to a CodePipeline's approval SNS Topic. 
+
+Note: This assumes that you've already deployed an [approval lambda](https://github.com/ndlib/codepipeline-approvals/blob/master/slack_approval.md#deploy-the-approval-lambda) and a [notifier](https://github.com/ndlib/codepipeline-approvals/blob/master/slack_approval.md#deploy-the-notifier-lambda) for the channel you want to push messages to.
+
+Example usage:
+
+```typescript
+import cdk = require('@aws-cdk/core');
+import { Pipeline } from '@aws-cdk/aws-codepipeline';
+import { Topic } from '@aws-cdk/aws-sns';
+import { SlackApproval } from '@ndlib/ndlib-cdk';
+const stack = new cdk.Stack();
+const approvalTopic = new Topic(this, 'ApprovalTopic');
+const pipeline = Pipeline(stack, { ... });
+const slackApproval = new SlackApproval(this, 'SlackApproval', {
+  approvalTopic,
+  notifyStackName: 'slack-deployment-channel-notifier',
+});
+```

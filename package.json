@@ -36,23 +36,23 @@
   },
   "homepage": "https://github.com/ndlib/ndlib-cdk#readme",
   "devDependencies": {
-    "@aws-cdk/assert": "^1.16.0",
-    "@types/jest": "^24.0.22",
+    "@aws-cdk/assert": "^1.18.0",
+    "@types/jest": "^24.0.23",
     "jest": "^24.9.0",
     "prettier": "^1.19.1",
-    "ts-jest": "^24.1.0",
+    "ts-jest": "^24.2.0",
     "tsc-watch": "^3.0.2",
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.3"
   },
   "files": [
     "lib/**/*"
   ],
   "dependencies": {
-    "@aws-cdk/aws-codepipeline": "^1.16.0",
-    "@aws-cdk/aws-elasticloadbalancingv2": "^1.16.0",
-    "@aws-cdk/aws-events-targets": "^1.16.0",
-    "@aws-cdk/core": "^1.16.0"
+    "@aws-cdk/aws-codepipeline": "^1.18.0",
+    "@aws-cdk/aws-elasticloadbalancingv2": "^1.18.0",
+    "@aws-cdk/aws-events-targets": "^1.18.0",
+    "@aws-cdk/core": "^1.18.0"
   }
 }

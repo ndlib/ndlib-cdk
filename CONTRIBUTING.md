@@ -44,6 +44,7 @@ npm version patch
 
 This will create a tag for the new version and create/push a branch named 'bump-\<new-version\>'.
 
+1. Update the CHANGELOG.md with changes since last version and push
 1. Create a PR for this change.
 1. Once merged, publish the version to npm:
 

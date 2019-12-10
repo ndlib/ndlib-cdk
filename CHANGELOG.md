@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.0](https://github.com/ndlib/ndlib-cdk/compare/v1.1.0...v1.2.0) (2019-12-10)
+
+### Features
+
+* Added integration with our Slack approval bot ([#16](https://github.com/ndlib/ndlib-cdk/pull/16)), closes [#15](https://github.com/ndlib/ndlib-cdk/issues/15)
+
 ## [1.1.0](https://github.com/ndlib/ndlib-cdk/compare/v1.0.3...v1.1.0) (2019-11-11)
 
 ### Bug Fixes

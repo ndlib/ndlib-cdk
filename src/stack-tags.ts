@@ -1,3 +1,4 @@
+import { NestedStack } from '@aws-cdk/aws-cloudformation';
 import { ConstructNode, IAspect, IConstruct, Stack } from '@aws-cdk/core';
 
 /**
@@ -14,10 +15,16 @@ export class StackTags implements IAspect {
       const owner = this.getContext('owner', node.node);
 
       node.tags.setTag('ProjectName', projectName);
-      node.tags.setTag('Name', node.stackName);
       node.tags.setTag('Contact', contact);
       node.tags.setTag('Owner', owner);
       node.tags.setTag('Description', description);
+
+      if (node instanceof NestedStack) {
+        const parent = node.parentStack as Stack;
+        node.tags.setTag('ParentStackName', parent.stackName);
+      } else {
+        node.tags.setTag('Name', node.stackName);
+      }
     }
   }
 

@@ -1,0 +1,14 @@
+# This is a comment.
+# Each line is a file pattern followed by one or more owners.
+
+# These owners will be the default owners for everything in
+# the repo. Unless a later match takes precedence,
+# @ndlib/cdk-core will be requested for
+# review when someone opens a pull request.
+*       @ndlib/cdk-core
+
+# Add specific reviewers for any modules authored outside of
+# the core team
+
+src/archive-bucket.ts @ndlib/cdk-core @ialford
+tests/archive-buckets.test.ts @ndlib/cdk-core @ialford

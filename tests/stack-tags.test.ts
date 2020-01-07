@@ -52,7 +52,6 @@ test('StackTags visit adds all tags on NestedStack', () => {
     { Key: 'Description', Value: 'description-value' },
     { Key: 'Owner', Value: 'owner-value' },
     { Key: 'ProjectName', Value: 'projectName-value' },
-    { Key: 'TopLevelStackName', Value: 'testStack' },
   ];
   expectedTags.forEach(kvp => expect(deeperNestedStack.tags.renderTags()).toContainEqual(kvp));
 });

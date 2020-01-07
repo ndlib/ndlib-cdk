@@ -19,11 +19,16 @@ export class StackTags implements IAspect {
       node.tags.setTag('Owner', owner);
       node.tags.setTag('Description', description);
 
-      if (node instanceof NestedStack) {
-        const parent = node.parentStack as Stack;
-        node.tags.setTag('ParentStackName', parent.stackName);
+      if (node.nested) {
+        let topStack = node.parentStack as Stack;
+        while (topStack.nested) {
+          topStack = topStack.parentStack as Stack;
+        }
+        node.tags.setTag('TopLevelStackName', topStack.stackName);
+        node.tags.removeTag('Name', 1);
       } else {
         node.tags.setTag('Name', node.stackName);
+        node.tags.removeTag('TopLevelStackName', 1);
       }
     }
   }

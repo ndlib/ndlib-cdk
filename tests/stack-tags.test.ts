@@ -36,24 +36,25 @@ test('StackTags visit adds all tags on NestedStack', () => {
   const app = new App();
   const stack = new Stack(app, 'testStack');
   const nestedStack = new NestedStack(stack, 'testNestedStack');
+  const deeperNestedStack = new NestedStack(nestedStack, 'deeperNestedStack');
   const visitor = new StackTags();
 
-  nestedStack.node.setContext('owner', 'owner-value');
-  nestedStack.node.setContext('contact', 'contact-value');
-  nestedStack.node.setContext('projectName', 'projectName-value');
-  nestedStack.node.setContext('description', 'description-value');
+  deeperNestedStack.node.setContext('owner', 'owner-value');
+  deeperNestedStack.node.setContext('contact', 'contact-value');
+  deeperNestedStack.node.setContext('projectName', 'projectName-value');
+  deeperNestedStack.node.setContext('description', 'description-value');
 
   // Can assume cdk will properly call visit, so calling it
   // directly for this test
-  visitor.visit(nestedStack);
+  visitor.visit(deeperNestedStack);
   const expectedTags = [
     { Key: 'Contact', Value: 'contact-value' },
     { Key: 'Description', Value: 'description-value' },
     { Key: 'Owner', Value: 'owner-value' },
     { Key: 'ProjectName', Value: 'projectName-value' },
-    { Key: 'ParentStackName', Value: 'testStack' },
+    { Key: 'TopLevelStackName', Value: 'testStack' },
   ];
-  expectedTags.forEach(kvp => expect(nestedStack.tags.renderTags()).toContainEqual(kvp));
+  expectedTags.forEach(kvp => expect(deeperNestedStack.tags.renderTags()).toContainEqual(kvp));
 });
 
 test('StackTags visit ignores non-stacks', () => {

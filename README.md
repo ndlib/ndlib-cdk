@@ -7,12 +7,12 @@
 
 Creates an Aspect that will apply stack level tags to all stacks in the application based on our defined required tags. Values for these tags are read from the following expected context keys:
 
-| Key | Value |
-|---|---|
-| projectName | Name of the overall project that the stacks belong to |
-| description | A description for the stacks|
-| contact | Contact information for the person(s) deploying this stack |
-| owner | Name or CLID of the person deploying this stack |
+| Key         | Value                                                      |
+| ----------- | ---------------------------------------------------------- |
+| projectName | Name of the overall project that the stacks belong to      |
+| description | A description for the stacks                               |
+| contact     | Contact information for the person(s) deploying this stack |
+| owner       | Name or CLID of the person deploying this stack            |
 
 Example usage:
 
@@ -72,7 +72,8 @@ const bucket = new ArchiveBucket(stack, 'Bucket', { ...overrides });
 Adds a basic email notification construct to watch a CodePipeline for state changes. Note: Currently does not watch any of the actions for specific state changes.
 
 Example message:
->The pipeline my-test-pipeline-142PEPTENTABF has changed state to STARTED. To view the pipeline, go to https://us-east-1.console.aws.amazon.com/codepipeline/home?region=us-east-1#/view/my-test-pipeline-142PEPTENTABF.
+
+> The pipeline my-test-pipeline-142PEPTENTABF has changed state to STARTED. To view the pipeline, go to https://us-east-1.console.aws.amazon.com/codepipeline/home?region=us-east-1#/view/my-test-pipeline-142PEPTENTABF.
 
 Example usage:
 
@@ -90,7 +91,7 @@ const notifications = new PipelineNotifications(stack, 'TestPipelineNotification
 
 ## CodePipeline Slack Approval
 
-Attaches a [Slack Approval Bot](https://github.com/ndlib/codepipeline-approvals/blob/master/slack_approval.md) to a CodePipeline's approval SNS Topic. 
+Attaches a [Slack Approval Bot](https://github.com/ndlib/codepipeline-approvals/blob/master/slack_approval.md) to a CodePipeline's approval SNS Topic.
 
 Note: This assumes that you've already deployed an [approval lambda](https://github.com/ndlib/codepipeline-approvals/blob/master/slack_approval.md#deploy-the-approval-lambda) and a [notifier](https://github.com/ndlib/codepipeline-approvals/blob/master/slack_approval.md#deploy-the-notifier-lambda) for the channel you want to push messages to.
 

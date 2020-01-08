@@ -1,10 +1,10 @@
-version: "2"
+version: '2'
 plugins:
   tslint:
     enabled: true
     config: tslint.json
 exclude_paths:
-- "lib/"
-- "**/node_modules/"
-- "**/tests/"
-- "**/*.d.ts"
+  - 'lib/'
+  - '**/node_modules/'
+  - '**/tests/'
+  - '**/*.d.ts'

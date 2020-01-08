@@ -1,4 +1,3 @@
-import { NestedStack } from '@aws-cdk/aws-cloudformation';
 import { ConstructNode, IAspect, IConstruct, Stack } from '@aws-cdk/core';
 
 /**

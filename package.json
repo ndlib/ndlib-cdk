@@ -50,6 +50,7 @@
     "lib/**/*"
   ],
   "dependencies": {
+    "@aws-cdk/aws-cloudformation": "^1.18.0",
     "@aws-cdk/aws-codepipeline": "^1.18.0",
     "@aws-cdk/aws-elasticloadbalancingv2": "^1.18.0",
     "@aws-cdk/aws-events-targets": "^1.18.0",

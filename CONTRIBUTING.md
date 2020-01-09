@@ -17,7 +17,7 @@ npm run build
 npm test
 ```
 
-Can also watch for changes and do both build and tests with the watch script (*Note: currently only works for changes to src*)
+Can also watch for changes and do both build and tests with the watch script (_Note: currently only works for changes to src_)
 
 ```shell
 npm run watch

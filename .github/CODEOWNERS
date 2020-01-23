@@ -5,6 +5,7 @@
 # the repo. Unless a later match takes precedence,
 # @ndlib/cdk-core will be requested for
 # review when someone opens a pull request.
+
 *       @ndlib/cdk-core
 
 # Add specific reviewers for any modules authored outside of

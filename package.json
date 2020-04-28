@@ -8,7 +8,7 @@
     "test": "jest --config jestconfig.json",
     "coverage": "jest --config jestconfig.json --coverage",
     "build": "tsc",
-    "format": "prettier --write \"@(src|tests)/**/*.@(ts|js|json|md|yml)\" \"*.@(ts|js|json|md|yml)\"",
+    "format": "tslint --fix -p tsconfig.json && prettier --write \"@(src|tests)/**/*.@(ts|js|json|md|yml)\" \"*.@(ts|js|json|md|yml)\"",
     "lint": "tslint -p tsconfig.json && prettier --check \"@(src|tests)/**/*.@(ts|js|json|md|yml)\" \"*.@(ts|js|json|md|yml)\"",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/ndlib/ndlib-cdk#readme",
   "devDependencies": {
-    "@aws-cdk/assert": "^1.20.0",
+    "@aws-cdk/assert": "^1.37.0",
     "@types/jest": "^24.0.23",
     "jest": "^24.9.0",
     "prettier": "^1.19.1",
@@ -50,10 +50,12 @@
     "lib/**/*"
   ],
   "dependencies": {
-    "@aws-cdk/aws-cloudformation": "^1.20.0",
-    "@aws-cdk/aws-codepipeline": "^1.20.0",
-    "@aws-cdk/aws-elasticloadbalancingv2": "^1.20.0",
-    "@aws-cdk/aws-events-targets": "^1.20.0",
-    "@aws-cdk/core": "^1.20.0"
+    "@aws-cdk/aws-cloudformation": "^1.37.0",
+    "@aws-cdk/aws-codepipeline": "^1.37.0",
+    "@aws-cdk/aws-elasticloadbalancingv2": "^1.37.0",
+    "@aws-cdk/aws-events-targets": "^1.37.0",
+    "@aws-cdk/aws-cloudwatch": "^1.37.0",
+    "@aws-cdk/aws-sns": "^1.37.0",
+    "@aws-cdk/core": "^1.37.0"
   }
 }

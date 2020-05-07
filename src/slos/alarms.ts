@@ -12,6 +12,7 @@ import {
   CloudfrontAvailabilitySLO,
   CloudfrontLatencySLO,
   IAlertConfig,
+  IMultiWindowAlert,
 } from './types';
 import { Windows } from './windows';
 
@@ -37,200 +38,237 @@ export interface ISLOAlarmsProps {
    */
   readonly slos: AnySLO[];
 }
+/**
+ * Function signature for an Alarm factory
+ */
+type AlarmFactory = (sloWindow: IAlertConfig, scope: Construct, slo: AnySLO, alarmName: string) => Alarm;
+
+/**
+ * KVPs where the key is the severity and the value is the SNS topic associated with that severity
+ */
+interface ITopicSeverities {
+  [key: string]: Topic;
+}
+
+/**
+ * Grouping of parent (composite) alarms, the child alarms that their expression is based on, and the severity
+ * that they are assosciated with
+ */
+interface IAlarmsBySeverities {
+  severity: string;
+  parentAlarm: CfnCompositeAlarm;
+  childAlarms: Alarm[][];
+}
 
 /**
  * Creates multi-window alarms using CloudWatch composite alarms from a list of slo objects.
  * Also creates an SNS topic as an action for the parent alarm.
  */
 export class SLOAlarms extends Construct {
-  public static apiAvailabilityAlarms = (
-    windows: IAlertConfig[],
-    scope: Construct,
-    alarmDescription: string,
-    sns: Topic,
-    slo: ApiAvailabilitySLO,
-  ) => {
-    const parentName = `${slo.title} Availability <= ${slo.sloThreshold}`;
-    const childAlarms = windows.map(sloWindow => {
-      const metric = new ApiAvailabilityMetric({
-        ...slo,
-        sloWindow,
-      });
-      const alarmName = `${parentName} - ${sloWindow.description}`;
-      const sloBudget = 1 - slo.sloThreshold;
-      let alarmThreshold = 1 - sloWindow.burnRateThreshold * sloBudget;
-      alarmThreshold = Math.max(0, Math.min(alarmThreshold, 1));
-      return new Alarm(scope, alarmName, {
-        metric,
-        threshold: alarmThreshold,
-        alarmName,
-        evaluationPeriods: 1,
-        datapointsToAlarm: 1,
-        comparisonOperator: ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
-      });
+  /**
+   * Factory method for constructing an Alarm based on an ApiAvailabilitySLO
+   */
+  public static apiAvailabilityAlarm = (sloWindow: IAlertConfig, scope: Construct, slo: AnySLO, alarmName: string) => {
+    const typedSlo = slo as ApiAvailabilitySLO;
+    const metric = new ApiAvailabilityMetric({
+      ...typedSlo,
+      sloWindow,
     });
-    const alarmRule = childAlarms.reduce(
-      (previous, current) =>
-        previous === '' ? `ALARM("${current.alarmName}")` : `${previous} OR ALARM("${current.alarmName}")`,
-      '',
-    );
-    const parentAlarm = new CfnCompositeAlarm(scope, parentName, {
-      alarmName: parentName,
-      alarmRule,
-      alarmDescription,
-      alarmActions: [sns.topicArn],
+    const sloBudget = 1 - typedSlo.sloThreshold;
+    let alarmThreshold = 1 - sloWindow.burnRateThreshold * sloBudget;
+    alarmThreshold = Math.max(0, Math.min(alarmThreshold, 1));
+    return new Alarm(scope, alarmName, {
+      metric,
+      threshold: alarmThreshold,
+      alarmName,
+      evaluationPeriods: 1,
+      datapointsToAlarm: 1,
+      comparisonOperator: ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
     });
-    return { parentAlarm, childAlarms };
   };
 
-  public static apiLatencyAlarms = (
-    windows: IAlertConfig[],
-    scope: Construct,
-    alarmDescription: string,
-    sns: Topic,
-    slo: ApiLatencySLO,
-  ) => {
-    const parentName = `${slo.title} Latency P${slo.sloThreshold * 100} >= ${slo.latencyThreshold}ms`;
-    const childAlarms = windows.map(sloWindow => {
-      const metric = new ApiLatencyMetric({
-        ...slo,
-        sloWindow,
-      });
-      const alarmName = `${parentName} - ${sloWindow.description}`;
-      return new Alarm(scope, alarmName, {
-        metric,
-        threshold: slo.latencyThreshold,
-        alarmName,
-        evaluationPeriods: 1,
-        datapointsToAlarm: 1,
-        comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
-      });
+  /**
+   * Factory method for constructing an Alarm based on an ApiLatencySLO
+   */
+  public static apiLatencyAlarm = (sloWindow: IAlertConfig, scope: Construct, slo: AnySLO, alarmName: string) => {
+    const typedSlo = slo as ApiLatencySLO;
+    const metric = new ApiLatencyMetric({
+      ...typedSlo,
+      sloWindow,
     });
-    const alarmRule = childAlarms.reduce(
-      (previous, current) =>
-        previous === '' ? `ALARM("${current.alarmName}")` : `${previous} OR ALARM("${current.alarmName}")`,
-      '',
-    );
-    const parentAlarm = new CfnCompositeAlarm(scope, parentName, {
-      alarmName: parentName,
-      alarmRule,
-      alarmDescription,
-      alarmActions: [sns.topicArn],
+    return new Alarm(scope, alarmName, {
+      metric,
+      threshold: typedSlo.latencyThreshold,
+      alarmName,
+      evaluationPeriods: 1,
+      datapointsToAlarm: 1,
+      comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
     });
-    return { parentAlarm, childAlarms };
   };
 
-  public static cloudfrontAvailabilityAlarms = (
-    windows: IAlertConfig[],
+  /**
+   * Factory method for constructing an Alarm based on an CloudfrontAvailabilitySLO
+   */
+  public static cloudfrontAvailabilityAlarm = (
+    sloWindow: IAlertConfig,
     scope: Construct,
-    alarmDescription: string,
-    sns: Topic,
-    slo: CloudfrontAvailabilitySLO,
+    slo: AnySLO,
+    alarmName: string,
   ) => {
-    const parentName = `${slo.title} Availability <= ${slo.sloThreshold}`;
-    const childAlarms = windows.map(sloWindow => {
-      const metric = new CloudfrontAvailabilityMetric({
-        ...slo,
-        sloWindow,
-      });
-      const alarmName = `${parentName} - ${sloWindow.description}`;
-      const sloBudget = 1 - slo.sloThreshold;
-      let alarmThreshold = 1 - sloWindow.burnRateThreshold * sloBudget;
-      alarmThreshold = Math.max(0, Math.min(alarmThreshold, 1));
-      return new Alarm(scope, alarmName, {
-        metric,
-        threshold: alarmThreshold,
-        alarmName,
-        evaluationPeriods: 1,
-        datapointsToAlarm: 1,
-        comparisonOperator: ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
-      });
+    const typedSlo = slo as CloudfrontAvailabilitySLO;
+    const metric = new CloudfrontAvailabilityMetric({
+      ...typedSlo,
+      sloWindow,
     });
-    const alarmRule = childAlarms.reduce(
-      (previous, current) =>
-        previous === '' ? `ALARM("${current.alarmName}")` : `${previous} OR ALARM("${current.alarmName}")`,
-      '',
-    );
-    const parentAlarm = new CfnCompositeAlarm(scope, parentName, {
-      alarmName: parentName,
-      alarmRule,
-      alarmDescription,
-      alarmActions: [sns.topicArn],
+    const sloBudget = 1 - typedSlo.sloThreshold;
+    let alarmThreshold = 1 - sloWindow.burnRateThreshold * sloBudget;
+    alarmThreshold = Math.max(0, Math.min(alarmThreshold, 1));
+    return new Alarm(scope, alarmName, {
+      metric,
+      threshold: alarmThreshold,
+      alarmName,
+      evaluationPeriods: 1,
+      datapointsToAlarm: 1,
+      comparisonOperator: ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
     });
-    return { parentAlarm, childAlarms };
   };
 
-  public static cloudfrontLatencyAlarms = (
-    windows: IAlertConfig[],
+  /**
+   * Factory method for constructing an Alarm based on an CloudfrontLatencySLO
+   */
+  public static cloudfrontLatencyAlarm = (
+    sloWindow: IAlertConfig,
+    scope: Construct,
+    slo: AnySLO,
+    alarmName: string,
+  ) => {
+    const typedSlo = slo as CloudfrontLatencySLO;
+    const metric = new CloudfrontLatencyMetric({
+      ...typedSlo,
+      sloWindow,
+    });
+    return new Alarm(scope, alarmName, {
+      metric,
+      threshold: typedSlo.latencyThreshold,
+      alarmName,
+      evaluationPeriods: 1,
+      datapointsToAlarm: 1,
+      comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+    });
+  };
+
+  /**
+   * Factory method for creating a composite alarm expression from the grid of alarms
+   */
+  public static createCompositeAlarm = (childAlarms: Alarm[][]) => {
+    return childAlarms.reduce((previousOr, currentOr) => {
+      const ands = currentOr.reduce(
+        (previousAnd, currentAnd) =>
+          previousAnd === ''
+            ? `ALARM("${currentAnd.alarmName}")`
+            : `${previousAnd} AND ALARM("${currentAnd.alarmName}")`,
+        '',
+      );
+      return previousOr === '' ? `(${ands})` : `${previousOr} OR (${ands})`;
+    }, '');
+  };
+
+  /**
+   * Factory method for creating all multi-window, multi-burn rate alarms for an SLO
+   */
+  public static createAlarms = (
+    windows: IMultiWindowAlert[],
     scope: Construct,
     alarmDescription: string,
-    sns: Topic,
-    slo: CloudfrontLatencySLO,
+    topics: ITopicSeverities,
+    slo: AnySLO,
+    parentName: string,
+    alarmFactory: AlarmFactory,
   ) => {
-    const parentName = `${slo.title} Latency P${slo.sloThreshold * 100} >= ${slo.latencyThreshold}ms`;
-    const childAlarms = windows.map(sloWindow => {
-      const metric = new CloudfrontLatencyMetric({
-        ...slo,
-        sloWindow,
+    const alarms = Object.keys(topics).map(topicSeverity => {
+      // Create child alarms for all windows associated with this severity
+      const childAlarms = windows.reduce((previous, current) => {
+        if (current.severity === topicSeverity) {
+          const windowsForSeverity = current.windows.map(sloWindow => {
+            return alarmFactory(sloWindow, scope, slo, `${parentName} - ${sloWindow.description}`);
+          });
+          previous.push(windowsForSeverity);
+        }
+        return previous;
+      }, [] as Alarm[][]);
+
+      // Create a composite alarm that sends its notification to the topic associated with this severity
+      const parentSeverityName = `${parentName} (${topicSeverity} Severity)`;
+      const parentAlarm = new CfnCompositeAlarm(scope, parentSeverityName, {
+        alarmName: parentSeverityName,
+        alarmRule: SLOAlarms.createCompositeAlarm(childAlarms),
+        alarmDescription,
+        alarmActions: [topics[topicSeverity].topicArn],
       });
-      const alarmName = `${parentName} - ${sloWindow.description}`;
-      return new Alarm(scope, alarmName, {
-        metric,
-        threshold: slo.latencyThreshold,
-        alarmName,
-        evaluationPeriods: 1,
-        datapointsToAlarm: 1,
-        comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
-      });
+      return { severity: topicSeverity, parentAlarm, childAlarms };
     });
-    const alarmRule = childAlarms.reduce(
-      (previous, current) =>
-        previous === '' ? `ALARM("${current.alarmName}")` : `${previous} OR ALARM("${current.alarmName}")`,
-      '',
-    );
-    const parentAlarm = new CfnCompositeAlarm(scope, parentName, {
-      alarmName: parentName,
-      alarmRule,
-      alarmDescription,
-      alarmActions: [sns.topicArn],
-    });
-    return { parentAlarm, childAlarms };
+    return alarms;
   };
+
+  /**
+   * List of alarms that were created, grouped by severity
+   */
+  public alarms!: IAlarmsBySeverities[];
+
+  /**
+   * Each SNS topic created for each severity
+   */
+  public topics: ITopicSeverities;
 
   constructor(scope: Construct, id: string, props: ISLOAlarmsProps) {
     super(scope, id);
 
+    const windows = Windows.standardAlarmMultiWindows;
+    this.alarms = [];
+
     let alarmDescription = `Service is at risk of exceeding its error budget. Please use the links below to troubleshoot the problem:\n\nDashboard: ${props.dashboardLink}\nRun book: ${props.runbookLink}\n`;
     if (props.alarmsDashboardLink) {
-      alarmDescription = `${alarmDescription}\nAlarms Dashboard: ${props.alarmsDashboardLink}`;
+      alarmDescription = `${alarmDescription}Alarms Dashboard: ${props.alarmsDashboardLink}\n`;
     }
 
-    const sns = new Topic(scope, 'AlarmTopic');
+    // Construct an SNS Topic for each unique severity type in the windows
+    this.topics = windows.reduce((previous, current) => {
+      if (previous[current.severity] === undefined) {
+        previous[current.severity] = new Topic(scope, `${current.severity}SeverityTopic`);
+      }
+      return previous;
+    }, {} as ITopicSeverities);
 
+    // Create multi-window, multi-burn rate alarms for each SLO based on its type
     props.slos.forEach(slo => {
-      const windows = Windows.standardAlarmWindows;
+      let parentName: string;
+      let alarmFactory: AlarmFactory;
       switch (slo.type) {
         case 'ApiAvailability':
-          SLOAlarms.apiAvailabilityAlarms(windows, this, alarmDescription, sns, slo as ApiAvailabilitySLO);
+          parentName = `${slo.title} Availability <= ${slo.sloThreshold}`;
+          alarmFactory = SLOAlarms.apiAvailabilityAlarm;
           break;
         case 'ApiLatency':
-          SLOAlarms.apiLatencyAlarms(windows, this, alarmDescription, sns, slo as ApiLatencySLO);
+          const apiLatencySLO = slo as ApiLatencySLO;
+          parentName = `${slo.title} Latency P${slo.sloThreshold * 100} >= ${apiLatencySLO.latencyThreshold}ms`;
+          alarmFactory = SLOAlarms.apiLatencyAlarm;
           break;
         case 'CloudfrontAvailability':
-          SLOAlarms.cloudfrontAvailabilityAlarms(
-            windows,
-            this,
-            alarmDescription,
-            sns,
-            slo as CloudfrontAvailabilitySLO,
-          );
+          parentName = `${slo.title} Availability <= ${slo.sloThreshold}`;
+          alarmFactory = SLOAlarms.cloudfrontAvailabilityAlarm;
           break;
         case 'CloudfrontLatency':
-          SLOAlarms.cloudfrontLatencyAlarms(windows, this, alarmDescription, sns, slo as CloudfrontLatencySLO);
+          const cloudfrontLatencySLO = slo as CloudfrontLatencySLO;
+          parentName = `${slo.title} Latency P${slo.sloThreshold * 100} >= ${cloudfrontLatencySLO.latencyThreshold}ms`;
+          alarmFactory = SLOAlarms.cloudfrontLatencyAlarm;
           break;
         default:
           throw new Error(`Alarms creation encountered an unknown type for slo: ${JSON.stringify(slo)}.`);
       }
+
+      this.alarms.push(
+        ...SLOAlarms.createAlarms(windows, this, alarmDescription, this.topics, slo, parentName, alarmFactory),
+      );
     });
   }
 }

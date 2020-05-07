@@ -4,6 +4,13 @@ import { Duration } from '@aws-cdk/core';
 describe('Windows', () => {
   const expectations = [
     {
+      window: Windows.twoPercentShort,
+      burnRate: 14.4,
+      percent: 2,
+      alertWindow: Duration.minutes(5),
+      description: '2.00% of 30 days budget burned in 5 minutes',
+    },
+    {
       window: Windows.twoPercentLong,
       burnRate: 14.4,
       percent: 2,
@@ -16,6 +23,13 @@ describe('Windows', () => {
       percent: 2,
       alertWindow: Duration.hours(2),
       description: '2.00% of 30 days budget burned in 1 hour 60 minutes',
+    },
+    {
+      window: Windows.fivePercentShort,
+      burnRate: 6,
+      percent: 5,
+      alertWindow: Duration.minutes(30),
+      description: '5.00% of 30 days budget burned in 30 minutes',
     },
     {
       window: Windows.fivePercentLong,
@@ -40,10 +54,10 @@ describe('Windows', () => {
     },
     {
       window: Windows.tenPercentShort,
-      burnRate: 3,
+      burnRate: 1,
       percent: 10,
-      alertWindow: Duration.days(1),
-      description: '10.00% of 30 days budget burned in 1 day',
+      alertWindow: Duration.hours(6),
+      description: '10.00% of 30 days budget burned in 6 hours',
     },
     {
       window: Windows.tenPercentLong,
@@ -95,7 +109,7 @@ describe('Windows', () => {
 
   it('alarmWindowSelector returns appropriate windows based on slo threshold', () => {
     const alarmSelectorExpectations = [
-      { slo: 0.9999999, windows: [Windows.twoPercentLong, Windows.fivePercentLong, Windows.tenPercentShort] },
+      { slo: 0.9999999, windows: [Windows.twoPercentLong, Windows.fivePercentLong, Windows.tenPercentMedium] },
       {
         slo: 0.93055555555,
         windows: [Windows.twoPercentExtraLong, Windows.fivePercentExtraLong, Windows.tenPercentShort],
@@ -111,18 +125,13 @@ describe('Windows', () => {
     const alarmSelectorExpectations = [
       {
         slo: 0.9999999,
-        windows: [Windows.twoPercentLong, Windows.fivePercentLong, Windows.tenPercentLong, Windows.thirtyDays],
+        windows: [Windows.twoPercentLong, Windows.fivePercentLong, Windows.tenPercentLong],
       },
       {
         slo: 0.93055555555,
-        windows: [
-          Windows.twoPercentExtraLong,
-          Windows.fivePercentExtraLong,
-          Windows.tenPercentLong,
-          Windows.thirtyDays,
-        ],
+        windows: [Windows.twoPercentExtraLong, Windows.fivePercentExtraLong, Windows.tenPercentLong],
       },
-      { slo: 0.86111111111, windows: [Windows.oneDaySensitive, Windows.tenPercentLong, Windows.thirtyDays] },
+      { slo: 0.86111111111, windows: [Windows.oneDaySensitive, Windows.tenPercentLong] },
     ];
     alarmSelectorExpectations.forEach(expectation => {
       expect(Windows.dashWindowSelector(expectation.slo)).toEqual(expectation.windows);

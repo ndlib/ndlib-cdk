@@ -110,3 +110,64 @@ const slackApproval = new SlackApproval(this, 'SlackApproval', {
   notifyStackName: 'slack-deployment-channel-notifier',
 });
 ```
+
+## Service Level Objectives
+
+Creates Cloudwatch Dashboards and Alarms from a list of SLOs based on the Google SRE workbook for [Alerting on SLOs](https://landing.google.com/sre/workbook/chapters/alerting-on-slos/)
+
+```typescript
+const slos = [
+  {
+    type: 'CloudfrontAvailability',
+    distributionId: 'E123456789ABC',
+    title: 'HTTPS - CDN',
+    sloThreshold: 0.999,
+  },
+  {
+    type: 'CloudfrontLatency',
+    distributionId: 'E123456789ABC',
+    title: 'HTTPS - CDN',
+    sloThreshold: 0.95,
+    latencyThreshold: 200,
+  },
+  {
+    type: 'ApiAvailability',
+    apiName: 'myapi-prod',
+    title: 'Backend API',
+    sloThreshold: 0.99,
+  },
+  {
+    type: 'ApiLatency',
+    apiName: 'myapi-prod',
+    title: 'Backend API',
+    sloThreshold: 0.95,
+    latencyThreshold: 2000,
+  },
+];
+const stack = new cdk.Stack();
+
+// Create a dashboard representation of all of the alarms we're creating.
+const alarmsDash = new SLOAlarmsDashboard(stack, 'AlarmsDashboard', {
+  slos,
+  dashboardName: 'AlarmsDashboard',
+});
+
+// Create a dashboard that shows the 30 day performance of all of our SLOs
+const perfDash = new SLOPerformanceDashboard(stack, 'PerformanceDashboard', {
+  slos,
+  dashboardName: 'PerformanceDashboard',
+});
+const alarmsDashboardName = Fn.ref((perfDash.node.defaultChild as CfnDashboard).logicalId);
+
+// Create the multi-window alarms for each of the SLOs. This will also create an SNS topic that will
+// receive the alerts. The alarm will include links to the dashboards and runbooks given in its
+// description.
+const alarms = new SLOAlarms(stack, 'Alarms', {
+  slos,
+  dashboardLink: `https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards:name=My-Website`,
+  runbookLink: 'https://github.com/myorg/myrunbooks',
+  alarmsDashboardLink: `https://console.aws.amazon.com/cloudwatch/home?region=${
+    cdk.Stack.of(this).region
+  }#dashboards:name=${alarmsDashboardName}`,
+});
+```

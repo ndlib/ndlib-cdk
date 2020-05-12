@@ -116,7 +116,7 @@ export class Windows {
   };
 
   /**
-   * 10% of 30 Day window in 1 day.
+   * 10% of 30 Day window in 6 hours.
    */
   public static readonly tenPercentShort: IAlertConfig = {
     percent: 10,

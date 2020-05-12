@@ -40,11 +40,11 @@ describe('SLOAlarmsDashboard', () => {
                 {
                   Ref: 'AWS::Region',
                 },
-                '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":21600,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"5% of Budget in 6 hours","value":0.994,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9928,"max":1}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 3 days","region":"',
+                '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":21600,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"5% of Budget in 6 hours","value":0.994,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9928,"max":1}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 1 day","region":"',
                 {
                   Ref: 'AWS::Region',
                 },
-                '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":259200,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"10% of Budget in 3 days","value":0.999,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9988,"max":1}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 30 days","region":"',
+                '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":86400,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"10% of Budget in 1 day","value":0.999,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9988,"max":1}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 30 days","region":"',
                 {
                   Ref: 'AWS::Region',
                 },
@@ -87,11 +87,11 @@ describe('SLOAlarmsDashboard', () => {
                 {
                   Ref: 'AWS::Region',
                 },
-                '","metrics":[["AWS/CloudFront","OriginLatency","DistributionId","myDistributionId","Region","Global",{"label":"Latency p70.00","period":21600,"stat":"p70.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":200,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":280}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 3 days","region":"',
+                '","metrics":[["AWS/CloudFront","OriginLatency","DistributionId","myDistributionId","Region","Global",{"label":"Latency p70.00","period":21600,"stat":"p70.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":200,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":280}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 1 day","region":"',
                 {
                   Ref: 'AWS::Region',
                 },
-                '","metrics":[["AWS/CloudFront","OriginLatency","DistributionId","myDistributionId","Region","Global",{"label":"Latency p95.00","period":259200,"stat":"p95.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":200,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":280}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 30 days","region":"',
+                '","metrics":[["AWS/CloudFront","OriginLatency","DistributionId","myDistributionId","Region","Global",{"label":"Latency p95.00","period":86400,"stat":"p95.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":200,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":280}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 30 days","region":"',
                 {
                   Ref: 'AWS::Region',
                 },
@@ -126,11 +126,11 @@ describe('SLOAlarmsDashboard', () => {
                 {
                   Ref: 'AWS::Region',
                 },
-                '","metrics":[[{"label":"Availability","expression":"(gatewayRequests - gatewayErrors)/gatewayRequests"}],["AWS/ApiGateway","Count","ApiName","myApiName",{"label":"Requests","period":21600,"stat":"Sum","visible":false,"id":"gatewayRequests"}],["AWS/ApiGateway","5XXError","ApiName","myApiName",{"label":"Error rate","period":21600,"stat":"Sum","visible":false,"id":"gatewayErrors"}]],"annotations":{"horizontal":[{"label":"5% of Budget in 6 hours","value":0.94,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.928,"max":1}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My API - 3 days","region":"',
+                '","metrics":[[{"label":"Availability","expression":"(gatewayRequests - gatewayErrors)/gatewayRequests"}],["AWS/ApiGateway","Count","ApiName","myApiName",{"label":"Requests","period":21600,"stat":"Sum","visible":false,"id":"gatewayRequests"}],["AWS/ApiGateway","5XXError","ApiName","myApiName",{"label":"Error rate","period":21600,"stat":"Sum","visible":false,"id":"gatewayErrors"}]],"annotations":{"horizontal":[{"label":"5% of Budget in 6 hours","value":0.94,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.928,"max":1}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My API - 1 day","region":"',
                 {
                   Ref: 'AWS::Region',
                 },
-                '","metrics":[[{"label":"Availability","expression":"(gatewayRequests - gatewayErrors)/gatewayRequests"}],["AWS/ApiGateway","Count","ApiName","myApiName",{"label":"Requests","period":259200,"stat":"Sum","visible":false,"id":"gatewayRequests"}],["AWS/ApiGateway","5XXError","ApiName","myApiName",{"label":"Error rate","period":259200,"stat":"Sum","visible":false,"id":"gatewayErrors"}]],"annotations":{"horizontal":[{"label":"10% of Budget in 3 days","value":0.99,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.988,"max":1}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My API - 30 days","region":"',
+                '","metrics":[[{"label":"Availability","expression":"(gatewayRequests - gatewayErrors)/gatewayRequests"}],["AWS/ApiGateway","Count","ApiName","myApiName",{"label":"Requests","period":86400,"stat":"Sum","visible":false,"id":"gatewayRequests"}],["AWS/ApiGateway","5XXError","ApiName","myApiName",{"label":"Error rate","period":86400,"stat":"Sum","visible":false,"id":"gatewayErrors"}]],"annotations":{"horizontal":[{"label":"10% of Budget in 1 day","value":0.99,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.988,"max":1}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My API - 30 days","region":"',
                 {
                   Ref: 'AWS::Region',
                 },
@@ -167,11 +167,11 @@ describe('SLOAlarmsDashboard', () => {
                 {
                   Ref: 'AWS::Region',
                 },
-                '","metrics":[["AWS/ApiGateway","Latency","ApiName","myApiName",{"label":"Latency p94.00","period":21600,"stat":"p94.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My API - 3 days","region":"',
+                '","metrics":[["AWS/ApiGateway","Latency","ApiName","myApiName",{"label":"Latency p94.00","period":21600,"stat":"p94.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My API - 1 day","region":"',
                 {
                   Ref: 'AWS::Region',
                 },
-                '","metrics":[["AWS/ApiGateway","Latency","ApiName","myApiName",{"label":"Latency p99.00","period":259200,"stat":"p99.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My API - 30 days","region":"',
+                '","metrics":[["AWS/ApiGateway","Latency","ApiName","myApiName",{"label":"Latency p99.00","period":86400,"stat":"p99.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My API - 30 days","region":"',
                 {
                   Ref: 'AWS::Region',
                 },

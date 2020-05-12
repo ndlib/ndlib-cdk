@@ -7,6 +7,21 @@ import { IAlertConfig } from './types';
  */
 export class Windows {
   /**
+   * 2% of 30 Day window in 5 minutes
+   */
+  public static readonly twoPercentShort: IAlertConfig = {
+    percent: 2,
+    period: Duration.days(30),
+    alertWindow: Duration.minutes(5),
+    get burnRateThreshold(): number {
+      return Windows.burnRate(Windows.twoPercentLong);
+    },
+    get description(): string {
+      return Windows.description(this);
+    },
+  };
+
+  /**
    * 2% of 30 Day window in 1 hour
    */
   public static readonly twoPercentLong: IAlertConfig = {
@@ -31,6 +46,21 @@ export class Windows {
     alertWindow: Duration.hours(2),
     get burnRateThreshold(): number {
       return Windows.burnRate(this);
+    },
+    get description(): string {
+      return Windows.description(this);
+    },
+  };
+
+  /**
+   * 5% of 30 Day window in 30 minutes
+   */
+  public static readonly fivePercentShort: IAlertConfig = {
+    percent: 5,
+    period: Duration.days(30),
+    alertWindow: Duration.minutes(30),
+    get burnRateThreshold(): number {
+      return Windows.burnRate(Windows.fivePercentLong);
     },
     get description(): string {
       return Windows.description(this);
@@ -86,14 +116,32 @@ export class Windows {
   };
 
   /**
-   * 10% of 30 Day window in 1 day.
+   * 10% of 30 Day window in 6 hours.
    */
   public static readonly tenPercentShort: IAlertConfig = {
     percent: 10,
     period: Duration.days(30),
+    alertWindow: Duration.hours(6),
+    get burnRateThreshold(): number {
+      return Windows.burnRate(Windows.tenPercentLong);
+    },
+    get description(): string {
+      return Windows.description(this);
+    },
+  };
+
+  /**
+   * 10% of 30 Day window in 1 day.
+   * Note: Google recommends 3 days for 10% long window, but since
+   * we cannot do a 3 day alarm for the long window, we're making
+   * a 1 day period
+   */
+  public static readonly tenPercentMedium: IAlertConfig = {
+    percent: 10,
+    period: Duration.days(30),
     alertWindow: Duration.days(1),
     get burnRateThreshold(): number {
-      return Windows.burnRate(this);
+      return Windows.burnRate(Windows.tenPercentLong);
     },
     get description(): string {
       return Windows.description(this);
@@ -133,13 +181,17 @@ export class Windows {
   };
 
   /**
-   * The golden standards from Google. Useful for 99.x SLOs
+   * The golden standards from Google.
    */
-  public static readonly standardWindows = [
-    Windows.twoPercentLong,
-    Windows.fivePercentLong,
-    Windows.tenPercentLong,
-    Windows.thirtyDays,
+  public static readonly standardWindows = [Windows.twoPercentLong, Windows.fivePercentLong, Windows.tenPercentLong];
+
+  /**
+   * The multi-window golden standards from Google.
+   */
+  public static readonly standardMultiWindows = [
+    { windows: [Windows.twoPercentShort, Windows.twoPercentLong], severity: 'High' },
+    { windows: [Windows.fivePercentShort, Windows.fivePercentLong], severity: 'High' },
+    { windows: [Windows.tenPercentShort, Windows.tenPercentLong], severity: 'Low' },
   ];
 
   /**
@@ -148,7 +200,16 @@ export class Windows {
   public static readonly standardAlarmWindows = [
     Windows.twoPercentLong,
     Windows.fivePercentLong,
-    Windows.tenPercentShort,
+    Windows.tenPercentMedium,
+  ];
+
+  /**
+   * The multi-window golden standards from Google, limited to one day for AWS alarms.
+   */
+  public static readonly standardAlarmMultiWindows = [
+    { windows: [Windows.twoPercentShort, Windows.twoPercentLong], severity: 'High' },
+    { windows: [Windows.fivePercentShort, Windows.fivePercentLong], severity: 'High' },
+    { windows: [Windows.tenPercentShort, Windows.tenPercentMedium], severity: 'Low' },
   ];
 
   /**
@@ -159,7 +220,6 @@ export class Windows {
     Windows.twoPercentExtraLong,
     Windows.fivePercentExtraLong,
     Windows.tenPercentLong,
-    Windows.thirtyDays,
   ];
 
   /**
@@ -176,18 +236,19 @@ export class Windows {
    * Experimental!
    * Useful for SLOs like 70%, 50% etc. The smallest window we can use is one day here.
    */
-  public static readonly lowPercentWindows = [Windows.oneDaySensitive, Windows.tenPercentLong, Windows.thirtyDays];
+  public static readonly lowPercentWindows = [Windows.oneDaySensitive, Windows.tenPercentLong];
 
   /**
    * Experimental!
    * Useful for SLOs like 70%, 50% etc, limited to one day for AWS alarms. The smallest window we can use is one day here.
    */
   public static readonly lowPercentAlarmWindows = [Windows.oneDaySensitive];
+
   /**
    * Calculates a target burn rate threshold for an alert config
    */
   public static readonly burnRate = (alertConfig: IAlertConfig) =>
-    (alertConfig.period.toHours() * (alertConfig.percent / 100)) / alertConfig.alertWindow.toHours();
+    ((alertConfig.period.toHours() * (alertConfig.percent / 100)) / alertConfig.alertWindow.toMinutes()) * 60;
 
   /**
    * Ex: "X% of Y Day budget burned in Z hours"

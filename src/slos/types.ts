@@ -93,6 +93,11 @@ export interface IAlertConfig {
   readonly description: string;
 }
 
+export interface IMultiWindowAlert {
+  readonly windows: IAlertConfig[];
+  readonly severity: string;
+}
+
 export interface ISLOWidgetProps extends GraphWidgetProps {
   /**
    * The decimal value for the threshold of the SLO.

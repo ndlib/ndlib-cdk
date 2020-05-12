@@ -80,7 +80,9 @@ export class SLOAlarmsDashboard extends Dashboard {
 
   constructor(scope: cdk.Construct, id: string, props: ISLOAlarmsDashboardProps) {
     const widgets = props.slos.reduce((result, slo) => {
-      const windows = Windows.standardWindows;
+      // Use standard alarm windows, plus the thirty day window, since the purpose of this dash is to see
+      // how well the alarms are predicting when the 30 day window will be exceeded
+      const windows = [...Windows.standardAlarmWindows, Windows.thirtyDays];
       switch (slo.type) {
         case 'ApiAvailability':
           result.push(SLOAlarmsDashboard.apiAvailabilityAlarmsRow(windows, slo as ApiAvailabilitySLO));

@@ -80,12 +80,11 @@ export class SLOPerformanceDashboard extends Dashboard {
       [[]] as any,
     );
 
-    const superProps = {
-      ...props,
+    const defaultProps = {
       widgets,
-      start: '-P1Y',
+      start: '-P360D',
     };
 
-    super(scope, id, superProps);
+    super(scope, id, { ...defaultProps, ...props });
   }
 }

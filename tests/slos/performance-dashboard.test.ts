@@ -52,7 +52,7 @@ describe('SLOPerformanceDashboard', () => {
           'Fn::Join': [
             '',
             [
-              '{"start":"-P1Y","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - Availability","region":"',
+              '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - Availability","region":"',
               {
                 Ref: 'AWS::Region',
               },
@@ -92,6 +92,41 @@ describe('SLOPerformanceDashboard', () => {
     );
   });
 
+  it('allows overriding the period', () => {
+    const slos = [
+      {
+        type: 'CloudfrontAvailability',
+        distributionId: 'myDistributionId',
+        title: 'My Cloudfront',
+        sloThreshold: 0.999,
+      },
+    ];
+    const stack = new Stack();
+    new SLOPerformanceDashboard(stack, 'TestPerformanceDashboard', {
+      slos,
+      dashboardName: 'TestPerformanceDashboard',
+      start: '-P1234D',
+    });
+
+    cdkExpect(stack).to(
+      haveResourceLike('AWS::CloudWatch::Dashboard', {
+        DashboardBody: {
+          'Fn::Join': [
+            '',
+            [
+              '{"start":"-P1234D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - Availability","region":"',
+              {
+                Ref: 'AWS::Region',
+              },
+              '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":2592000,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"SLO","value":0.999,"fill":"below","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0.995,"max":1}}}}]}',
+            ],
+          ],
+        },
+        DashboardName: 'TestPerformanceDashboard',
+      }),
+    );
+  });
+
   describe('CloudfrontAvailability', () => {
     const slos = [
       {
@@ -115,7 +150,7 @@ describe('SLOPerformanceDashboard', () => {
             'Fn::Join': [
               '',
               [
-                '{"start":"-P1Y","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - Availability","region":"',
+                '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - Availability","region":"',
                 {
                   Ref: 'AWS::Region',
                 },
@@ -153,7 +188,7 @@ describe('SLOPerformanceDashboard', () => {
             'Fn::Join': [
               '',
               [
-                '{"start":"-P1Y","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - Latency 200ms","region":"',
+                '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - Latency 200ms","region":"',
                 {
                   Ref: 'AWS::Region',
                 },
@@ -183,7 +218,7 @@ describe('SLOPerformanceDashboard', () => {
             'Fn::Join': [
               '',
               [
-                '{"start":"-P1Y","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My API - Availability","region":"',
+                '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My API - Availability","region":"',
                 {
                   Ref: 'AWS::Region',
                 },
@@ -215,7 +250,7 @@ describe('SLOPerformanceDashboard', () => {
             'Fn::Join': [
               '',
               [
-                '{"start":"-P1Y","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My API - Latency 2000ms","region":"',
+                '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My API - Latency 2000ms","region":"',
                 {
                   Ref: 'AWS::Region',
                 },

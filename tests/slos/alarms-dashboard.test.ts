@@ -12,6 +12,53 @@ describe('SLOAlarmsDashboard', () => {
     );
   });
 
+  it('allows overriding the period', () => {
+    const slos = [
+      {
+        type: 'CloudfrontAvailability',
+        distributionId: 'myDistributionId',
+        title: 'My Cloudfront',
+        sloThreshold: 0.999,
+      },
+    ];
+    const stack = new Stack();
+    new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', {
+      slos,
+      dashboardName: 'TestAlarmsDashboard',
+      start: '-P1234D',
+    });
+
+    cdkExpect(stack).to(
+      haveResourceLike('AWS::CloudWatch::Dashboard', {
+        DashboardBody: {
+          'Fn::Join': [
+            '',
+            [
+              '{"start":"-P1234D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 60 minutes","region":"',
+              {
+                Ref: 'AWS::Region',
+              },
+              '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":3600,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"2% of Budget in 60 minutes","value":0.9856,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9827,"max":1}}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 6 hours","region":"',
+              {
+                Ref: 'AWS::Region',
+              },
+              '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":21600,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"5% of Budget in 6 hours","value":0.994,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9928,"max":1}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 1 day","region":"',
+              {
+                Ref: 'AWS::Region',
+              },
+              '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":86400,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"10% of Budget in 1 day","value":0.999,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9988,"max":1}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 30 days","region":"',
+              {
+                Ref: 'AWS::Region',
+              },
+              '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":2592000,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"100% of Budget in 30 days","value":0.999,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9988,"max":1}}}}]}',
+            ],
+          ],
+        },
+        DashboardName: 'TestAlarmsDashboard',
+      }),
+    );
+  });
+
   describe('CloudfrontAvailability', () => {
     const slos = [
       {
@@ -32,7 +79,7 @@ describe('SLOAlarmsDashboard', () => {
             'Fn::Join': [
               '',
               [
-                '{"start":"-P1Y","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 60 minutes","region":"',
+                '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 60 minutes","region":"',
                 {
                   Ref: 'AWS::Region',
                 },
@@ -79,7 +126,7 @@ describe('SLOAlarmsDashboard', () => {
             'Fn::Join': [
               '',
               [
-                '{"start":"-P1Y","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 60 minutes","region":"',
+                '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 60 minutes","region":"',
                 {
                   Ref: 'AWS::Region',
                 },
@@ -118,7 +165,7 @@ describe('SLOAlarmsDashboard', () => {
             'Fn::Join': [
               '',
               [
-                '{"start":"-P1Y","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My API - 60 minutes","region":"',
+                '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My API - 60 minutes","region":"',
                 {
                   Ref: 'AWS::Region',
                 },
@@ -159,7 +206,7 @@ describe('SLOAlarmsDashboard', () => {
             'Fn::Join': [
               '',
               [
-                '{"start":"-P1Y","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My API - 60 minutes","region":"',
+                '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My API - 60 minutes","region":"',
                 {
                   Ref: 'AWS::Region',
                 },

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0](https://github.com/ndlib/ndlib-cdk/compare/v1.2.2...v1.3.0) (2020-05-28)
+
+### Features
+
+- Added Service Level Objective Alarms and Dashboards. ([#27](https://github.com/ndlib/ndlib-cdk/pull/27),[#28](https://github.com/ndlib/ndlib-cdk/pull/28),[#29](https://github.com/ndlib/ndlib-cdk/pull/29))
+
 ## [1.2.2](https://github.com/ndlib/ndlib-cdk/compare/v1.2.1...v1.2.2) (2020-01-09)
 
 ### Features

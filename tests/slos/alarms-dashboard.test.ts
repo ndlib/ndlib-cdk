@@ -38,7 +38,7 @@ describe('SLOAlarmsDashboard', () => {
               {
                 Ref: 'AWS::Region',
               },
-              '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":3600,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"2% of Budget in 60 minutes","value":0.9856,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9827,"max":1}}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 6 hours","region":"',
+              '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":3600,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"2% of Budget in 60 minutes","value":0.9856,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.98272,"max":1}}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 6 hours","region":"',
               {
                 Ref: 'AWS::Region',
               },
@@ -83,7 +83,7 @@ describe('SLOAlarmsDashboard', () => {
                 {
                   Ref: 'AWS::Region',
                 },
-                '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":3600,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"2% of Budget in 60 minutes","value":0.9856,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9827,"max":1}}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 6 hours","region":"',
+                '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":3600,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"2% of Budget in 60 minutes","value":0.9856,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.98272,"max":1}}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 6 hours","region":"',
                 {
                   Ref: 'AWS::Region',
                 },
@@ -169,11 +169,11 @@ describe('SLOAlarmsDashboard', () => {
                 {
                   Ref: 'AWS::Region',
                 },
-                '","metrics":[[{"label":"Availability","expression":"(gatewayRequests - gatewayErrors)/gatewayRequests"}],["AWS/ApiGateway","Count","ApiName","myApiName",{"label":"Requests","period":3600,"stat":"Sum","visible":false,"id":"gatewayRequests"}],["AWS/ApiGateway","5XXError","ApiName","myApiName",{"label":"Error rate","period":3600,"stat":"Sum","visible":false,"id":"gatewayErrors"}]],"annotations":{"horizontal":[{"label":"2% of Budget in 60 minutes","value":0.856,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.8272,"max":1}}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"My API - 6 hours","region":"',
+                '","metrics":[[{"label":"Availability","expression":"(gatewayRequests - gatewayErrors)/gatewayRequests"}],["AWS/ApiGateway","Count","ApiName","myApiName",{"label":"Requests","period":3600,"stat":"Sum","visible":false,"id":"gatewayRequests"}],["AWS/ApiGateway","5XXError","ApiName","myApiName",{"label":"Error rate","period":3600,"stat":"Sum","visible":false,"id":"gatewayErrors"}]],"annotations":{"horizontal":[{"label":"2% of Budget in 60 minutes","value":0.856,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.8271999999999998,"max":1}}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"My API - 6 hours","region":"',
                 {
                   Ref: 'AWS::Region',
                 },
-                '","metrics":[[{"label":"Availability","expression":"(gatewayRequests - gatewayErrors)/gatewayRequests"}],["AWS/ApiGateway","Count","ApiName","myApiName",{"label":"Requests","period":21600,"stat":"Sum","visible":false,"id":"gatewayRequests"}],["AWS/ApiGateway","5XXError","ApiName","myApiName",{"label":"Error rate","period":21600,"stat":"Sum","visible":false,"id":"gatewayErrors"}]],"annotations":{"horizontal":[{"label":"5% of Budget in 6 hours","value":0.94,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.928,"max":1}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My API - 1 day","region":"',
+                '","metrics":[[{"label":"Availability","expression":"(gatewayRequests - gatewayErrors)/gatewayRequests"}],["AWS/ApiGateway","Count","ApiName","myApiName",{"label":"Requests","period":21600,"stat":"Sum","visible":false,"id":"gatewayRequests"}],["AWS/ApiGateway","5XXError","ApiName","myApiName",{"label":"Error rate","period":21600,"stat":"Sum","visible":false,"id":"gatewayErrors"}]],"annotations":{"horizontal":[{"label":"5% of Budget in 6 hours","value":0.94,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9279999999999999,"max":1}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My API - 1 day","region":"',
                 {
                   Ref: 'AWS::Region',
                 },

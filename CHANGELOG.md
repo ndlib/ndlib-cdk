@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.1](https://github.com/ndlib/ndlib-cdk/compare/v1.3.0...v1.3.1) (2020-06-05)
+
+### Bug Fixes
+
+- Fixed an issue with scaling of Availability widgets for SLOs with a high number of 9s. ([#32](https://github.com/ndlib/ndlib-cdk/pull/32))
+
 ## [1.3.0](https://github.com/ndlib/ndlib-cdk/compare/v1.2.2...v1.3.0) (2020-05-28)
 
 ### Features

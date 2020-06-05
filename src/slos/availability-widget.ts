@@ -35,7 +35,6 @@ export class AvailabilityWidget extends GraphWidget {
         { label: 'SLO', value: props.sloThreshold, fill: Shading.NONE, color: Colors.orange },
       ];
     }
-    leftYAxis.min = +leftYAxis.min.toFixed(4);
     let title = props.title;
     if (props.addPeriodToTitle === true) {
       title = `${props.title} - ${props.sloWindow.alertWindow.toHumanString()}`;

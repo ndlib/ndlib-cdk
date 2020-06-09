@@ -50,12 +50,28 @@ export interface ICloudfrontSLI {
   readonly distributionId: string;
 }
 
+/**
+ * Properties specific to Elastic Search based Service Level Indicators
+ */
+export interface IElasticSearchSLI {
+  readonly accountId: string;
+  readonly domainName: string;
+}
+
 // SLO types are combinations of the objective and the indicator
 export type ApiAvailabilitySLO = IAvailabilitySLO & IApiSLI;
 export type ApiLatencySLO = ILatencySLO & IApiSLI;
 export type CloudfrontAvailabilitySLO = IAvailabilitySLO & ICloudfrontSLI;
 export type CloudfrontLatencySLO = ILatencySLO & ICloudfrontSLI;
-export type AnySLO = ApiAvailabilitySLO | CloudfrontAvailabilitySLO | ApiLatencySLO | CloudfrontLatencySLO;
+export type ElasticSearchAvailabilitySLO = IAvailabilitySLO & IElasticSearchSLI;
+export type ElasticSearchLatencySLO = ILatencySLO & IElasticSearchSLI;
+export type AnySLO =
+  | ApiAvailabilitySLO
+  | ApiLatencySLO
+  | CloudfrontAvailabilitySLO
+  | CloudfrontLatencySLO
+  | ElasticSearchAvailabilitySLO
+  | ElasticSearchLatencySLO;
 
 /**
  * Defines a configuration for alerting on burn rates within a window

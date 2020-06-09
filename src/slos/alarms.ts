@@ -5,12 +5,16 @@ import { ApiAvailabilityMetric } from './api-availability-metric';
 import { ApiLatencyMetric } from './api-latency-metric';
 import { CloudfrontAvailabilityMetric } from './cloudfront-availability-metric';
 import { CloudfrontLatencyMetric } from './cloudfront-latency-metric';
+import { ElasticSearchAvailabilityMetric } from './elasticsearch-availability-metric';
+import { ElasticSearchLatencyMetric } from './elasticsearch-latency-metric';
 import {
   AnySLO,
   ApiAvailabilitySLO,
   ApiLatencySLO,
   CloudfrontAvailabilitySLO,
   CloudfrontLatencySLO,
+  ElasticSearchAvailabilitySLO,
+  ElasticSearchLatencySLO,
   IAlertConfig,
   IMultiWindowAlert,
 } from './types';
@@ -158,6 +162,57 @@ export class SLOAlarms extends Construct {
   };
 
   /**
+   * Factory method for constructing an Alarm based on an ElasticSearchAvailabilitySLO
+   */
+  public static elasticSearchAvailabilityAlarm = (
+    sloWindow: IAlertConfig,
+    scope: Construct,
+    slo: AnySLO,
+    alarmName: string,
+  ) => {
+    const typedSlo = slo as ElasticSearchAvailabilitySLO;
+    const metric = new ElasticSearchAvailabilityMetric({
+      ...typedSlo,
+      sloWindow,
+    });
+    const sloBudget = 1 - typedSlo.sloThreshold;
+    let alarmThreshold = 1 - sloWindow.burnRateThreshold * sloBudget;
+    alarmThreshold = Math.max(0, Math.min(alarmThreshold, 1));
+    return new Alarm(scope, alarmName, {
+      metric,
+      threshold: alarmThreshold,
+      alarmName,
+      evaluationPeriods: 1,
+      datapointsToAlarm: 1,
+      comparisonOperator: ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
+    });
+  };
+
+  /**
+   * Factory method for constructing an Alarm based on an ElasticSearchLatencySLO
+   */
+  public static elasticSearchLatencyAlarm = (
+    sloWindow: IAlertConfig,
+    scope: Construct,
+    slo: AnySLO,
+    alarmName: string,
+  ) => {
+    const typedSlo = slo as ElasticSearchLatencySLO;
+    const metric = new ElasticSearchLatencyMetric({
+      ...typedSlo,
+      sloWindow,
+    });
+    return new Alarm(scope, alarmName, {
+      metric,
+      threshold: typedSlo.latencyThreshold,
+      alarmName,
+      evaluationPeriods: 1,
+      datapointsToAlarm: 1,
+      comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+    });
+  };
+
+  /**
    * Factory method for creating a composite alarm expression from the grid of alarms
    */
   public static createCompositeAlarm = (childAlarms: Alarm[][]) => {
@@ -261,6 +316,15 @@ export class SLOAlarms extends Construct {
           const cloudfrontLatencySLO = slo as CloudfrontLatencySLO;
           parentName = `${slo.title} Latency P${slo.sloThreshold * 100} >= ${cloudfrontLatencySLO.latencyThreshold}ms`;
           alarmFactory = SLOAlarms.cloudfrontLatencyAlarm;
+          break;
+        case 'ElasticSearchAvailability':
+          parentName = `${slo.title} Availability <= ${slo.sloThreshold}`;
+          alarmFactory = SLOAlarms.elasticSearchAvailabilityAlarm;
+          break;
+        case 'ElasticSearchLatency':
+          const esLatencySLO = slo as ElasticSearchLatencySLO;
+          parentName = `${slo.title} Latency P${slo.sloThreshold * 100} >= ${esLatencySLO.latencyThreshold}ms`;
+          alarmFactory = SLOAlarms.elasticSearchLatencyAlarm;
           break;
         default:
           throw new Error(`Alarms creation encountered an unknown type for slo: ${JSON.stringify(slo)}.`);

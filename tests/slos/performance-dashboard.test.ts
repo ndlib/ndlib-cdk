@@ -43,6 +43,21 @@ describe('SLOPerformanceDashboard', () => {
       },
       { type: 'ApiAvailability', apiName: 'myApiName', title: 'My API', sloThreshold: 0.99 },
       { type: 'ApiLatency', apiName: 'myApiName', title: 'My API', sloThreshold: 0.99, latencyThreshold: 2000 },
+      {
+        type: 'ElasticSearchAvailability',
+        domainName: 'domainName',
+        accountId: 'accountId',
+        title: 'My ES Domain',
+        sloThreshold: 0.99,
+      },
+      {
+        type: 'ElasticSearchLatency',
+        domainName: 'domainName',
+        accountId: 'accountId',
+        title: 'My ES Domain',
+        sloThreshold: 0.99,
+        latencyThreshold: 2000,
+      },
     ];
     const stack = new Stack();
     new SLOPerformanceDashboard(stack, 'TestAlarms', { slos });
@@ -84,7 +99,15 @@ describe('SLOPerformanceDashboard', () => {
               {
                 Ref: 'AWS::Region',
               },
-              '","metrics":[["AWS/ApiGateway","Latency","ApiName","myApiName",{"label":"Latency p99.00","period":2592000,"stat":"p99.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}}]}',
+              '","metrics":[["AWS/ApiGateway","Latency","ApiName","myApiName",{"label":"Latency p99.00","period":2592000,"stat":"p99.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}},{"type":"metric","width":6,"height":6,"x":0,"y":12,"properties":{"view":"timeSeries","title":"My ES Domain - Availability","region":"',
+              {
+                Ref: 'AWS::Region',
+              },
+              '","metrics":[[{"label":"Availability","expression":"(requests - errors)/requests"}],["AWS/ES","ElasticsearchRequests","ClientId","accountId","DomainName","domainName",{"label":"Requests","period":2592000,"stat":"Sum","visible":false,"id":"requests"}],["AWS/ES","5xx","ClientId","accountId","DomainName","domainName",{"label":"Errors","period":2592000,"stat":"Sum","visible":false,"id":"errors"}]],"annotations":{"horizontal":[{"label":"SLO","value":0.99,"fill":"below","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0.95,"max":1}}}},{"type":"metric","width":6,"height":6,"x":6,"y":12,"properties":{"view":"timeSeries","title":"My ES Domain - Latency 2000ms","region":"',
+              {
+                Ref: 'AWS::Region',
+              },
+              '","metrics":[["AWS/ES","SearchLatency","ClientId","accountId","DomainName","domainName",{"label":"Latency p99.00","period":2592000,"stat":"p99.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}}]}',
             ],
           ],
         },

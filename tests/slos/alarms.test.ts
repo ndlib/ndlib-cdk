@@ -14,6 +14,21 @@ describe('SLOAlarms', () => {
     },
     { type: 'ApiAvailability', apiName: 'myApiName', title: 'My API', sloThreshold: 0.99 },
     { type: 'ApiLatency', apiName: 'myApiName', title: 'My API', sloThreshold: 0.99, latencyThreshold: 2000 },
+    {
+      type: 'ElasticSearchAvailability',
+      domainName: 'domainName',
+      accountId: 'accountId',
+      title: 'My ES Domain',
+      sloThreshold: 0.99,
+    },
+    {
+      type: 'ElasticSearchLatency',
+      domainName: 'domainName',
+      accountId: 'accountId',
+      title: 'My ES Domain',
+      sloThreshold: 0.99,
+      latencyThreshold: 2000,
+    },
   ];
   const invalidSlos = [{ type: 'SomeUndefined', apiName: 'apiName', title: 'My Made Up SLO', sloThreshold: 0.999 }];
 

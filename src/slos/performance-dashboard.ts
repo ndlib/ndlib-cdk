@@ -4,7 +4,17 @@ import { ApiAvailabilityWidget } from './api-availability-widget';
 import { ApiLatencyWidget } from './api-latency-widget';
 import { CloudfrontAvailabilityWidget } from './cloudfront-availability-widget';
 import { CloudfrontLatencyWidget } from './cloudfront-latency-widget';
-import { AnySLO, ApiAvailabilitySLO, ApiLatencySLO, CloudfrontAvailabilitySLO, CloudfrontLatencySLO } from './types';
+import { ElasticSearchAvailabilityWidget } from './elasticsearch-availability-widget';
+import { ElasticSearchLatencyWidget } from './elasticsearch-latency-widget';
+import {
+  AnySLO,
+  ApiAvailabilitySLO,
+  ApiLatencySLO,
+  CloudfrontAvailabilitySLO,
+  CloudfrontLatencySLO,
+  ElasticSearchAvailabilitySLO,
+  ElasticSearchLatencySLO,
+} from './types';
 import { Windows } from './windows';
 
 export interface ISLOPerformanceDashboardProps extends DashboardProps {
@@ -67,6 +77,26 @@ export class SLOPerformanceDashboard extends Dashboard {
                 ...cloudfrontLatencySlo,
                 sloWindow: Windows.thirtyDays,
                 title: `${cloudfrontLatencySlo.title} - Latency ${cloudfrontLatencySlo.latencyThreshold}ms`,
+              }),
+            );
+            break;
+          case 'ElasticSearchAvailability':
+            const elasticSearchAvailabilitySlo = slo as ElasticSearchAvailabilitySLO;
+            lastRow.push(
+              new ElasticSearchAvailabilityWidget({
+                ...elasticSearchAvailabilitySlo,
+                sloWindow: Windows.thirtyDays,
+                title: `${elasticSearchAvailabilitySlo.title} - Availability`,
+              }),
+            );
+            break;
+          case 'ElasticSearchLatency':
+            const esLatencySlo = slo as ElasticSearchLatencySLO;
+            lastRow.push(
+              new ElasticSearchLatencyWidget({
+                ...esLatencySlo,
+                sloWindow: Windows.thirtyDays,
+                title: `${esLatencySlo.title} - Latency ${esLatencySlo.latencyThreshold}ms`,
               }),
             );
             break;

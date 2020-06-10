@@ -4,12 +4,16 @@ import { ApiAvailabilityWidget } from './api-availability-widget';
 import { ApiLatencyWidget } from './api-latency-widget';
 import { CloudfrontAvailabilityWidget } from './cloudfront-availability-widget';
 import { CloudfrontLatencyWidget } from './cloudfront-latency-widget';
+import { ElasticSearchAvailabilityWidget } from './elasticsearch-availability-widget';
+import { ElasticSearchLatencyWidget } from './elasticsearch-latency-widget';
 import {
   AnySLO,
   ApiAvailabilitySLO,
   ApiLatencySLO,
   CloudfrontAvailabilitySLO,
   CloudfrontLatencySLO,
+  ElasticSearchAvailabilitySLO,
+  ElasticSearchLatencySLO,
   IAlertConfig,
 } from './types';
 import { Windows } from './windows';
@@ -78,6 +82,32 @@ export class SLOAlarmsDashboard extends Dashboard {
     );
   };
 
+  // Creates an array of ElasticSearchAvailabilityWidgets for each window we are using
+  public static elasticSearchAvailabilityAlarmsRow = (windows: IAlertConfig[], slo: ElasticSearchAvailabilitySLO) => {
+    return windows.map(
+      sloWindow =>
+        new ElasticSearchAvailabilityWidget({
+          ...slo,
+          sloWindow,
+          showBurnRateThreshold: true,
+          addPeriodToTitle: true,
+        }),
+    );
+  };
+
+  // Creates an array of ElasticSearchLatencyWidgets for each window we are using
+  public static elasticSearchLatencyAlarmsRow = (windows: IAlertConfig[], slo: ElasticSearchLatencySLO) => {
+    return windows.map(
+      sloWindow =>
+        new ElasticSearchLatencyWidget({
+          ...slo,
+          sloWindow,
+          showBurnRateThreshold: true,
+          addPeriodToTitle: true,
+        }),
+    );
+  };
+
   constructor(scope: cdk.Construct, id: string, props: ISLOAlarmsDashboardProps) {
     const widgets = props.slos.reduce((result, slo) => {
       // Use standard alarm windows, plus the thirty day window, since the purpose of this dash is to see
@@ -95,6 +125,14 @@ export class SLOAlarmsDashboard extends Dashboard {
           break;
         case 'CloudfrontLatency':
           result.push(SLOAlarmsDashboard.cloudfrontLatencyAlarmsRow(windows, slo as CloudfrontLatencySLO));
+          break;
+        case 'ElasticSearchAvailability':
+          result.push(
+            SLOAlarmsDashboard.elasticSearchAvailabilityAlarmsRow(windows, slo as ElasticSearchAvailabilitySLO),
+          );
+          break;
+        case 'ElasticSearchLatency':
+          result.push(SLOAlarmsDashboard.elasticSearchLatencyAlarmsRow(windows, slo as ElasticSearchLatencySLO));
           break;
         default:
           throw new Error(`AlarmsDashboard creation encountered an unknown type for slo: ${JSON.stringify(slo)}.`);

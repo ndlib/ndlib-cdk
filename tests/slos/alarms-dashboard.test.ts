@@ -232,3 +232,98 @@ describe('SLOAlarmsDashboard', () => {
     });
   });
 });
+
+describe('ElasticSearchAvailability', () => {
+  const slos = [
+    {
+      type: 'ElasticSearchAvailability',
+      domainName: 'domainName',
+      accountId: 'accountId',
+      title: 'My ES Domain',
+      sloThreshold: 0.99,
+    },
+  ];
+
+  it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
+    const stack = new Stack();
+    new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
+
+    cdkExpect(stack).to(
+      haveResourceLike('AWS::CloudWatch::Dashboard', {
+        DashboardBody: {
+          'Fn::Join': [
+            '',
+            [
+              '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My ES Domain - 60 minutes","region":"',
+              {
+                Ref: 'AWS::Region',
+              },
+              '","metrics":[[{"label":"Availability","expression":"(requests - errors)/requests"}],["AWS/ES","ElasticsearchRequests","ClientId","accountId","DomainName","domainName",{"label":"Requests","period":3600,"stat":"Sum","visible":false,"id":"requests"}],["AWS/ES","5xx","ClientId","accountId","DomainName","domainName",{"label":"Errors","period":3600,"stat":"Sum","visible":false,"id":"errors"}]],"annotations":{"horizontal":[{"label":"2% of Budget in 60 minutes","value":0.856,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.8271999999999998,"max":1}}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"My ES Domain - 6 hours","region":"',
+              {
+                Ref: 'AWS::Region',
+              },
+              '","metrics":[[{"label":"Availability","expression":"(requests - errors)/requests"}],["AWS/ES","ElasticsearchRequests","ClientId","accountId","DomainName","domainName",{"label":"Requests","period":21600,"stat":"Sum","visible":false,"id":"requests"}],["AWS/ES","5xx","ClientId","accountId","DomainName","domainName",{"label":"Errors","period":21600,"stat":"Sum","visible":false,"id":"errors"}]],"annotations":{"horizontal":[{"label":"5% of Budget in 6 hours","value":0.94,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9279999999999999,"max":1}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My ES Domain - 1 day","region":"',
+              {
+                Ref: 'AWS::Region',
+              },
+              '","metrics":[[{"label":"Availability","expression":"(requests - errors)/requests"}],["AWS/ES","ElasticsearchRequests","ClientId","accountId","DomainName","domainName",{"label":"Requests","period":86400,"stat":"Sum","visible":false,"id":"requests"}],["AWS/ES","5xx","ClientId","accountId","DomainName","domainName",{"label":"Errors","period":86400,"stat":"Sum","visible":false,"id":"errors"}]],"annotations":{"horizontal":[{"label":"10% of Budget in 1 day","value":0.99,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.988,"max":1}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My ES Domain - 30 days","region":"',
+              {
+                Ref: 'AWS::Region',
+              },
+              '","metrics":[[{"label":"Availability","expression":"(requests - errors)/requests"}],["AWS/ES","ElasticsearchRequests","ClientId","accountId","DomainName","domainName",{"label":"Requests","period":2592000,"stat":"Sum","visible":false,"id":"requests"}],["AWS/ES","5xx","ClientId","accountId","DomainName","domainName",{"label":"Errors","period":2592000,"stat":"Sum","visible":false,"id":"errors"}]],"annotations":{"horizontal":[{"label":"100% of Budget in 30 days","value":0.99,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.988,"max":1}}}}]}',
+            ],
+          ],
+        },
+        DashboardName: 'TestAlarmsDashboard',
+      }),
+    );
+  });
+});
+
+describe('ElasticSearchLatency', () => {
+  const slos = [
+    {
+      type: 'ElasticSearchLatency',
+      domainName: 'domainName',
+      accountId: 'accountId',
+      title: 'My ES Domain',
+      sloThreshold: 0.99,
+      latencyThreshold: 2000,
+    },
+  ];
+
+  it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
+    const stack = new Stack();
+    new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
+
+    cdkExpect(stack).to(
+      haveResourceLike('AWS::CloudWatch::Dashboard', {
+        DashboardBody: {
+          'Fn::Join': [
+            '',
+            [
+              '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My ES Domain - 60 minutes","region":"',
+              {
+                Ref: 'AWS::Region',
+              },
+              '","metrics":[["AWS/ES","SearchLatency","ClientId","accountId","DomainName","domainName",{"label":"Latency p85.60","period":3600,"stat":"p85.60"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"My ES Domain - 6 hours","region":"',
+              {
+                Ref: 'AWS::Region',
+              },
+              '","metrics":[["AWS/ES","SearchLatency","ClientId","accountId","DomainName","domainName",{"label":"Latency p94.00","period":21600,"stat":"p94.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My ES Domain - 1 day","region":"',
+              {
+                Ref: 'AWS::Region',
+              },
+              '","metrics":[["AWS/ES","SearchLatency","ClientId","accountId","DomainName","domainName",{"label":"Latency p99.00","period":86400,"stat":"p99.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My ES Domain - 30 days","region":"',
+              {
+                Ref: 'AWS::Region',
+              },
+              '","metrics":[["AWS/ES","SearchLatency","ClientId","accountId","DomainName","domainName",{"label":"Latency p99.00","period":2592000,"stat":"p99.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}}]}',
+            ],
+          ],
+        },
+        DashboardName: 'TestAlarmsDashboard',
+      }),
+    );
+  });
+});

@@ -143,6 +143,21 @@ const slos = [
     sloThreshold: 0.95,
     latencyThreshold: 2000,
   },
+  {
+    type: 'ElasticSearchAvailability',
+    domainName: 'myes-prod',
+    accountId: '1234567890',
+    title: 'Search API',
+    sloThreshold: 0.99999,
+  },
+  {
+    type: 'ElasticSearchLatency',
+    domainName: 'myes-prod',
+    accountId: '1234567890',
+    title: 'Search API',
+    sloThreshold: 0.99,
+    latencyThreshold: 100,
+  },
 ];
 const stack = new cdk.Stack();
 

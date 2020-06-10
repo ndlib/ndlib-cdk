@@ -47,7 +47,9 @@
     "tsc-watch": "^3.0.2",
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.7.3",
+    "typescript": "^3.7.3"
+  },
+  "dependencies": {
     "@aws-cdk/aws-cloudformation": "^1.38.0",
     "@aws-cdk/aws-codepipeline": "^1.38.0",
     "@aws-cdk/aws-elasticloadbalancingv2": "^1.38.0",

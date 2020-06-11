@@ -10,10 +10,11 @@
     "build": "tsc",
     "format": "tslint --fix -p tsconfig.json && prettier --write \"@(src|tests)/**/*.@(ts|js|json|md|yml)\" \"*.@(ts|js|json|md|yml)\"",
     "lint": "tslint -p tsconfig.json && prettier --check \"@(src|tests)/**/*.@(ts|js|json|md|yml)\" \"*.@(ts|js|json|md|yml)\"",
+    "generate-changelog": "github-changes -n ${npm_package_version} -o ndlib -r ndlib-cdk --only-pulls --use-commit-body",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
-    "preversion": "npm run lint",
-    "version": "npm run format && git checkout -B bump-$npm_package_version && git add -A src",
+    "preversion": "npm test && npm run lint",
+    "version": "npm run generate-changelog && npm run format && git add CHANGELOG.md && git checkout -B bump-$npm_package_version && git add -A src",
     "postversion": "git push --set-upstream origin bump-$npm_package_version && git push --tags",
     "watch": "tsc-watch --onSuccess \"npm run test\""
   },
@@ -44,17 +45,18 @@
     "tsc-watch": "^3.0.2",
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.7.3"
+    "typescript": "^3.7.3",
+    "github-changes": "^1.1.2"
   },
   "files": [
     "lib/**/*"
   ],
   "dependencies": {
     "@aws-cdk/aws-cloudformation": "^1.45.0",
+    "@aws-cdk/aws-cloudwatch": "^1.45.0",
     "@aws-cdk/aws-codepipeline": "^1.45.0",
     "@aws-cdk/aws-elasticloadbalancingv2": "^1.45.0",
     "@aws-cdk/aws-events-targets": "^1.45.0",
-    "@aws-cdk/aws-cloudwatch": "^1.45.0",
     "@aws-cdk/aws-sns": "^1.45.0",
     "@aws-cdk/core": "^1.45.0"
   }

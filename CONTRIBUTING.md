@@ -38,17 +38,16 @@ npm run format
 
 1. Bump the version, ex:
 
-```shell
-npm version patch
-```
+   ```shell
+   npm version [major | minor | patch]
+   ```
 
-This will create a tag for the new version and create/push a branch named 'bump-\<new-version\>'.
+   This will update the CHANGELOG, create a tag for the new version, and create/push a branch named 'bump-\<new-version\>'.
 
-1. Update the CHANGELOG.md with changes since last version and push
 1. Create a PR for this change.
 1. Once merged, publish the version to npm:
 
-```shell
-git checkout v1.0.1
-npm publish --access public
-```
+   ```shell
+   git checkout <new-version>
+   npm publish --access public
+   ```

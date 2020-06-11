@@ -1,61 +1,59 @@
-# Changelog
+## Change Log
 
-## [1.3.1](https://github.com/ndlib/ndlib-cdk/compare/v1.3.0...v1.3.1) (2020-06-05)
+### 1.3.1 (2020/06/11 14:04 +00:00)
 
-### Bug Fixes
+- [#34](https://github.com/ndlib/ndlib-cdk/pull/34) Add ElasticSearch SLOs (@jgondron)
+- [#33](https://github.com/ndlib/ndlib-cdk/pull/33) Bump 1.3.1 (@jgondron)
 
-- Fixed an issue with scaling of Availability widgets for SLOs with a high number of 9s. ([#32](https://github.com/ndlib/ndlib-cdk/pull/32))
+### v1.3.1 (2020/06/05 15:57 +00:00)
 
-## [1.3.0](https://github.com/ndlib/ndlib-cdk/compare/v1.2.2...v1.3.0) (2020-05-28)
+- [#32](https://github.com/ndlib/ndlib-cdk/pull/32) Fix Y scale for availability widgets (@jgondron)
+- [#31](https://github.com/ndlib/ndlib-cdk/pull/31) Bump 1.3.0 (@jgondron)
 
-### Features
+### v1.3.0 (2020/05/28 12:42 +00:00)
 
-- Added Service Level Objective Alarms and Dashboards. ([#27](https://github.com/ndlib/ndlib-cdk/pull/27),[#28](https://github.com/ndlib/ndlib-cdk/pull/28),[#29](https://github.com/ndlib/ndlib-cdk/pull/29))
+- [#29](https://github.com/ndlib/ndlib-cdk/pull/29) Fix dashboard time range (@jgondron)
+- [#28](https://github.com/ndlib/ndlib-cdk/pull/28) Change SLOs to observe multi-window, multi-burn rates for alerts (@jgondron)
+- [#27](https://github.com/ndlib/ndlib-cdk/pull/27) Adding Service Level Objective constructs (@jgondron)
+- [#26](https://github.com/ndlib/ndlib-cdk/pull/26) Bump acorn from 5.7.3 to 5.7.4 (@dependabot[bot])
+- [#25](https://github.com/ndlib/ndlib-cdk/pull/25) Update CODEOWNERS (@jeremyf)
+- [#24](https://github.com/ndlib/ndlib-cdk/pull/24) Bump 1.2.2 (@mlkirkpatrick)
 
-## [1.2.2](https://github.com/ndlib/ndlib-cdk/compare/v1.2.1...v1.2.2) (2020-01-09)
+### v1.2.2 (2020/01/09 13:48 +00:00)
 
-### Features
+- [#23](https://github.com/ndlib/ndlib-cdk/pull/23) Cdk update 1.20.0 (@mlkirkpatrick)
+- [#22](https://github.com/ndlib/ndlib-cdk/pull/22) Release v1.2.1 (@mlkirkpatrick)
 
-- Update AWS CDK to v1.20.0. ([#23](https://github.com/ndlib/ndlib-cdk/pull/23))
+### v1.2.1 (2020/01/08 20:06 +00:00)
 
-## [1.2.1](https://github.com/ndlib/ndlib-cdk/compare/v1.2.0...v1.2.1) (2020-01-08)
+- [#21](https://github.com/ndlib/ndlib-cdk/pull/21) Fix an issue with applying tags on a NestedStack construct. (@mlkirkpatrick)
+- [#20](https://github.com/ndlib/ndlib-cdk/pull/20) add CODEOWNERS for PR Review (@ialford)
+- [#18](https://github.com/ndlib/ndlib-cdk/pull/18) Bump 1.2.0 (@jgondron)
 
-### Bug Fixes
+### v1.2.0 (2019/12/10 15:03 +00:00)
 
-- Fix issue with applying StackTags to nested stacks ([#21](https://github.com/ndlib/ndlib-cdk/pull/21))
+- [#17](https://github.com/ndlib/ndlib-cdk/pull/17) Update packages (@jgondron)
+- [#16](https://github.com/ndlib/ndlib-cdk/pull/16) Add Slack Approvals (@jgondron)
+- [#14](https://github.com/ndlib/ndlib-cdk/pull/14) Bump 1.1.0 (@jgondron)
 
-## [1.2.0](https://github.com/ndlib/ndlib-cdk/compare/v1.1.0...v1.2.0) (2019-12-10)
+### v1.1.0 (2019/11/12 18:23 +00:00)
 
-### Features
+- [#13](https://github.com/ndlib/ndlib-cdk/pull/13) Fix merge issue (@jgondron)
+- [#8](https://github.com/ndlib/ndlib-cdk/pull/8) Archival bucket constructs (@jgondron, @ialford)
+- [#12](https://github.com/ndlib/ndlib-cdk/pull/12) Add pipeline email notifications (@jgondron)
+- [#7](https://github.com/ndlib/ndlib-cdk/pull/7) Fix prettier (@jgondron)
+- [#6](https://github.com/ndlib/ndlib-cdk/pull/6) Bump 1.0.3 (@jgondron)
 
-- Added integration with our Slack approval bot ([#16](https://github.com/ndlib/ndlib-cdk/pull/16)), closes [#15](https://github.com/ndlib/ndlib-cdk/issues/15)
+### v1.0.3 (2019/09/30 20:20 +00:00)
 
-## [1.1.0](https://github.com/ndlib/ndlib-cdk/compare/v1.0.3...v1.1.0) (2019-11-11)
+- [#5](https://github.com/ndlib/ndlib-cdk/pull/5) Add HTTPS ALB (@jgondron)
+- [#4](https://github.com/ndlib/ndlib-cdk/pull/4) Bump version 1.0.2 (@jgondron)
 
-### Bug Fixes
+### v1.0.2 (2019/09/23 19:44 +00:00)
 
-- Fix prettier ([#7](https://github.com/ndlib/ndlib-cdk/pull/7))
+- [#3](https://github.com/ndlib/ndlib-cdk/pull/3) Fix publishing issues (@jgondron)
+- [#2](https://github.com/ndlib/ndlib-cdk/pull/2) Patch version (@jgondron)
 
-### Features
+### v1.0.1 (2019/09/23 17:54 +00:00)
 
-- Add CodePipeline email notifications ([#12](https://github.com/ndlib/ndlib-cdk/pull/12)), closes [#9](https://github.com/ndlib/ndlib-cdk/issues/9)
-- Add Archival bucket constructs ([#8](https://github.com/ndlib/ndlib-cdk/pull/8))
-- Add HTTPS ALB ([#5](https://github.com/ndlib/ndlib-cdk/pull/5))
-
-## [1.0.3](https://github.com/ndlib/ndlib-cdk/compare/v1.0.2...v1.0.3) (2019-09-23)
-
-### Bug Fixes
-
-- Move npm package to @ndlib organization ([b20699](https://github.com/ndlib/ndlib-cdk/commit/b20699374a22b2424bfce961359034a635a05df7))
-
-## [1.0.2](https://github.com/ndlib/ndlib-cdk/compare/v1.0.1...v1.0.2) (2019-09-23)
-
-### Bug Fixes
-
-- Fix publishing issues ([#3](https://github.com/ndlib/ndlib-cdk/pull/3))
-
-## [1.0.1](https://github.com/ndlib/ndlib-cdk/compare/feb80590339abc48a582502704cd4ee108e2041c...v1.0.1) (2019-09-23)
-
-### Features
-
-- Add StackTags Aspect ([#1](https://github.com/ndlib/ndlib-cdk/pull/1))
+- [#1](https://github.com/ndlib/ndlib-cdk/pull/1) Add StackTags Aspect (@jgondron)

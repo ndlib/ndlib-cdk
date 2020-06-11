@@ -1,7 +1,8 @@
 ## Change Log
 
-### 1.3.1 (2020/06/11 14:04 +00:00)
+### 1.4.0 (2020/06/11 15:24 +00:00)
 
+- [#35](https://github.com/ndlib/ndlib-cdk/pull/35) Update version workflow (@jgondron)
 - [#34](https://github.com/ndlib/ndlib-cdk/pull/34) Add ElasticSearch SLOs (@jgondron)
 - [#33](https://github.com/ndlib/ndlib-cdk/pull/33) Bump 1.3.1 (@jgondron)
 

@@ -8,14 +8,14 @@ test('Artifact Bucket is not publicly accessible', () => {
   const bucket = new ArtifactBucket(stack, 'Bucket', {});
   expect(stack).to(
     haveResource('AWS::S3::Bucket', {
-        PublicAccessBlockConfiguration: {
+      PublicAccessBlockConfiguration: {
         BlockPublicAcls: true,
         BlockPublicPolicy: true,
         IgnorePublicAcls: true,
         RestrictPublicBuckets: true,
-        },
-          }
-  )) 
+      },
+    }),
+  );
 });
 
 test('Artifact Bucket cannot be accessed via non-secure methods', () => {
@@ -23,32 +23,32 @@ test('Artifact Bucket cannot be accessed via non-secure methods', () => {
   const bucket = new ArtifactBucket(stack, 'Bucket', {});
   expect(stack).to(
     haveResourceLike('AWS::S3::BucketPolicy', {
-      "PolicyDocument": {
-        "Statement": [
-          { "Action": "s3:*",
-            "Condition": {
-              "Bool": { "aws:SecureTransport": false }
+      PolicyDocument: {
+        Statement: [
+          {
+            Action: 's3:*',
+            Condition: {
+              Bool: { 'aws:SecureTransport': false },
             },
-            "Effect": "Deny",
-            "Principal": "*",
-            "Resource": {
-              "Fn::Join": [
-                "",
-                [ {
-                    "Fn::GetAtt": [
-                      "Bucket83908E77",
-                      "Arn"
-                    ] },
-                  "*"
-                ]
-              ]
-            }
-          }
-        ]
-      }
-    })
-  )}
-);
+            Effect: 'Deny',
+            Principal: '*',
+            Resource: {
+              'Fn::Join': [
+                '',
+                [
+                  {
+                    'Fn::GetAtt': ['Bucket83908E77', 'Arn'],
+                  },
+                  '*',
+                ],
+              ],
+            },
+          },
+        ],
+      },
+    }),
+  );
+});
 
 // test('Glacier S3 Bucket is not publicly accessible', () => {
 //   const stack = new Stack();

@@ -186,3 +186,17 @@ const alarms = new SLOAlarms(stack, 'Alarms', {
   }#dashboards:name=${alarmsDashboardName}`,
 });
 ```
+
+## Artifact S3 Bucket
+
+Creates an S3 Bucket with no public access and requires secure transport to take any action. This is a common construct across many applications, where a build process requires a place to store its output.
+
+The following example will create a standard artifact bucket:
+
+```typescript
+import cdk = require('@aws-cdk/core');
+import { ArtifactBucket } from '@ndlib/ndlib-cdk';
+
+const stack = new cdk.Stack();
+const bucket = new ArtifactBucket(stack, 'Bucket');
+```

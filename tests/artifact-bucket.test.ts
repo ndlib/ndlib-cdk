@@ -39,7 +39,7 @@ test('Artifact Bucket cannot be accessed via non-secure methods', () => {
                   {
                     'Fn::GetAtt': ['Bucket83908E77', 'Arn'],
                   },
-                  '*',
+                  '/*',
                 ],
               ],
             },

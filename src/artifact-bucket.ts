@@ -28,7 +28,7 @@ export class ArtifactBucket extends s3.Bucket {
         conditions: {
           Bool: { 'aws:SecureTransport': false },
         },
-        resources: [this.bucketArn + '*'],
+        resources: [this.bucketArn + '/*'],
       }),
     );
   }

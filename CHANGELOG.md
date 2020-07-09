@@ -1,6 +1,11 @@
 ## Change Log
 
-### 1.4.0 (2020/06/11 15:24 +00:00)
+### 1.5.0 (2020/07/08 18:20 +00:00)
+
+- [#37](https://github.com/ndlib/ndlib-cdk/pull/37) Add artifact bucket (@ialford)
+- [#36](https://github.com/ndlib/ndlib-cdk/pull/36) Bump 1.4.0 (@jgondron)
+
+### v1.4.0 (2020/06/11 15:24 +00:00)
 
 - [#35](https://github.com/ndlib/ndlib-cdk/pull/35) Update version workflow (@jgondron)
 - [#34](https://github.com/ndlib/ndlib-cdk/pull/34) Add ElasticSearch SLOs (@jgondron)

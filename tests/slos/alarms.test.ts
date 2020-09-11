@@ -29,6 +29,22 @@ describe('SLOAlarms', () => {
       sloThreshold: 0.99,
       latencyThreshold: 2000,
     },
+    {
+      type: 'CustomAvailability',
+      namespace: 'CustomNamespace',
+      errorsMetricName: 'CustomErrorCountMetric',
+      countsMetricName: 'CustomRequestCountMetric',
+      title: 'My Custom Availability',
+      sloThreshold: 0.99,
+    },
+    {
+      type: 'CustomLatency',
+      namespace: 'CustomNamespace',
+      latencyMetricName: 'CustomLatencyMetric',
+      title: 'My Custom Latency',
+      sloThreshold: 0.99,
+      latencyThreshold: 2000,
+    },
   ];
   const invalidSlos = [{ type: 'SomeUndefined', apiName: 'apiName', title: 'My Made Up SLO', sloThreshold: 0.999 }];
 

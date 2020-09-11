@@ -4,6 +4,8 @@ import { ApiAvailabilityWidget } from './api-availability-widget';
 import { ApiLatencyWidget } from './api-latency-widget';
 import { CloudfrontAvailabilityWidget } from './cloudfront-availability-widget';
 import { CloudfrontLatencyWidget } from './cloudfront-latency-widget';
+import { CustomAvailabilityWidget } from './custom-availability-widget';
+import { CustomLatencyWidget } from './custom-latency-widget';
 import { ElasticSearchAvailabilityWidget } from './elasticsearch-availability-widget';
 import { ElasticSearchLatencyWidget } from './elasticsearch-latency-widget';
 import {
@@ -12,6 +14,8 @@ import {
   ApiLatencySLO,
   CloudfrontAvailabilitySLO,
   CloudfrontLatencySLO,
+  CustomAvailabilitySLO,
+  CustomLatencySLO,
   ElasticSearchAvailabilitySLO,
   ElasticSearchLatencySLO,
 } from './types';
@@ -77,6 +81,26 @@ export class SLOPerformanceDashboard extends Dashboard {
                 ...cloudfrontLatencySlo,
                 sloWindow: Windows.thirtyDays,
                 title: `${cloudfrontLatencySlo.title} - Latency ${cloudfrontLatencySlo.latencyThreshold}ms`,
+              }),
+            );
+            break;
+          case 'CustomAvailability':
+            const customAvailabilitySlo = slo as CustomAvailabilitySLO;
+            lastRow.push(
+              new CustomAvailabilityWidget({
+                ...customAvailabilitySlo,
+                sloWindow: Windows.thirtyDays,
+                title: `${customAvailabilitySlo.title} - Availability`,
+              }),
+            );
+            break;
+          case 'CustomLatency':
+            const customLatencySlo = slo as CustomLatencySLO;
+            lastRow.push(
+              new CustomLatencyWidget({
+                ...customLatencySlo,
+                sloWindow: Windows.thirtyDays,
+                title: `${customLatencySlo.title} - Latency ${customLatencySlo.latencyThreshold}ms`,
               }),
             );
             break;

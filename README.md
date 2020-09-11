@@ -166,6 +166,22 @@ const slos = [
     sloThreshold: 0.99,
     latencyThreshold: 100,
   },
+  {
+    type: 'CustomAvailability',
+    namespace: 'CustomNamespace',
+    errorsMetricName: 'CustomErrorCountMetric',
+    countsMetricName: 'CustomRequestCountMetric',
+    title: 'My Custom Availability',
+    sloThreshold: 0.99,
+  },
+  {
+    type: 'CustomLatency',
+    namespace: 'CustomNamespace',
+    latencyMetricName: 'CustomLatencyMetric',
+    title: 'My Custom Latency',
+    sloThreshold: 0.99,
+    latencyThreshold: 2000,
+  },
 ];
 const stack = new cdk.Stack();
 

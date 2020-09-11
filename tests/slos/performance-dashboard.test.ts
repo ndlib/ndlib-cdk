@@ -1,6 +1,7 @@
-import { expect as cdkExpect, haveResourceLike } from '@aws-cdk/assert';
+import { Capture, expect as cdkExpect, haveResourceLike } from '@aws-cdk/assert';
 import { SLOPerformanceDashboard } from '../../src/slos/performance-dashboard';
 import { Stack } from '@aws-cdk/core';
+import { collapseJoin } from './helpers';
 
 describe('SLOPerformanceDashboard', () => {
   it('throws an excpetion if theres an unknown type', () => {
@@ -60,57 +61,32 @@ describe('SLOPerformanceDashboard', () => {
       },
     ];
     const stack = new Stack();
-    new SLOPerformanceDashboard(stack, 'TestAlarms', { slos });
+    new SLOPerformanceDashboard(stack, 'TestPerformanceDashboard', { slos, dashboardName: 'TestPerformanceDashboard' });
+    const dashBody = Capture.anyType();
     cdkExpect(stack).to(
       haveResourceLike('AWS::CloudWatch::Dashboard', {
-        DashboardBody: {
-          'Fn::Join': [
-            '',
-            [
-              '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - Availability","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":2592000,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"SLO","value":0.999,"fill":"below","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0.995,"max":1}}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - Latency 200ms","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[["AWS/CloudFront","OriginLatency","DistributionId","myDistributionId","Region","Global",{"label":"Latency p95.00","period":2592000,"stat":"p95.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":200,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":280}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My API - Availability","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[[{"label":"Availability","expression":"(gatewayRequests - gatewayErrors)/gatewayRequests"}],["AWS/ApiGateway","Count","ApiName","myApiName",{"label":"Requests","period":2592000,"stat":"Sum","visible":false,"id":"gatewayRequests"}],["AWS/ApiGateway","5XXError","ApiName","myApiName",{"label":"Error rate","period":2592000,"stat":"Sum","visible":false,"id":"gatewayErrors"}]],"annotations":{"horizontal":[{"label":"SLO","value":0.99,"fill":"below","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0.95,"max":1}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My API - Latency 2000ms","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[["AWS/ApiGateway","Latency","ApiName","myApiName",{"label":"Latency p99.00","period":2592000,"stat":"p99.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}},{"type":"metric","width":6,"height":6,"x":0,"y":6,"properties":{"view":"timeSeries","title":"My Cloudfront - Availability","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":2592000,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"SLO","value":0.999,"fill":"below","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0.995,"max":1}}}},{"type":"metric","width":6,"height":6,"x":6,"y":6,"properties":{"view":"timeSeries","title":"My Cloudfront - Latency 200ms","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[["AWS/CloudFront","OriginLatency","DistributionId","myDistributionId","Region","Global",{"label":"Latency p95.00","period":2592000,"stat":"p95.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":200,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":280}}}},{"type":"metric","width":6,"height":6,"x":12,"y":6,"properties":{"view":"timeSeries","title":"My API - Availability","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[[{"label":"Availability","expression":"(gatewayRequests - gatewayErrors)/gatewayRequests"}],["AWS/ApiGateway","Count","ApiName","myApiName",{"label":"Requests","period":2592000,"stat":"Sum","visible":false,"id":"gatewayRequests"}],["AWS/ApiGateway","5XXError","ApiName","myApiName",{"label":"Error rate","period":2592000,"stat":"Sum","visible":false,"id":"gatewayErrors"}]],"annotations":{"horizontal":[{"label":"SLO","value":0.99,"fill":"below","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0.95,"max":1}}}},{"type":"metric","width":6,"height":6,"x":18,"y":6,"properties":{"view":"timeSeries","title":"My API - Latency 2000ms","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[["AWS/ApiGateway","Latency","ApiName","myApiName",{"label":"Latency p99.00","period":2592000,"stat":"p99.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}},{"type":"metric","width":6,"height":6,"x":0,"y":12,"properties":{"view":"timeSeries","title":"My ES Domain - Availability","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[[{"label":"Availability","expression":"(m2xx + m3xx + m4xx)/(m2xx + m3xx + m4xx + m5xx)"}],["AWS/ES","2xx","ClientId","accountId","DomainName","domainName",{"label":"2xx","period":2592000,"stat":"Sum","visible":false,"id":"m2xx"}],["AWS/ES","3xx","ClientId","accountId","DomainName","domainName",{"label":"3xx","period":2592000,"stat":"Sum","visible":false,"id":"m3xx"}],["AWS/ES","4xx","ClientId","accountId","DomainName","domainName",{"label":"4xx","period":2592000,"stat":"Sum","visible":false,"id":"m4xx"}],["AWS/ES","5xx","ClientId","accountId","DomainName","domainName",{"label":"5xx","period":2592000,"stat":"Sum","visible":false,"id":"m5xx"}]],"annotations":{"horizontal":[{"label":"SLO","value":0.99,"fill":"below","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0.95,"max":1}}}},{"type":"metric","width":6,"height":6,"x":6,"y":12,"properties":{"view":"timeSeries","title":"My ES Domain - Latency 2000ms","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[["AWS/ES","SearchLatency","ClientId","accountId","DomainName","domainName",{"label":"Latency p99.00","period":2592000,"stat":"p99.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}}]}',
-            ],
-          ],
-        },
+        DashboardBody: dashBody.capture(),
+        DashboardName: 'TestPerformanceDashboard',
+      }),
+    );
+    const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+    const rowOneWidget = expect.objectContaining({ y: 0, height: 6 });
+    const rowTwoWidget = expect.objectContaining({ y: 6, height: 6 });
+    const rowThreeWidget = expect.objectContaining({ y: 12, height: 6 });
+    expect(dashObj).toEqual(
+      expect.objectContaining({
+        widgets: [
+          rowOneWidget,
+          rowOneWidget,
+          rowOneWidget,
+          rowOneWidget,
+          rowTwoWidget,
+          rowTwoWidget,
+          rowTwoWidget,
+          rowTwoWidget,
+          rowThreeWidget,
+          rowThreeWidget,
+        ],
       }),
     );
   });
@@ -130,22 +106,17 @@ describe('SLOPerformanceDashboard', () => {
       dashboardName: 'TestPerformanceDashboard',
       start: '-P1234D',
     });
-
+    const dashBody = Capture.anyType();
     cdkExpect(stack).to(
       haveResourceLike('AWS::CloudWatch::Dashboard', {
-        DashboardBody: {
-          'Fn::Join': [
-            '',
-            [
-              '{"start":"-P1234D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - Availability","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":2592000,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"SLO","value":0.999,"fill":"below","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0.995,"max":1}}}}]}',
-            ],
-          ],
-        },
+        DashboardBody: dashBody.capture(),
         DashboardName: 'TestPerformanceDashboard',
+      }),
+    );
+    const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+    expect(dashObj).toEqual(
+      expect.objectContaining({
+        start: '-P1234D',
       }),
     );
   });
@@ -167,21 +138,35 @@ describe('SLOPerformanceDashboard', () => {
         dashboardName: 'TestPerformanceDashboard',
       });
 
+      const dashBody = Capture.anyType();
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::Dashboard', {
-          DashboardBody: {
-            'Fn::Join': [
-              '',
-              [
-                '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - Availability","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":2592000,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"SLO","value":0.999,"fill":"below","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0.995,"max":1}}}}]}',
-              ],
-            ],
-          },
+          DashboardBody: dashBody.capture(),
           DashboardName: 'TestPerformanceDashboard',
+        }),
+      );
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      expect(dashObj).toEqual(
+        expect.objectContaining({
+          widgets: expect.arrayContaining([
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: `My Cloudfront - Availability`,
+                metrics: [
+                  [{ label: 'Availability', expression: '1-(errorRate/100)' }],
+                  [
+                    'AWS/CloudFront',
+                    '5xxErrorRate',
+                    'DistributionId',
+                    'myDistributionId',
+                    'Region',
+                    'Global',
+                    { label: 'Error rate', period: 2592000, visible: false, id: 'errorRate' },
+                  ],
+                ],
+              }),
+            }),
+          ]),
         }),
       );
     });
@@ -205,21 +190,34 @@ describe('SLOPerformanceDashboard', () => {
         dashboardName: 'TestPerformanceDashboard',
       });
 
+      const dashBody = Capture.anyType();
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::Dashboard', {
-          DashboardBody: {
-            'Fn::Join': [
-              '',
-              [
-                '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - Latency 200ms","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[["AWS/CloudFront","OriginLatency","DistributionId","myDistributionId","Region","Global",{"label":"Latency p95.00","period":2592000,"stat":"p95.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":200,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":280}}}}]}',
-              ],
-            ],
-          },
+          DashboardBody: dashBody.capture(),
           DashboardName: 'TestPerformanceDashboard',
+        }),
+      );
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      expect(dashObj).toEqual(
+        expect.objectContaining({
+          widgets: expect.arrayContaining([
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: `My Cloudfront - Latency 200ms`,
+                metrics: [
+                  [
+                    'AWS/CloudFront',
+                    'OriginLatency',
+                    'DistributionId',
+                    'myDistributionId',
+                    'Region',
+                    'Global',
+                    { label: 'Latency p95.00', period: 2592000, stat: 'p95.00' },
+                  ],
+                ],
+              }),
+            }),
+          ]),
         }),
       );
     });
@@ -235,21 +233,40 @@ describe('SLOPerformanceDashboard', () => {
         dashboardName: 'TestPerformanceDashboard',
       });
 
+      const dashBody = Capture.anyType();
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::Dashboard', {
-          DashboardBody: {
-            'Fn::Join': [
-              '',
-              [
-                '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My API - Availability","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[[{"label":"Availability","expression":"(gatewayRequests - gatewayErrors)/gatewayRequests"}],["AWS/ApiGateway","Count","ApiName","myApiName",{"label":"Requests","period":2592000,"stat":"Sum","visible":false,"id":"gatewayRequests"}],["AWS/ApiGateway","5XXError","ApiName","myApiName",{"label":"Error rate","period":2592000,"stat":"Sum","visible":false,"id":"gatewayErrors"}]],"annotations":{"horizontal":[{"label":"SLO","value":0.99,"fill":"below","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0.95,"max":1}}}}]}',
-              ],
-            ],
-          },
+          DashboardBody: dashBody.capture(),
           DashboardName: 'TestPerformanceDashboard',
+        }),
+      );
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      expect(dashObj).toEqual(
+        expect.objectContaining({
+          widgets: expect.arrayContaining([
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: `My API - Availability`,
+                metrics: [
+                  [{ label: 'Availability', expression: '(gatewayRequests - gatewayErrors)/gatewayRequests' }],
+                  [
+                    'AWS/ApiGateway',
+                    'Count',
+                    'ApiName',
+                    'myApiName',
+                    { label: 'Requests', period: 2592000, stat: 'Sum', visible: false, id: 'gatewayRequests' },
+                  ],
+                  [
+                    'AWS/ApiGateway',
+                    '5XXError',
+                    'ApiName',
+                    'myApiName',
+                    { label: 'Error rate', period: 2592000, stat: 'Sum', visible: false, id: 'gatewayErrors' },
+                  ],
+                ],
+              }),
+            }),
+          ]),
         }),
       );
     });
@@ -267,21 +284,134 @@ describe('SLOPerformanceDashboard', () => {
         dashboardName: 'TestPerformanceDashboard',
       });
 
+      const dashBody = Capture.anyType();
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::Dashboard', {
-          DashboardBody: {
-            'Fn::Join': [
-              '',
-              [
-                '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My API - Latency 2000ms","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[["AWS/ApiGateway","Latency","ApiName","myApiName",{"label":"Latency p99.00","period":2592000,"stat":"p99.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}}]}',
-              ],
-            ],
-          },
+          DashboardBody: dashBody.capture(),
           DashboardName: 'TestPerformanceDashboard',
+        }),
+      );
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      expect(dashObj).toEqual(
+        expect.objectContaining({
+          widgets: expect.arrayContaining([
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: `My API - Latency 2000ms`,
+                metrics: [
+                  [
+                    'AWS/ApiGateway',
+                    'Latency',
+                    'ApiName',
+                    'myApiName',
+                    { label: 'Latency p99.00', period: 2592000, stat: 'p99.00' },
+                  ],
+                ],
+              }),
+            }),
+          ]),
+        }),
+      );
+    });
+  });
+
+  describe('CustomAvailability', () => {
+    const slos = [
+      {
+        type: 'CustomAvailability',
+        namespace: 'CustomNamespace',
+        errorsMetricName: 'CustomErrorCountMetric',
+        countsMetricName: 'CustomRequestCountMetric',
+        title: 'My Custom Availability',
+        sloThreshold: 0.99,
+      },
+    ];
+
+    it('constructs a dashboard with a 30 day window widget', () => {
+      const stack = new Stack();
+      new SLOPerformanceDashboard(stack, 'TestPerformanceDashboard', {
+        slos,
+        dashboardName: 'TestPerformanceDashboard',
+      });
+
+      const dashBody = Capture.anyType();
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Dashboard', {
+          DashboardBody: dashBody.capture(),
+          DashboardName: 'TestPerformanceDashboard',
+        }),
+      );
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      expect(dashObj).toEqual(
+        expect.objectContaining({
+          widgets: expect.arrayContaining([
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: `My Custom Availability - Availability`,
+                metrics: [
+                  [{ label: 'Availability', expression: '(requests - errors)/requests' }],
+                  [
+                    'CustomNamespace',
+                    'CustomRequestCountMetric',
+                    { label: 'Requests', period: 2592000, stat: 'Sum', visible: false, id: 'requests' },
+                  ],
+                  [
+                    'CustomNamespace',
+                    'CustomErrorCountMetric',
+                    { label: 'Errors', period: 2592000, stat: 'Sum', visible: false, id: 'errors' },
+                  ],
+                ],
+              }),
+            }),
+          ]),
+        }),
+      );
+    });
+  });
+
+  describe('CustomLatency', () => {
+    const slos = [
+      {
+        type: 'CustomLatency',
+        namespace: 'CustomNamespace',
+        latencyMetricName: 'CustomLatencyMetric',
+        title: 'My Custom Latency',
+        sloThreshold: 0.99,
+        latencyThreshold: 2000,
+      },
+    ];
+
+    it('constructs a dashboard with a 30 day window widget', () => {
+      const stack = new Stack();
+      new SLOPerformanceDashboard(stack, 'TestPerformanceDashboard', {
+        slos,
+        dashboardName: 'TestPerformanceDashboard',
+      });
+
+      const dashBody = Capture.anyType();
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Dashboard', {
+          DashboardBody: dashBody.capture(),
+          DashboardName: 'TestPerformanceDashboard',
+        }),
+      );
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      expect(dashObj).toEqual(
+        expect.objectContaining({
+          widgets: [
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: `My Custom Latency - Latency 2000ms`,
+                metrics: expect.arrayContaining([
+                  [
+                    'CustomNamespace',
+                    'CustomLatencyMetric',
+                    { label: 'Latency p99.00', period: 2592000, stat: 'p99.00' },
+                  ],
+                ]),
+              }),
+            }),
+          ],
         }),
       );
     });

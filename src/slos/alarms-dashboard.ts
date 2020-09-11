@@ -4,6 +4,8 @@ import { ApiAvailabilityWidget } from './api-availability-widget';
 import { ApiLatencyWidget } from './api-latency-widget';
 import { CloudfrontAvailabilityWidget } from './cloudfront-availability-widget';
 import { CloudfrontLatencyWidget } from './cloudfront-latency-widget';
+import { CustomAvailabilityWidget } from './custom-availability-widget';
+import { CustomLatencyWidget } from './custom-latency-widget';
 import { ElasticSearchAvailabilityWidget } from './elasticsearch-availability-widget';
 import { ElasticSearchLatencyWidget } from './elasticsearch-latency-widget';
 import {
@@ -12,10 +14,13 @@ import {
   ApiLatencySLO,
   CloudfrontAvailabilitySLO,
   CloudfrontLatencySLO,
+  CustomAvailabilitySLO,
+  CustomLatencySLO,
   ElasticSearchAvailabilitySLO,
   ElasticSearchLatencySLO,
   IAlertConfig,
 } from './types';
+
 import { Windows } from './windows';
 
 export interface ISLOAlarmsDashboardProps extends DashboardProps {
@@ -82,6 +87,31 @@ export class SLOAlarmsDashboard extends Dashboard {
     );
   };
 
+  // Creates an array of CustomAvailabilityWidgets for each window we are using
+  public static customAvailabilityAlarmsRow = (windows: IAlertConfig[], slo: CustomAvailabilitySLO) => {
+    return windows.map(
+      sloWindow =>
+        new CustomAvailabilityWidget({
+          ...slo,
+          sloWindow,
+          showBurnRateThreshold: true,
+          addPeriodToTitle: true,
+        }),
+    );
+  };
+
+  // Creates an array of ApiLatencyWidgets for each window we are using
+  public static customLatencyAlarmsRow = (windows: IAlertConfig[], slo: CustomLatencySLO) => {
+    return windows.map(
+      sloWindow =>
+        new CustomLatencyWidget({
+          ...slo,
+          sloWindow,
+          showBurnRateThreshold: true,
+          addPeriodToTitle: true,
+        }),
+    );
+  };
   // Creates an array of ElasticSearchAvailabilityWidgets for each window we are using
   public static elasticSearchAvailabilityAlarmsRow = (windows: IAlertConfig[], slo: ElasticSearchAvailabilitySLO) => {
     return windows.map(
@@ -125,6 +155,12 @@ export class SLOAlarmsDashboard extends Dashboard {
           break;
         case 'CloudfrontLatency':
           result.push(SLOAlarmsDashboard.cloudfrontLatencyAlarmsRow(windows, slo as CloudfrontLatencySLO));
+          break;
+        case 'CustomAvailability':
+          result.push(SLOAlarmsDashboard.customAvailabilityAlarmsRow(windows, slo as CustomAvailabilitySLO));
+          break;
+        case 'CustomLatency':
+          result.push(SLOAlarmsDashboard.customLatencyAlarmsRow(windows, slo as CustomLatencySLO));
           break;
         case 'ElasticSearchAvailability':
           result.push(

@@ -1,7 +1,7 @@
 import { beASupersetOfTemplate, expect, haveResourceLike } from '@aws-cdk/assert';
 import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline';
-import { FakeBuildAction } from '@aws-cdk/aws-codepipeline/test/fake-build-action';
-import { FakeSourceAction } from '@aws-cdk/aws-codepipeline/test/fake-source-action';
+import { FakeBuildAction } from './fake-build-action';
+import { FakeSourceAction } from './fake-source-action';
 import { Stack } from '@aws-cdk/core';
 import { PipelineNotifications } from '../src/index';
 

@@ -24,32 +24,53 @@ export interface IElasticSearchAvailabilityMetricProps {
  */
 export class ElasticSearchAvailabilityMetric extends MathExpression {
   constructor(props: IElasticSearchAvailabilityMetricProps) {
-    const errors = new Metric({
-      namespace: 'AWS/ES',
-      metricName: '5xx',
-      dimensions: {
-        DomainName: props.domainName,
-        ClientId: props.accountId,
-      },
-      statistic: 'Sum',
-      label: 'Errors',
-    });
-
-    const requests = new Metric({
-      namespace: 'AWS/ES',
-      metricName: 'ElasticsearchRequests',
-      dimensions: {
-        DomainName: props.domainName,
-        ClientId: props.accountId,
-      },
-      statistic: 'Sum',
-      label: 'Requests',
-    });
+    const usingMetrics = {
+      m2xx: new Metric({
+        namespace: 'AWS/ES',
+        metricName: '2xx',
+        dimensions: {
+          DomainName: props.domainName,
+          ClientId: props.accountId,
+        },
+        statistic: 'Sum',
+        label: '2xx',
+      }),
+      m3xx: new Metric({
+        namespace: 'AWS/ES',
+        metricName: '3xx',
+        dimensions: {
+          DomainName: props.domainName,
+          ClientId: props.accountId,
+        },
+        statistic: 'Sum',
+        label: '3xx',
+      }),
+      m4xx: new Metric({
+        namespace: 'AWS/ES',
+        metricName: '4xx',
+        dimensions: {
+          DomainName: props.domainName,
+          ClientId: props.accountId,
+        },
+        statistic: 'Sum',
+        label: '4xx',
+      }),
+      m5xx: new Metric({
+        namespace: 'AWS/ES',
+        metricName: '5xx',
+        dimensions: {
+          DomainName: props.domainName,
+          ClientId: props.accountId,
+        },
+        statistic: 'Sum',
+        label: '5xx',
+      }),
+    };
 
     const myProps = {
       label: 'Availability',
-      expression: '(requests - errors)/requests',
-      usingMetrics: { requests, errors },
+      expression: '(m2xx + m3xx + m4xx)/(m2xx + m3xx + m4xx + m5xx)',
+      usingMetrics,
       period: props.sloWindow.alertWindow,
     };
 

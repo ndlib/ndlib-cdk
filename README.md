@@ -20,7 +20,7 @@ Example usage:
 import cdk = require('@aws-cdk/core');
 import { StackTags } from '@ndlib/ndlib-cdk';
 const app = new cdk.App();
-app.node.applyAspect(new StackTags());
+Aspects.of(app).add(new StackTags());
 ```
 
 ## HTTPS Application Load Balancer

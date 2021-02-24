@@ -52,7 +52,7 @@ Create a commit with the proposed changes:
     - `archive-bucket` for code related to the S3 Archival Bucket construct
     - `artifact-bucket` for code related to the S3 Bucket for CodePipeline Artifacts construct
     - `https-alb` for code related to the Application Load Balancer module
-    - `pipeline-notifications` for code related to the notification conmstruct for CodePipeline state changes
+    - `pipeline-notifications` for code related to the notification construct for CodePipeline state changes
     - `slack-approval` for code related to the CodePipeline Slack approval construct
     - `stack-tags` for code related to the creation of required tags on CDK-created resources
 

@@ -48,6 +48,7 @@ Create a commit with the proposed changes:
 - The scope should indicate which module the proposed change impacts.
 
   - Current scopes as of 2021-02-24 are:
+
     - `slo` for code related to SLOs
     - `archive-bucket` for code related to the S3 Archival Bucket construct
     - `artifact-bucket` for code related to the S3 Bucket for CodePipeline Artifacts construct
@@ -55,6 +56,8 @@ Create a commit with the proposed changes:
     - `pipeline-notifications` for code related to the notification construct for CodePipeline state changes
     - `slack-approval` for code related to the CodePipeline Slack approval construct
     - `stack-tags` for code related to the creation of required tags on CDK-created resources
+
+  - If you are proposing a new feature, please create a new scope for the propsed feature, and include it in the commit message, such as `feat(my-new-feature): title`.
 
 - Commit message should indicate which issues are fixed (if any): `fixes #<issue>` or `closes #<issue>`.
 

@@ -16,6 +16,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 14.x
+    - name: Run NPM CI
+      run: npm ci
     - name: Generate Coverage Report
       uses: paambaati/codeclimate-action@v2.7.5 #Taking recommendation from https://docs.codeclimate.com/docs/github-actions-test-coverage
       with:

@@ -1,0 +1,23 @@
+# This workflow will do a clean install of node dependencies, run tests, and report test coverage to CodeCoverage.
+name: CodeCoverage Report
+on:
+  pull_request:
+    branches: [ master ]
+jobs:
+  coverage-report:
+    env:
+      CC_TEST_REPORTER_ID: 8a2453d074f6da747259e1908df35ab1d8c8fa4c3ebacacdf43c2c464bd24abb
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v2
+    - name: Use Node.js 14.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+    - name: Run NPM CI
+      run: npm ci
+    - name: Generate Coverage Report
+      uses: paambaati/codeclimate-action@v2.7.5 #Taking recommendation from https://docs.codeclimate.com/docs/github-actions-test-coverage
+      with:
+        coverageCommand: npm run coverage

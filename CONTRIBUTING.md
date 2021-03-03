@@ -56,6 +56,7 @@ Create a commit with the proposed changes:
     - `pipeline-notifications` for code related to the notification construct for CodePipeline state changes
     - `slack-approval` for code related to the CodePipeline Slack approval construct
     - `stack-tags` for code related to the creation of required tags on CDK-created resources
+    - `docker-codebuild` for code related to the factory helper method for authenticated DockerHub pulls in CodeBuild projects
 
   - If you are proposing a new feature, please create a new scope for the propsed feature, and include it in the commit message, such as `feat(my-new-feature): title`.
 

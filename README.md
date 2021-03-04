@@ -218,8 +218,8 @@ const project = new PipelineProject(stack, `test-project`, {
     buildImage: DockerCodeBuildAction.fromLinuxDockerImage(
       stack,
       'alpine-build-image',
-      'alpine:3',
-      '/test/credentials',
+      image: 'alpine:3',
+      credentialsContextKeyName: '/test/credentials',
     ),
   },
 });
@@ -246,8 +246,8 @@ const project = new Project(stack, `test-project`, {
     buildImage: DockerCodeBuildAction.fromWindowsDockerImage(
       stack,
       'iis-build-image',
-      'mcr.microsoft.com/windows/servercore/iis',
-      '/test/credentials',
+      image: 'mcr.microsoft.com/windows/servercore/iis',
+      credentialsContextKeyName: '/test/credentials',
     ),
   },
 });

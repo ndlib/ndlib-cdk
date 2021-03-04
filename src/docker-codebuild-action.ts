@@ -35,11 +35,9 @@ export class DockerCodeBuildAction {
   public static fromWindowsDockerImage(
     scope: cdk.Construct,
     id: string,
-    image: string,
-    credentialsContextKeyName: string,
-  ): IBuildImage {
-    return WindowsBuildImage.fromDockerRegistry(image, {
-      secretsManagerCredentials: Secret.fromSecretNameV2(scope, `${id}-Credentials`, credentialsContextKeyName),
+    options: IDockerCodeBuildAction): IBuildImage {
+    return WindowsBuildImage.fromDockerRegistry(options.image, {
+      secretsManagerCredentials: Secret.fromSecretNameV2(scope, `${id}-Credentials`, options.credentialsContextKeyName),
     });
   }
 }

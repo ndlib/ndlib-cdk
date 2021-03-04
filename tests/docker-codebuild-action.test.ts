@@ -86,12 +86,10 @@ describe('PipelineProject Behavior', () => {
       //when
       new PipelineProject(stack, 'test-pipeline-project', {
         environment: {
-          buildImage: DockerCodeBuildAction.fromWindowsDockerImage(
-            stack,
-            'test-docker',
+          buildImage: DockerCodeBuildAction.fromWindowsDockerImage(stack, 'test-docker', {
             image,
-            '/test/credentials/path',
-          ),
+            credentialsContextKeyName: '/test/credentials/path',
+          }),
         },
       });
 
@@ -114,7 +112,10 @@ describe('PipelineProject Behavior', () => {
       //when
       new PipelineProject(stack, 'test-project', {
         environment: {
-          buildImage: DockerCodeBuildAction.fromWindowsDockerImage(stack, 'test-docker', 'scratch', secretsManagerPath),
+          buildImage: DockerCodeBuildAction.fromWindowsDockerImage(stack, 'test-docker', {
+            image: 'scratch',
+            credentialsContextKeyName: secretsManagerPath,
+          }),
         },
       });
 
@@ -255,12 +256,10 @@ describe('Project Behavior', () => {
           version: '0.2',
         }),
         environment: {
-          buildImage: DockerCodeBuildAction.fromWindowsDockerImage(
-            stack,
-            'test-docker',
+          buildImage: DockerCodeBuildAction.fromWindowsDockerImage(stack, 'test-docker', {
             image,
-            '/test/credentials/path',
-          ),
+            credentialsContextKeyName: '/test/credentials/path',
+          }),
         },
       });
 
@@ -291,7 +290,10 @@ describe('Project Behavior', () => {
           version: '0.2',
         }),
         environment: {
-          buildImage: DockerCodeBuildAction.fromWindowsDockerImage(stack, 'test-docker', 'scratch', secretsManagerPath),
+          buildImage: DockerCodeBuildAction.fromWindowsDockerImage(stack, 'test-docker', {
+            image: 'scratch',
+            credentialsContextKeyName: secretsManagerPath,
+          }),
         },
       });
 

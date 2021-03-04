@@ -32,10 +32,7 @@ export class DockerCodeBuildAction {
    * @param image The DockerHub image that should be used for this action
    */
 
-  public static fromWindowsDockerImage(
-    scope: cdk.Construct,
-    id: string,
-    options: IDockerCodeBuildAction): IBuildImage {
+  public static fromWindowsDockerImage(scope: cdk.Construct, id: string, options: IDockerCodeBuildAction): IBuildImage {
     return WindowsBuildImage.fromDockerRegistry(options.image, {
       secretsManagerCredentials: Secret.fromSecretNameV2(scope, `${id}-Credentials`, options.credentialsContextKeyName),
     });

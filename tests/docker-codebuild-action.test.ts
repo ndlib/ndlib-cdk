@@ -6,7 +6,7 @@ import { DockerCodeBuildAction } from '../src/index';
 describe('PipelineProject Behavior', () => {
   test('Dont break default behavior', () => {
     const stack = new Stack();
-    new DockerCodeBuildAction(stack, 'Action');
+    new PipelineProject(stack, 'Action');
     expect(stack).to(
       haveResourceLike('AWS::CodeBuild::Project', {
         Environment: {
@@ -29,7 +29,10 @@ describe('PipelineProject Behavior', () => {
       // when
       new PipelineProject(stack, `test-project`, {
         environment: {
-          buildImage: DockerCodeBuildAction.fromLinuxDockerImage(stack, 'test-docker', image, '/test/credentials'),
+          buildImage: DockerCodeBuildAction.fromLinuxDockerImage(stack, 'test-docker', {
+            image: image,
+            credentialsContextKeyName: '/test/credentials/path',
+          }),
         },
       });
 
@@ -52,7 +55,10 @@ describe('PipelineProject Behavior', () => {
       //when
       new PipelineProject(stack, 'test-pipeline-project', {
         environment: {
-          buildImage: DockerCodeBuildAction.fromLinuxDockerImage(stack, 'test-docker', 'scratch', secretsManagerPath),
+          buildImage: DockerCodeBuildAction.fromLinuxDockerImage(stack, 'test-docker', {
+            image: 'scratch',
+            credentialsContextKeyName: secretsManagerPath,
+          }),
         },
       });
 
@@ -171,7 +177,10 @@ describe('Project Behavior', () => {
           version: '0.2',
         }),
         environment: {
-          buildImage: DockerCodeBuildAction.fromLinuxDockerImage(stack, 'test-docker', image, '/test/credentials'),
+          buildImage: DockerCodeBuildAction.fromLinuxDockerImage(stack, 'test-docker', {
+            image,
+            credentialsContextKeyName: '/test/credentials',
+          }),
         },
       });
 
@@ -204,7 +213,10 @@ describe('Project Behavior', () => {
           version: '0.2',
         }),
         environment: {
-          buildImage: DockerCodeBuildAction.fromLinuxDockerImage(stack, 'test-docker', 'scratch', secretsManagerPath),
+          buildImage: DockerCodeBuildAction.fromLinuxDockerImage(stack, 'test-docker', {
+            image: 'scratch',
+            credentialsContextKeyName: secretsManagerPath,
+          }),
         },
       });
 

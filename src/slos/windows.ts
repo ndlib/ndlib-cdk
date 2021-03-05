@@ -1,5 +1,5 @@
 import { Duration } from '@aws-cdk/core';
-import { IAlertConfig } from './types';
+import { IAlertConfig, Severity } from './types';
 
 /**
  * Encapsulates the properties of SLO alerting windows and provides a set of presets
@@ -189,9 +189,9 @@ export class Windows {
    * The multi-window golden standards from Google.
    */
   public static readonly standardMultiWindows = [
-    { windows: [Windows.twoPercentShort, Windows.twoPercentLong], severity: 'High' },
-    { windows: [Windows.fivePercentShort, Windows.fivePercentLong], severity: 'High' },
-    { windows: [Windows.tenPercentShort, Windows.tenPercentLong], severity: 'Low' },
+    { windows: [Windows.twoPercentShort, Windows.twoPercentLong], severity: Severity.HIGH },
+    { windows: [Windows.fivePercentShort, Windows.fivePercentLong], severity: Severity.HIGH },
+    { windows: [Windows.tenPercentShort, Windows.tenPercentLong], severity: Severity.LOW },
   ];
 
   /**
@@ -207,9 +207,9 @@ export class Windows {
    * The multi-window golden standards from Google, limited to one day for AWS alarms.
    */
   public static readonly standardAlarmMultiWindows = [
-    { windows: [Windows.twoPercentShort, Windows.twoPercentLong], severity: 'High' },
-    { windows: [Windows.fivePercentShort, Windows.fivePercentLong], severity: 'High' },
-    { windows: [Windows.tenPercentShort, Windows.tenPercentMedium], severity: 'Low' },
+    { windows: [Windows.twoPercentShort, Windows.twoPercentLong], severity: Severity.HIGH },
+    { windows: [Windows.fivePercentShort, Windows.fivePercentLong], severity: Severity.HIGH },
+    { windows: [Windows.tenPercentShort, Windows.tenPercentMedium], severity: Severity.LOW },
   ];
 
   /**

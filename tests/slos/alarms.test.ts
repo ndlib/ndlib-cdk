@@ -46,6 +46,116 @@ describe('SLOAlarms', () => {
     );
   });
 
+  it('enables all alarm actions by default', () => {
+    const stack = new Stack();
+    const slos = [
+      {
+        type: 'CloudfrontAvailability',
+        distributionId: 'myDistributionId',
+        title: 'My Cloudfront',
+        sloThreshold: 0.999,
+      },
+    ];
+    new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+    cdkExpect(stack).to(
+      haveResourceLike('AWS::CloudWatch::CompositeAlarm', {
+        AlarmName: 'My Cloudfront Availability <= 0.999 (High Severity)',
+        ActionsEnabled: true,
+      }),
+    );
+    cdkExpect(stack).to(
+      haveResourceLike('AWS::CloudWatch::CompositeAlarm', {
+        AlarmName: 'My Cloudfront Availability <= 0.999 (Low Severity)',
+        ActionsEnabled: true,
+      }),
+    );
+  });
+
+  it('optionally disables the alarm actions for the high severity alarms', () => {
+    const stack = new Stack();
+    const slos = [
+      {
+        type: 'CloudfrontAvailability',
+        distributionId: 'myDistributionId',
+        title: 'My Cloudfront',
+        sloThreshold: 0.999,
+        alarmsEnabled: {
+          High: false,
+        },
+      },
+    ];
+    new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+    cdkExpect(stack).to(
+      haveResourceLike('AWS::CloudWatch::CompositeAlarm', {
+        AlarmName: 'My Cloudfront Availability <= 0.999 (High Severity)',
+        ActionsEnabled: false,
+      }),
+    );
+    cdkExpect(stack).to(
+      haveResourceLike('AWS::CloudWatch::CompositeAlarm', {
+        AlarmName: 'My Cloudfront Availability <= 0.999 (Low Severity)',
+        ActionsEnabled: true,
+      }),
+    );
+  });
+
+  it('optionally disables the alarm actions for the low severity alarms', () => {
+    const stack = new Stack();
+    const slos = [
+      {
+        type: 'CloudfrontAvailability',
+        distributionId: 'myDistributionId',
+        title: 'My Cloudfront',
+        sloThreshold: 0.999,
+        alarmsEnabled: {
+          Low: false,
+        },
+      },
+    ];
+    new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+    cdkExpect(stack).to(
+      haveResourceLike('AWS::CloudWatch::CompositeAlarm', {
+        AlarmName: 'My Cloudfront Availability <= 0.999 (High Severity)',
+        ActionsEnabled: true,
+      }),
+    );
+    cdkExpect(stack).to(
+      haveResourceLike('AWS::CloudWatch::CompositeAlarm', {
+        AlarmName: 'My Cloudfront Availability <= 0.999 (Low Severity)',
+        ActionsEnabled: false,
+      }),
+    );
+  });
+
+  it('optionally disables the alarm actions for both severity alarms', () => {
+    const stack = new Stack();
+    const slos = [
+      {
+        type: 'CloudfrontAvailability',
+        distributionId: 'myDistributionId',
+        title: 'My Cloudfront',
+        sloThreshold: 0.999,
+        alarmsEnabled: {
+          High: false,
+          Low: false,
+        },
+      },
+    ];
+    new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+    cdkExpect(stack).to(
+      haveResourceLike('AWS::CloudWatch::CompositeAlarm', {
+        AlarmName: 'My Cloudfront Availability <= 0.999 (High Severity)',
+        ActionsEnabled: false,
+      }),
+    );
+    cdkExpect(stack).to(
+      haveResourceLike('AWS::CloudWatch::CompositeAlarm', {
+        AlarmName: 'My Cloudfront Availability <= 0.999 (Low Severity)',
+        ActionsEnabled: false,
+      }),
+    );
+  });
+
   describe('CloudfrontAvailability', () => {
     it('constructs an alarm for the 2.00% of 30 days budget burned in 5 minutes window', () => {
       const stack = new Stack();

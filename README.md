@@ -215,12 +215,10 @@ import { DockerCodeBuildAction } from '@ndlib/ndlib-cdk';
 const stack = new cdk.Stack();
 const project = new PipelineProject(stack, `test-project`, {
   environment: {
-    buildImage: DockerCodeBuildAction.fromLinuxDockerImage(
-      stack,
-      'alpine-build-image',
+    buildImage: DockerCodeBuildAction.fromLinuxDockerImage(stack, 'alpine-build-image', {
       image: 'alpine:3',
       credentialsContextKeyName: '/test/credentials',
-    ),
+    }),
   },
 });
 ```
@@ -243,12 +241,10 @@ const project = new Project(stack, `test-project`, {
     version: '0.2',
   }),
   environment: {
-    buildImage: DockerCodeBuildAction.fromWindowsDockerImage(
-      stack,
-      'iis-build-image',
+    buildImage: DockerCodeBuildAction.fromWindowsDockerImage(stack, 'iis-build-image', {
       image: 'mcr.microsoft.com/windows/servercore/iis',
       credentialsContextKeyName: '/test/credentials',
-    ),
+    }),
   },
 });
 ```

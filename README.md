@@ -122,6 +122,10 @@ const slos = [
     distributionId: 'E123456789ABC',
     title: 'HTTPS - CDN',
     sloThreshold: 0.999,
+    alarmsEnabled: {
+      High: true,
+      Low: true,
+    },
   },
   {
     type: 'CloudfrontLatency',
@@ -129,6 +133,10 @@ const slos = [
     title: 'HTTPS - CDN',
     sloThreshold: 0.95,
     latencyThreshold: 200,
+    alarmsEnabled: {
+      High: false,
+      Low: false,
+    },
   },
   {
     type: 'ApiAvailability',

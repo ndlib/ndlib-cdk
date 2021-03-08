@@ -17,6 +17,7 @@ import {
   ElasticSearchLatencySLO,
   IAlertConfig,
   IMultiWindowAlert,
+  Severity,
 } from './types';
 import { Windows } from './windows';
 
@@ -259,6 +260,7 @@ export class SLOAlarms extends Construct {
         alarmRule: SLOAlarms.createCompositeAlarm(childAlarms),
         alarmDescription,
         alarmActions: [topics[topicSeverity].topicArn],
+        actionsEnabled: slo.alarmsEnabled === undefined ? true : slo.alarmsEnabled[topicSeverity] ?? true,
       });
       return { severity: topicSeverity, parentAlarm, childAlarms };
     });

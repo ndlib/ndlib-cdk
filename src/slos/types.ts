@@ -20,6 +20,17 @@ export interface ISLO {
    * The decimal value for the threshold of the SLO.
    */
   readonly sloThreshold: number;
+
+  /**
+   * Optional object to specify which alarm actions should be enabled by severity.
+   * Example object:
+   * {
+   *   High: true,
+   *   Low: false,
+   * }
+   * By default, all actions for all severities are enabled.
+   */
+  readonly alarmsEnabled?: { [key: string]: boolean };
 }
 
 /**
@@ -146,4 +157,9 @@ export enum Colors {
   red = '#d62728',
   blue = '#1f77b4',
   orange = '#ff7f0e',
+}
+
+export enum Severity {
+  HIGH = 'High',
+  LOW = 'Low',
 }

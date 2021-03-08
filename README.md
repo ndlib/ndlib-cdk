@@ -208,3 +208,51 @@ import { ArtifactBucket } from '@ndlib/ndlib-cdk';
 const stack = new cdk.Stack();
 const bucket = new ArtifactBucket(stack, 'Bucket');
 ```
+
+## Docker CodeBuild Action
+
+This is a factory helper method to ease the creation of CodeBuild projects that use authenticated methods to pull from DockerHub. This method requires following the [Official AWS Documentation on solving the "error pulling image configuration: toomanyrequests" error](https://aws.amazon.com/premiumsupport/knowledge-center/codebuild-docker-pull-image-error/) in the "Store your DockerHub credentials with AWS Secrets Manager" section.
+
+The following example will create a Linux CodeBuild project, using DockerHub authentication credentials stored in Secrets Manager (under the `/test/credentials` path) and the `PipelineProject` CDK construct, that leverages the `alpine:3` DockerHub Image:
+
+```typescript
+import cdk = require('@aws-cdk/core');
+import { PipelineProject } from '@aws-cdk/aws-codebuild';
+import { DockerCodeBuildAction } from '@ndlib/ndlib-cdk';
+
+const stack = new cdk.Stack();
+const project = new PipelineProject(stack, `test-project`, {
+  environment: {
+    buildImage: DockerCodeBuildAction.fromLinuxDockerImage(stack, 'alpine-build-image', {
+      image: 'alpine:3',
+      credentialsContextKeyName: '/test/credentials',
+    }),
+  },
+});
+```
+
+The following example will create a Windows CodeBuild project, using DockerHub authentication credentials stored in Secrets Manager (under the `/test/credentials` path) and the `Project` CDK construct, that leverages the `mcr.microsoft.com/windows/servercore/iis` DockerHub Image:
+
+```typescript
+import cdk = require('@aws-cdk/core');
+import { Project, BuildSpec } from '@aws-cdk/aws-codebuild';
+import { DockerCodeBuildAction } from '@ndlib/ndlib-cdk';
+
+const stack = new cdk.Stack();
+const project = new Project(stack, `test-project`, {
+  buildSpec: BuildSpec.fromObject({
+    phases: {
+      build: {
+        commands: ['echo hello'],
+      },
+    },
+    version: '0.2',
+  }),
+  environment: {
+    buildImage: DockerCodeBuildAction.fromWindowsDockerImage(stack, 'iis-build-image', {
+      image: 'mcr.microsoft.com/windows/servercore/iis',
+      credentialsContextKeyName: '/test/credentials',
+    }),
+  },
+});
+```

@@ -31,33 +31,36 @@
     "name": "Hesburgh Libraries, University of Notre Dame",
     "url": "https://library.nd.edu"
   },
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/ndlib/ndlib-cdk/issues"
   },
   "homepage": "https://github.com/ndlib/ndlib-cdk#readme",
   "devDependencies": {
-    "@aws-cdk/assert": "^1.45.0",
+    "@aws-cdk/assert": "^1.91.0",
     "@types/jest": "^24.0.23",
+    "@types/node": "^14.14.41",
+    "aws-sdk": "^2.891.0",
+    "github-changes": "^1.1.2",
     "jest": "^24.9.0",
     "prettier": "^1.19.1",
     "ts-jest": "^24.2.0",
     "tsc-watch": "^3.0.2",
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.7.3",
-    "github-changes": "^1.1.2"
+    "typescript": "^3.7.3"
   },
   "files": [
     "lib/**/*"
   ],
   "dependencies": {
-    "@aws-cdk/aws-cloudformation": "^1.45.0",
-    "@aws-cdk/aws-cloudwatch": "^1.45.0",
-    "@aws-cdk/aws-codepipeline": "^1.45.0",
-    "@aws-cdk/aws-elasticloadbalancingv2": "^1.45.0",
-    "@aws-cdk/aws-events-targets": "^1.45.0",
-    "@aws-cdk/aws-sns": "^1.45.0",
-    "@aws-cdk/core": "^1.45.0"
+    "@aws-cdk/aws-cloudformation": "^1.91.0",
+    "@aws-cdk/aws-cloudfront": "^1.91.0",
+    "@aws-cdk/aws-cloudwatch": "^1.91.0",
+    "@aws-cdk/aws-codepipeline": "^1.91.0",
+    "@aws-cdk/aws-elasticloadbalancingv2": "^1.91.0",
+    "@aws-cdk/aws-events-targets": "^1.91.0",
+    "@aws-cdk/aws-sns": "^1.91.0",
+    "@aws-cdk/core": "^1.91.0"
   }
 }

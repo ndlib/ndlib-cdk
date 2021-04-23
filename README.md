@@ -256,3 +256,36 @@ const project = new Project(stack, `test-project`, {
   },
 });
 ```
+
+## Edge Lambdas
+
+These lambdas are standardized code which may be useful for multiple projects. They should be paired with one or more cloudfronts.
+
+The current list of edge lambdas are:
+
+- SpaRedirectionLambda – Requesting a page other than the index redirects to the origin to serve up the root index file. This is useful for SPAs which handle their own routing.
+- TransclusionLambda – Requesting .shtml files with server-side includes (SSI) triggers this lambda. Include tags in the HTML are replaced with the body of the page file they are requesting, so the origin serves up a flat HTML file.
+
+Each of these constructs implements IEdgeLambda. It will create the function, as well as define a Behavior which can then be used in configuring a CloudFront.
+
+Example usage:
+
+```typescript
+import cdk = require('@aws-cdk/core')
+import { CloudFrontWebDistribution } from '@aws-cdk/aws-cloudfront'
+import { TransclusionLambda } from '@ndlib/ndlib-cdk'
+
+const stack = new cdk.Stack()
+const transclusionLambda = new TransclusionLambda(stack, 'Transclusion', {
+  isDefaultBehavior: true,
+})
+new CloudFrontWebDistribution(this, 'Distribution', {
+  ...
+  originConfigs: [
+    {
+      ...
+      behaviors: [transclusionLambda.behavior],
+    },
+  ],
+})
+```

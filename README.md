@@ -276,8 +276,10 @@ import { CloudFrontWebDistribution } from '@aws-cdk/aws-cloudfront'
 import { TransclusionLambda } from '@ndlib/ndlib-cdk'
 
 const stack = new cdk.Stack()
+const siteBucket = new Bucket(stack, 'Bucket');
 const transclusionLambda = new TransclusionLambda(stack, 'Transclusion', {
   isDefaultBehavior: true,
+  originBucket: siteBucket,
 })
 new CloudFrontWebDistribution(this, 'Distribution', {
   ...

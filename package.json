@@ -7,7 +7,7 @@
   "scripts": {
     "test": "jest --config jestconfig.json",
     "coverage": "jest --config jestconfig.json --coverage",
-    "build": "tsc",
+    "build": "tsc && ./copy-lambda-files.sh",
     "format": "tslint --fix -p tsconfig.json && prettier --write \"@(src|tests)/**/*.@(ts|js|json|md|yml)\" \"*.@(ts|js|json|md|yml)\"",
     "lint": "tslint -p tsconfig.json && prettier --check \"@(src|tests)/**/*.@(ts|js|json|md|yml)\" \"*.@(ts|js|json|md|yml)\"",
     "generate-changelog": "github-changes -n ${npm_package_version} -o ndlib -r ndlib-cdk --only-pulls --use-commit-body",

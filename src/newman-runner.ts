@@ -23,7 +23,7 @@ export interface INewmanRunnerProps extends PipelineProjectProps {
   };
 
   /**
-   * Display name for the action in a CodePipeline.
+   * Display name for the action in a CodePipeline. Defaults to construct id.
    */
   readonly actionName?: string;
 
@@ -34,6 +34,8 @@ export interface INewmanRunnerProps extends PipelineProjectProps {
 
   /**
    * Role that should run the CodeBuild Project.
+   * If omitted, a default service role may be created for the project. See AWS CDK documentation:
+   * https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-codebuild.PipelineProject.html#role
    */
   readonly role?: Role;
 }

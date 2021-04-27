@@ -9,3 +9,4 @@ export * from './slos/performance-dashboard';
 export * from './artifact-bucket';
 export * from './docker-codebuild-action';
 export * from './edge-lambdas';
+export * from './newman-runner';

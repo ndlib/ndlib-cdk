@@ -8,3 +8,4 @@ export * from './slos/alarms-dashboard';
 export * from './slos/performance-dashboard';
 export * from './artifact-bucket';
 export * from './docker-codebuild-action';
+export * from './newman-runner';

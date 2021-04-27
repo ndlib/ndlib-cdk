@@ -256,3 +256,29 @@ const project = new Project(stack, `test-project`, {
   },
 });
 ```
+
+## Newman Runner
+
+This construct creates a CodeBuild project and an action which can be used in a pipeline to run newman tests. This is typically used for smoke tests to verify the service deployed by the pipeline is operational.
+
+Example usage:
+
+```typescript
+import { Pipeline } from '@aws-cdk/aws-codepipeline';
+import { Stack } from '@aws-cdk/core';
+import { NewmanPipelineProject } from '@ndlib/ndlib-cdk';
+
+const stack = new Stack();
+const pipeline = Pipeline(stack, 'MyPipeline');
+const newmanRunner = new NewmanRunner(stack, 'TestProject', {
+  collectionPath: 'test/newman/collection.json',
+  variables: {
+    hostname: 'https://www.example.com',
+    foo: 'bar',
+  },
+});
+pipeline.addStage({
+  stageName: 'Build',
+  actions: [buildAction, newmanRunner.action, approvalAction],
+});
+```

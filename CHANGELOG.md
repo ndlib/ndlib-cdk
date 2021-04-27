@@ -1,6 +1,17 @@
 ## Change Log
 
-### 1.6.0 (2021/01/12 14:51 +00:00)
+### 1.7.0 (2021/04/27 20:20 +00:00)
+
+- [#57](https://github.com/ndlib/ndlib-cdk/pull/57) Add NewmanRunner construct. (#57) (@mlkirkpatrick)
+- [#56](https://github.com/ndlib/ndlib-cdk/pull/56) Add Edge Lambda constructs. (@mlkirkpatrick)
+- [#54](https://github.com/ndlib/ndlib-cdk/pull/54) feat(slo): add ability to silence alarms (@jgondron)
+- [#53](https://github.com/ndlib/ndlib-cdk/pull/53) feat(docker-codebuild): factory helper for using authentication and DockerHub images in CodeBuild (#53) (@ialford)
+- [#49](https://github.com/ndlib/ndlib-cdk/pull/49) docs: add scopes and update contributing (#49) (@ialford)
+- [#47](https://github.com/ndlib/ndlib-cdk/pull/47) ci: migrate Travis workflows to GitHub Actions (@ialford)
+- [#45](https://github.com/ndlib/ndlib-cdk/pull/45) Update applyAspect to Aspects.of (@jrittenh)
+- [#42](https://github.com/ndlib/ndlib-cdk/pull/42) 1.6.0 (@jgondron)
+
+### v1.6.0 (2021/01/12 14:51 +00:00)
 
 - [#41](https://github.com/ndlib/ndlib-cdk/pull/41) Fix ElasticSearch Availability SLOs (@jgondron)
 - [#38](https://github.com/ndlib/ndlib-cdk/pull/38) Bump version 1.5.0 (@mlkirkpatrick)

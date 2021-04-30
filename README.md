@@ -286,6 +286,34 @@ const project = new Project(stack, `test-project`, {
 });
 ```
 
+## Static Host
+
+Creates a CloudFront, buckets, and other relevant resources for hosting a site with a static host.
+
+Lambda@Edge functions can also be connected to the CloudFront, but must be defined first in your stack definition. See [Edge Lambdas](#edge-lambdas) section for reusable lambdas that may be particularly relevant for static hosts.
+
+Example usage:
+
+```typescript
+import cdk = require('@aws-cdk/core')
+import { Certificate } from '@aws-cdk/aws-certificatemanager'
+import { StaticHost, TransclusionLambda } from '@ndlib/ndlib-cdk'
+
+const stack = new cdk.Stack()
+const siteBucket = new Bucket(stack, 'Bucket')
+const transclusionLambda = new TransclusionLambda(stack, 'Transclusion', {
+  isDefaultBehavior: true,
+  originBucket: siteBucket,
+})
+const host = new StaticHost(stack, 'MyStaticHost', {
+  hostnamePrefix: 'my-site',
+  domainName: 'domain.org',
+  websiteCertificate: Certificate.fromCertificateArn(stack, 'ACMCert', 'arn:aws:acm:::certificate/example'),
+  indexFilename: 'index.shtml',
+  edgeLambdas: [transclusionLambda],
+})
+```
+
 ## Edge Lambdas
 
 These lambdas are standardized code which may be useful for multiple projects. They should be paired with one or more cloudfronts.
@@ -295,31 +323,9 @@ The current list of edge lambdas are:
 - SpaRedirectionLambda – Requesting a page other than the index redirects to the origin to serve up the root index file. This is useful for SPAs which handle their own routing.
 - TransclusionLambda – Requesting .shtml files with server-side includes (SSI) triggers this lambda. Include tags in the HTML are replaced with the body of the page file they are requesting, so the origin serves up a flat HTML file.
 
-Each of these constructs implements IEdgeLambda. It will create the function, as well as define a Behavior which can then be used in configuring a CloudFront.
+These are especially useful to pair with a StaticHost construct. Alternatively, you can attach a custom lambda by implementing the IEdgeLambda interface. It will create the function, as well as define a Behavior which can then be used in configuring a CloudFront.
 
-Example usage:
-
-```typescript
-import cdk = require('@aws-cdk/core')
-import { CloudFrontWebDistribution } from '@aws-cdk/aws-cloudfront'
-import { TransclusionLambda } from '@ndlib/ndlib-cdk'
-
-const stack = new cdk.Stack()
-const siteBucket = new Bucket(stack, 'Bucket');
-const transclusionLambda = new TransclusionLambda(stack, 'Transclusion', {
-  isDefaultBehavior: true,
-  originBucket: siteBucket,
-})
-new CloudFrontWebDistribution(this, 'Distribution', {
-  ...
-  originConfigs: [
-    {
-      ...
-      behaviors: [transclusionLambda.behavior],
-    },
-  ],
-})
-```
+See [Static Host](#static-host) for example.
 
 ## Newman Runner
 

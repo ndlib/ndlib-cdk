@@ -305,9 +305,12 @@ import { NewmanPipelineProject } from '@ndlib/ndlib-cdk';
 
 const stack = new Stack();
 const pipeline = Pipeline(stack, 'MyPipeline');
+const appSourceArtifact = new codepipeline.Artifact('AppCode');
+// ...
 const newmanRunner = new NewmanRunner(stack, 'TestProject', {
+  sourceArtifact: appSourceArtifact,
   collectionPath: 'test/newman/collection.json',
-  variables: {
+  collectionVariables: {
     hostname: 'https://www.example.com',
     foo: 'bar',
   },

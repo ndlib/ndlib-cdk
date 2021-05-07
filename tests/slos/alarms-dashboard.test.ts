@@ -1,11 +1,12 @@
-import { expect as cdkExpect, haveResourceLike } from '@aws-cdk/assert';
+import { Capture, expect as cdkExpect, haveResourceLike } from '@aws-cdk/assert';
 import { SLOAlarmsDashboard } from '../../src/slos/alarms-dashboard';
 import { Stack } from '@aws-cdk/core';
+import { collapseJoin } from './helpers';
 
 describe('SLOAlarmsDashboard', () => {
   const invalidSlos = [{ type: 'SomeUndefined', apiName: 'apiName', title: 'My Made Up SLO', sloThreshold: 0.999 }];
 
-  it('throws an excpetion if theres an unknown type', () => {
+  it('throws an exception if theres an unknown type', () => {
     const stack = new Stack();
     expect(() => new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos: invalidSlos })).toThrow(
       'AlarmsDashboard creation encountered an unknown type for slo: {"type":"SomeUndefined","apiName":"apiName","title":"My Made Up SLO","sloThreshold":0.999}.',
@@ -27,34 +28,17 @@ describe('SLOAlarmsDashboard', () => {
       dashboardName: 'TestAlarmsDashboard',
       start: '-P1234D',
     });
-
+    const dashBody = Capture.anyType();
     cdkExpect(stack).to(
       haveResourceLike('AWS::CloudWatch::Dashboard', {
-        DashboardBody: {
-          'Fn::Join': [
-            '',
-            [
-              '{"start":"-P1234D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 60 minutes","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":3600,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"2% of Budget in 60 minutes","value":0.9856,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.98272,"max":1}}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 6 hours","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":21600,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"5% of Budget in 6 hours","value":0.994,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9928,"max":1}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 1 day","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":86400,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"10% of Budget in 1 day","value":0.999,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9988,"max":1}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 30 days","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":2592000,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"100% of Budget in 30 days","value":0.999,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9988,"max":1}}}}]}',
-            ],
-          ],
-        },
+        DashboardBody: dashBody.capture(),
         DashboardName: 'TestAlarmsDashboard',
+      }),
+    );
+    const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+    expect(dashObj).toEqual(
+      expect.objectContaining({
+        start: '-P1234D',
       }),
     );
   });
@@ -72,34 +56,86 @@ describe('SLOAlarmsDashboard', () => {
     it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
       const stack = new Stack();
       new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
-
+      const dashBody = Capture.anyType();
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::Dashboard', {
-          DashboardBody: {
-            'Fn::Join': [
-              '',
-              [
-                '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 60 minutes","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":3600,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"2% of Budget in 60 minutes","value":0.9856,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.98272,"max":1}}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 6 hours","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":21600,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"5% of Budget in 6 hours","value":0.994,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9928,"max":1}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 1 day","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":86400,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"10% of Budget in 1 day","value":0.999,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9988,"max":1}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 30 days","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[[{"label":"Availability","expression":"1-(errorRate/100)"}],["AWS/CloudFront","5xxErrorRate","DistributionId","myDistributionId","Region","Global",{"label":"Error rate","period":2592000,"visible":false,"id":"errorRate"}]],"annotations":{"horizontal":[{"label":"100% of Budget in 30 days","value":0.999,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.999,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9988,"max":1}}}}]}',
-              ],
-            ],
-          },
+          DashboardBody: dashBody.capture(),
           DashboardName: 'TestAlarmsDashboard',
+        }),
+      );
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      expect(dashObj).toEqual(
+        expect.objectContaining({
+          widgets: expect.arrayContaining([
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: `My Cloudfront - 60 minutes`,
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '1-(errorRate/100)' }],
+                  [
+                    'AWS/CloudFront',
+                    '5xxErrorRate',
+                    'DistributionId',
+                    'myDistributionId',
+                    'Region',
+                    'Global',
+                    { label: 'Error rate', period: 3600, visible: false, id: 'errorRate' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My Cloudfront - 6 hours',
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '1-(errorRate/100)' }],
+                  [
+                    'AWS/CloudFront',
+                    '5xxErrorRate',
+                    'DistributionId',
+                    'myDistributionId',
+                    'Region',
+                    'Global',
+                    { label: 'Error rate', period: 21600, visible: false, id: 'errorRate' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My Cloudfront - 1 day',
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '1-(errorRate/100)' }],
+                  [
+                    'AWS/CloudFront',
+                    '5xxErrorRate',
+                    'DistributionId',
+                    'myDistributionId',
+                    'Region',
+                    'Global',
+                    { label: 'Error rate', period: 86400, visible: false, id: 'errorRate' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My Cloudfront - 30 days',
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '1-(errorRate/100)' }],
+                  [
+                    'AWS/CloudFront',
+                    '5xxErrorRate',
+                    'DistributionId',
+                    'myDistributionId',
+                    'Region',
+                    'Global',
+                    { label: 'Error rate', period: 2592000, visible: false, id: 'errorRate' },
+                  ],
+                ]),
+              }),
+            }),
+          ]),
         }),
       );
     });
@@ -119,34 +155,82 @@ describe('SLOAlarmsDashboard', () => {
     it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
       const stack = new Stack();
       new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
-
+      const dashBody = Capture.anyType();
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::Dashboard', {
-          DashboardBody: {
-            'Fn::Join': [
-              '',
-              [
-                '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 60 minutes","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[["AWS/CloudFront","OriginLatency","DistributionId","myDistributionId","Region","Global",{"label":"Latency p28.00","period":3600,"stat":"p28.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":200,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":280}}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 6 hours","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[["AWS/CloudFront","OriginLatency","DistributionId","myDistributionId","Region","Global",{"label":"Latency p70.00","period":21600,"stat":"p70.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":200,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":280}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 1 day","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[["AWS/CloudFront","OriginLatency","DistributionId","myDistributionId","Region","Global",{"label":"Latency p95.00","period":86400,"stat":"p95.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":200,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":280}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My Cloudfront - 30 days","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[["AWS/CloudFront","OriginLatency","DistributionId","myDistributionId","Region","Global",{"label":"Latency p95.00","period":2592000,"stat":"p95.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":200,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":280}}}}]}',
-              ],
-            ],
-          },
+          DashboardBody: dashBody.capture(),
           DashboardName: 'TestAlarmsDashboard',
+        }),
+      );
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      expect(dashObj).toEqual(
+        expect.objectContaining({
+          widgets: expect.arrayContaining([
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: `My Cloudfront - 60 minutes`,
+                metrics: expect.arrayContaining([
+                  [
+                    'AWS/CloudFront',
+                    'OriginLatency',
+                    'DistributionId',
+                    'myDistributionId',
+                    'Region',
+                    'Global',
+                    { label: 'Latency p28.00', period: 3600, stat: 'p28.00' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My Cloudfront - 6 hours',
+                metrics: expect.arrayContaining([
+                  [
+                    'AWS/CloudFront',
+                    'OriginLatency',
+                    'DistributionId',
+                    'myDistributionId',
+                    'Region',
+                    'Global',
+                    { label: 'Latency p70.00', period: 21600, stat: 'p70.00' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My Cloudfront - 1 day',
+                metrics: expect.arrayContaining([
+                  [
+                    'AWS/CloudFront',
+                    'OriginLatency',
+                    'DistributionId',
+                    'myDistributionId',
+                    'Region',
+                    'Global',
+                    { label: 'Latency p95.00', period: 86400, stat: 'p95.00' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My Cloudfront - 30 days',
+                metrics: expect.arrayContaining([
+                  [
+                    'AWS/CloudFront',
+                    'OriginLatency',
+                    'DistributionId',
+                    'myDistributionId',
+                    'Region',
+                    'Global',
+                    { label: 'Latency p95.00', period: 2592000, stat: 'p95.00' },
+                  ],
+                ]),
+              }),
+            }),
+          ]),
         }),
       );
     });
@@ -158,34 +242,106 @@ describe('SLOAlarmsDashboard', () => {
     it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
       const stack = new Stack();
       new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
-
+      const dashBody = Capture.anyType();
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::Dashboard', {
-          DashboardBody: {
-            'Fn::Join': [
-              '',
-              [
-                '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My API - 60 minutes","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[[{"label":"Availability","expression":"(gatewayRequests - gatewayErrors)/gatewayRequests"}],["AWS/ApiGateway","Count","ApiName","myApiName",{"label":"Requests","period":3600,"stat":"Sum","visible":false,"id":"gatewayRequests"}],["AWS/ApiGateway","5XXError","ApiName","myApiName",{"label":"Error rate","period":3600,"stat":"Sum","visible":false,"id":"gatewayErrors"}]],"annotations":{"horizontal":[{"label":"2% of Budget in 60 minutes","value":0.856,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.8271999999999998,"max":1}}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"My API - 6 hours","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[[{"label":"Availability","expression":"(gatewayRequests - gatewayErrors)/gatewayRequests"}],["AWS/ApiGateway","Count","ApiName","myApiName",{"label":"Requests","period":21600,"stat":"Sum","visible":false,"id":"gatewayRequests"}],["AWS/ApiGateway","5XXError","ApiName","myApiName",{"label":"Error rate","period":21600,"stat":"Sum","visible":false,"id":"gatewayErrors"}]],"annotations":{"horizontal":[{"label":"5% of Budget in 6 hours","value":0.94,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9279999999999999,"max":1}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My API - 1 day","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[[{"label":"Availability","expression":"(gatewayRequests - gatewayErrors)/gatewayRequests"}],["AWS/ApiGateway","Count","ApiName","myApiName",{"label":"Requests","period":86400,"stat":"Sum","visible":false,"id":"gatewayRequests"}],["AWS/ApiGateway","5XXError","ApiName","myApiName",{"label":"Error rate","period":86400,"stat":"Sum","visible":false,"id":"gatewayErrors"}]],"annotations":{"horizontal":[{"label":"10% of Budget in 1 day","value":0.99,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.988,"max":1}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My API - 30 days","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[[{"label":"Availability","expression":"(gatewayRequests - gatewayErrors)/gatewayRequests"}],["AWS/ApiGateway","Count","ApiName","myApiName",{"label":"Requests","period":2592000,"stat":"Sum","visible":false,"id":"gatewayRequests"}],["AWS/ApiGateway","5XXError","ApiName","myApiName",{"label":"Error rate","period":2592000,"stat":"Sum","visible":false,"id":"gatewayErrors"}]],"annotations":{"horizontal":[{"label":"100% of Budget in 30 days","value":0.99,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.988,"max":1}}}}]}',
-              ],
-            ],
-          },
+          DashboardBody: dashBody.capture(),
           DashboardName: 'TestAlarmsDashboard',
+        }),
+      );
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      expect(dashObj).toEqual(
+        expect.objectContaining({
+          widgets: expect.arrayContaining([
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: `My API - 60 minutes`,
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '(gatewayRequests - gatewayErrors)/gatewayRequests' }],
+                  [
+                    'AWS/ApiGateway',
+                    'Count',
+                    'ApiName',
+                    'myApiName',
+                    { label: 'Requests', period: 3600, stat: 'Sum', visible: false, id: 'gatewayRequests' },
+                  ],
+                  [
+                    'AWS/ApiGateway',
+                    '5XXError',
+                    'ApiName',
+                    'myApiName',
+                    { label: 'Error rate', period: 3600, stat: 'Sum', visible: false, id: 'gatewayErrors' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My API - 6 hours',
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '(gatewayRequests - gatewayErrors)/gatewayRequests' }],
+                  [
+                    'AWS/ApiGateway',
+                    'Count',
+                    'ApiName',
+                    'myApiName',
+                    { label: 'Requests', period: 21600, stat: 'Sum', visible: false, id: 'gatewayRequests' },
+                  ],
+                  [
+                    'AWS/ApiGateway',
+                    '5XXError',
+                    'ApiName',
+                    'myApiName',
+                    { label: 'Error rate', period: 21600, stat: 'Sum', visible: false, id: 'gatewayErrors' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My API - 1 day',
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '(gatewayRequests - gatewayErrors)/gatewayRequests' }],
+                  [
+                    'AWS/ApiGateway',
+                    'Count',
+                    'ApiName',
+                    'myApiName',
+                    { label: 'Requests', period: 86400, stat: 'Sum', visible: false, id: 'gatewayRequests' },
+                  ],
+                  [
+                    'AWS/ApiGateway',
+                    '5XXError',
+                    'ApiName',
+                    'myApiName',
+                    { label: 'Error rate', period: 86400, stat: 'Sum', visible: false, id: 'gatewayErrors' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My API - 30 days',
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '(gatewayRequests - gatewayErrors)/gatewayRequests' }],
+                  [
+                    'AWS/ApiGateway',
+                    'Count',
+                    'ApiName',
+                    'myApiName',
+                    { label: 'Requests', period: 2592000, stat: 'Sum', visible: false, id: 'gatewayRequests' },
+                  ],
+                  [
+                    'AWS/ApiGateway',
+                    '5XXError',
+                    'ApiName',
+                    'myApiName',
+                    { label: 'Error rate', period: 2592000, stat: 'Sum', visible: false, id: 'gatewayErrors' },
+                  ],
+                ]),
+              }),
+            }),
+          ]),
         }),
       );
     });
@@ -199,131 +355,559 @@ describe('SLOAlarmsDashboard', () => {
     it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
       const stack = new Stack();
       new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
-
+      const dashBody = Capture.anyType();
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::Dashboard', {
-          DashboardBody: {
-            'Fn::Join': [
-              '',
-              [
-                '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My API - 60 minutes","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[["AWS/ApiGateway","Latency","ApiName","myApiName",{"label":"Latency p85.60","period":3600,"stat":"p85.60"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"My API - 6 hours","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[["AWS/ApiGateway","Latency","ApiName","myApiName",{"label":"Latency p94.00","period":21600,"stat":"p94.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My API - 1 day","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[["AWS/ApiGateway","Latency","ApiName","myApiName",{"label":"Latency p99.00","period":86400,"stat":"p99.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My API - 30 days","region":"',
-                {
-                  Ref: 'AWS::Region',
-                },
-                '","metrics":[["AWS/ApiGateway","Latency","ApiName","myApiName",{"label":"Latency p99.00","period":2592000,"stat":"p99.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}}]}',
-              ],
-            ],
-          },
+          DashboardBody: dashBody.capture(),
           DashboardName: 'TestAlarmsDashboard',
+        }),
+      );
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      expect(dashObj).toEqual(
+        expect.objectContaining({
+          widgets: expect.arrayContaining([
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: `My API - 60 minutes`,
+                metrics: expect.arrayContaining([
+                  [
+                    'AWS/ApiGateway',
+                    'Latency',
+                    'ApiName',
+                    'myApiName',
+                    { label: 'Latency p85.60', period: 3600, stat: 'p85.60' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My API - 6 hours',
+                metrics: expect.arrayContaining([
+                  [
+                    'AWS/ApiGateway',
+                    'Latency',
+                    'ApiName',
+                    'myApiName',
+                    { label: 'Latency p94.00', period: 21600, stat: 'p94.00' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My API - 1 day',
+                metrics: expect.arrayContaining([
+                  [
+                    'AWS/ApiGateway',
+                    'Latency',
+                    'ApiName',
+                    'myApiName',
+                    { label: 'Latency p99.00', period: 86400, stat: 'p99.00' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My API - 30 days',
+                metrics: expect.arrayContaining([
+                  [
+                    'AWS/ApiGateway',
+                    'Latency',
+                    'ApiName',
+                    'myApiName',
+                    { label: 'Latency p99.00', period: 2592000, stat: 'p99.00' },
+                  ],
+                ]),
+              }),
+            }),
+          ]),
         }),
       );
     });
   });
-});
 
-describe('ElasticSearchAvailability', () => {
-  const slos = [
-    {
-      type: 'ElasticSearchAvailability',
-      domainName: 'domainName',
-      accountId: 'accountId',
-      title: 'My ES Domain',
-      sloThreshold: 0.99,
-    },
-  ];
+  describe('ElasticSearchAvailability', () => {
+    const slos = [
+      {
+        type: 'ElasticSearchAvailability',
+        domainName: 'domainName',
+        accountId: 'accountId',
+        title: 'My ES Domain',
+        sloThreshold: 0.99,
+      },
+    ];
 
-  it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
-    const stack = new Stack();
-    new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
-
-    cdkExpect(stack).to(
-      haveResourceLike('AWS::CloudWatch::Dashboard', {
-        DashboardBody: {
-          'Fn::Join': [
-            '',
-            [
-              '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My ES Domain - 60 minutes","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[[{"label":"Availability","expression":"(m2xx + m3xx + m4xx)/(m2xx + m3xx + m4xx + m5xx)"}],["AWS/ES","2xx","ClientId","accountId","DomainName","domainName",{"label":"2xx","period":3600,"stat":"Sum","visible":false,"id":"m2xx"}],["AWS/ES","3xx","ClientId","accountId","DomainName","domainName",{"label":"3xx","period":3600,"stat":"Sum","visible":false,"id":"m3xx"}],["AWS/ES","4xx","ClientId","accountId","DomainName","domainName",{"label":"4xx","period":3600,"stat":"Sum","visible":false,"id":"m4xx"}],["AWS/ES","5xx","ClientId","accountId","DomainName","domainName",{"label":"5xx","period":3600,"stat":"Sum","visible":false,"id":"m5xx"}]],"annotations":{"horizontal":[{"label":"2% of Budget in 60 minutes","value":0.856,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.8271999999999998,"max":1}}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"My ES Domain - 6 hours","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[[{"label":"Availability","expression":"(m2xx + m3xx + m4xx)/(m2xx + m3xx + m4xx + m5xx)"}],["AWS/ES","2xx","ClientId","accountId","DomainName","domainName",{"label":"2xx","period":21600,"stat":"Sum","visible":false,"id":"m2xx"}],["AWS/ES","3xx","ClientId","accountId","DomainName","domainName",{"label":"3xx","period":21600,"stat":"Sum","visible":false,"id":"m3xx"}],["AWS/ES","4xx","ClientId","accountId","DomainName","domainName",{"label":"4xx","period":21600,"stat":"Sum","visible":false,"id":"m4xx"}],["AWS/ES","5xx","ClientId","accountId","DomainName","domainName",{"label":"5xx","period":21600,"stat":"Sum","visible":false,"id":"m5xx"}]],"annotations":{"horizontal":[{"label":"5% of Budget in 6 hours","value":0.94,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.9279999999999999,"max":1}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My ES Domain - 1 day","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[[{"label":"Availability","expression":"(m2xx + m3xx + m4xx)/(m2xx + m3xx + m4xx + m5xx)"}],["AWS/ES","2xx","ClientId","accountId","DomainName","domainName",{"label":"2xx","period":86400,"stat":"Sum","visible":false,"id":"m2xx"}],["AWS/ES","3xx","ClientId","accountId","DomainName","domainName",{"label":"3xx","period":86400,"stat":"Sum","visible":false,"id":"m3xx"}],["AWS/ES","4xx","ClientId","accountId","DomainName","domainName",{"label":"4xx","period":86400,"stat":"Sum","visible":false,"id":"m4xx"}],["AWS/ES","5xx","ClientId","accountId","DomainName","domainName",{"label":"5xx","period":86400,"stat":"Sum","visible":false,"id":"m5xx"}]],"annotations":{"horizontal":[{"label":"10% of Budget in 1 day","value":0.99,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.988,"max":1}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My ES Domain - 30 days","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[[{"label":"Availability","expression":"(m2xx + m3xx + m4xx)/(m2xx + m3xx + m4xx + m5xx)"}],["AWS/ES","2xx","ClientId","accountId","DomainName","domainName",{"label":"2xx","period":2592000,"stat":"Sum","visible":false,"id":"m2xx"}],["AWS/ES","3xx","ClientId","accountId","DomainName","domainName",{"label":"3xx","period":2592000,"stat":"Sum","visible":false,"id":"m3xx"}],["AWS/ES","4xx","ClientId","accountId","DomainName","domainName",{"label":"4xx","period":2592000,"stat":"Sum","visible":false,"id":"m4xx"}],["AWS/ES","5xx","ClientId","accountId","DomainName","domainName",{"label":"5xx","period":2592000,"stat":"Sum","visible":false,"id":"m5xx"}]],"annotations":{"horizontal":[{"label":"100% of Budget in 30 days","value":0.99,"fill":"below","color":"#d62728","yAxis":"left"},{"label":"SLO","value":0.99,"fill":"none","color":"#ff7f0e","yAxis":"left"}]},"yAxis":{"left":{"min":0.988,"max":1}}}}]}',
-            ],
-          ],
-        },
-        DashboardName: 'TestAlarmsDashboard',
-      }),
-    );
+    it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
+      const stack = new Stack();
+      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
+      const dashBody = Capture.anyType();
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Dashboard', {
+          DashboardBody: dashBody.capture(),
+          DashboardName: 'TestAlarmsDashboard',
+        }),
+      );
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      expect(dashObj).toEqual(
+        expect.objectContaining({
+          widgets: expect.arrayContaining([
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: `My ES Domain - 60 minutes`,
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '(m2xx + m3xx + m4xx)/(m2xx + m3xx + m4xx + m5xx)' }],
+                  [
+                    'AWS/ES',
+                    '2xx',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: '2xx', period: 3600, stat: 'Sum', visible: false, id: 'm2xx' },
+                  ],
+                  [
+                    'AWS/ES',
+                    '3xx',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: '3xx', period: 3600, stat: 'Sum', visible: false, id: 'm3xx' },
+                  ],
+                  [
+                    'AWS/ES',
+                    '4xx',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: '4xx', period: 3600, stat: 'Sum', visible: false, id: 'm4xx' },
+                  ],
+                  [
+                    'AWS/ES',
+                    '5xx',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: '5xx', period: 3600, stat: 'Sum', visible: false, id: 'm5xx' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My ES Domain - 6 hours',
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '(m2xx + m3xx + m4xx)/(m2xx + m3xx + m4xx + m5xx)' }],
+                  [
+                    'AWS/ES',
+                    '2xx',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: '2xx', period: 21600, stat: 'Sum', visible: false, id: 'm2xx' },
+                  ],
+                  [
+                    'AWS/ES',
+                    '3xx',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: '3xx', period: 21600, stat: 'Sum', visible: false, id: 'm3xx' },
+                  ],
+                  [
+                    'AWS/ES',
+                    '4xx',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: '4xx', period: 21600, stat: 'Sum', visible: false, id: 'm4xx' },
+                  ],
+                  [
+                    'AWS/ES',
+                    '5xx',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: '5xx', period: 21600, stat: 'Sum', visible: false, id: 'm5xx' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My ES Domain - 1 day',
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '(m2xx + m3xx + m4xx)/(m2xx + m3xx + m4xx + m5xx)' }],
+                  [
+                    'AWS/ES',
+                    '2xx',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: '2xx', period: 86400, stat: 'Sum', visible: false, id: 'm2xx' },
+                  ],
+                  [
+                    'AWS/ES',
+                    '3xx',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: '3xx', period: 86400, stat: 'Sum', visible: false, id: 'm3xx' },
+                  ],
+                  [
+                    'AWS/ES',
+                    '4xx',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: '4xx', period: 86400, stat: 'Sum', visible: false, id: 'm4xx' },
+                  ],
+                  [
+                    'AWS/ES',
+                    '5xx',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: '5xx', period: 86400, stat: 'Sum', visible: false, id: 'm5xx' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My ES Domain - 30 days',
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '(m2xx + m3xx + m4xx)/(m2xx + m3xx + m4xx + m5xx)' }],
+                  [
+                    'AWS/ES',
+                    '2xx',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: '2xx', period: 2592000, stat: 'Sum', visible: false, id: 'm2xx' },
+                  ],
+                  [
+                    'AWS/ES',
+                    '3xx',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: '3xx', period: 2592000, stat: 'Sum', visible: false, id: 'm3xx' },
+                  ],
+                  [
+                    'AWS/ES',
+                    '4xx',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: '4xx', period: 2592000, stat: 'Sum', visible: false, id: 'm4xx' },
+                  ],
+                  [
+                    'AWS/ES',
+                    '5xx',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: '5xx', period: 2592000, stat: 'Sum', visible: false, id: 'm5xx' },
+                  ],
+                ]),
+              }),
+            }),
+          ]),
+        }),
+      );
+    });
   });
-});
 
-describe('ElasticSearchLatency', () => {
-  const slos = [
-    {
-      type: 'ElasticSearchLatency',
-      domainName: 'domainName',
-      accountId: 'accountId',
-      title: 'My ES Domain',
-      sloThreshold: 0.99,
-      latencyThreshold: 2000,
-    },
-  ];
+  describe('ElasticSearchLatency', () => {
+    const slos = [
+      {
+        type: 'ElasticSearchLatency',
+        domainName: 'domainName',
+        accountId: 'accountId',
+        title: 'My ES Domain',
+        sloThreshold: 0.99,
+        latencyThreshold: 2000,
+      },
+    ];
 
-  it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
-    const stack = new Stack();
-    new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
+    it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
+      const stack = new Stack();
+      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
+      const dashBody = Capture.anyType();
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Dashboard', {
+          DashboardBody: dashBody.capture(),
+          DashboardName: 'TestAlarmsDashboard',
+        }),
+      );
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      expect(dashObj).toEqual(
+        expect.objectContaining({
+          widgets: expect.arrayContaining([
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: `My ES Domain - 60 minutes`,
+                metrics: expect.arrayContaining([
+                  [
+                    'AWS/ES',
+                    'SearchLatency',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: 'Latency p85.60', period: 3600, stat: 'p85.60' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My ES Domain - 6 hours',
+                metrics: expect.arrayContaining([
+                  [
+                    'AWS/ES',
+                    'SearchLatency',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: 'Latency p94.00', period: 21600, stat: 'p94.00' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My ES Domain - 1 day',
+                metrics: expect.arrayContaining([
+                  [
+                    'AWS/ES',
+                    'SearchLatency',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: 'Latency p99.00', period: 86400, stat: 'p99.00' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My ES Domain - 30 days',
+                metrics: expect.arrayContaining([
+                  [
+                    'AWS/ES',
+                    'SearchLatency',
+                    'ClientId',
+                    'accountId',
+                    'DomainName',
+                    'domainName',
+                    { label: 'Latency p99.00', period: 2592000, stat: 'p99.00' },
+                  ],
+                ]),
+              }),
+            }),
+          ]),
+        }),
+      );
+    });
+  });
 
-    cdkExpect(stack).to(
-      haveResourceLike('AWS::CloudWatch::Dashboard', {
-        DashboardBody: {
-          'Fn::Join': [
-            '',
-            [
-              '{"start":"-P360D","widgets":[{"type":"metric","width":6,"height":6,"x":0,"y":0,"properties":{"view":"timeSeries","title":"My ES Domain - 60 minutes","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[["AWS/ES","SearchLatency","ClientId","accountId","DomainName","domainName",{"label":"Latency p85.60","period":3600,"stat":"p85.60"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}},{"type":"metric","width":6,"height":6,"x":6,"y":0,"properties":{"view":"timeSeries","title":"My ES Domain - 6 hours","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[["AWS/ES","SearchLatency","ClientId","accountId","DomainName","domainName",{"label":"Latency p94.00","period":21600,"stat":"p94.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}},{"type":"metric","width":6,"height":6,"x":12,"y":0,"properties":{"view":"timeSeries","title":"My ES Domain - 1 day","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[["AWS/ES","SearchLatency","ClientId","accountId","DomainName","domainName",{"label":"Latency p99.00","period":86400,"stat":"p99.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}},{"type":"metric","width":6,"height":6,"x":18,"y":0,"properties":{"view":"timeSeries","title":"My ES Domain - 30 days","region":"',
-              {
-                Ref: 'AWS::Region',
-              },
-              '","metrics":[["AWS/ES","SearchLatency","ClientId","accountId","DomainName","domainName",{"label":"Latency p99.00","period":2592000,"stat":"p99.00"}]],"annotations":{"horizontal":[{"label":"SLO","value":2000,"fill":"above","color":"#d62728","yAxis":"left"}]},"yAxis":{"left":{"min":0,"max":2800}}}}]}',
-            ],
-          ],
-        },
-        DashboardName: 'TestAlarmsDashboard',
-      }),
-    );
+  describe('CustomAvailability', () => {
+    const slos = [
+      {
+        type: 'CustomAvailability',
+        namespace: 'CustomNamespace',
+        errorsMetricName: 'CustomErrorCountMetric',
+        countsMetricName: 'CustomRequestCountMetric',
+        title: 'My Custom Availability',
+        sloThreshold: 0.99,
+      },
+    ];
+
+    it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
+      const stack = new Stack();
+      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
+      const dashBody = Capture.anyType();
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Dashboard', {
+          DashboardBody: dashBody.capture(),
+          DashboardName: 'TestAlarmsDashboard',
+        }),
+      );
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      expect(dashObj).toEqual(
+        expect.objectContaining({
+          widgets: expect.arrayContaining([
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: `My Custom Availability - 60 minutes`,
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '(requests - errors)/requests' }],
+                  [
+                    'CustomNamespace',
+                    'CustomRequestCountMetric',
+                    { label: 'Requests', period: 3600, stat: 'Sum', visible: false, id: 'requests' },
+                  ],
+                  [
+                    'CustomNamespace',
+                    'CustomErrorCountMetric',
+                    { label: 'Errors', period: 3600, stat: 'Sum', visible: false, id: 'errors' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My Custom Availability - 6 hours',
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '(requests - errors)/requests' }],
+                  [
+                    'CustomNamespace',
+                    'CustomRequestCountMetric',
+                    { label: 'Requests', period: 21600, stat: 'Sum', visible: false, id: 'requests' },
+                  ],
+                  [
+                    'CustomNamespace',
+                    'CustomErrorCountMetric',
+                    { label: 'Errors', period: 21600, stat: 'Sum', visible: false, id: 'errors' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My Custom Availability - 1 day',
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '(requests - errors)/requests' }],
+                  [
+                    'CustomNamespace',
+                    'CustomRequestCountMetric',
+                    { label: 'Requests', period: 86400, stat: 'Sum', visible: false, id: 'requests' },
+                  ],
+                  [
+                    'CustomNamespace',
+                    'CustomErrorCountMetric',
+                    { label: 'Errors', period: 86400, stat: 'Sum', visible: false, id: 'errors' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My Custom Availability - 30 days',
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '(requests - errors)/requests' }],
+                  [
+                    'CustomNamespace',
+                    'CustomRequestCountMetric',
+                    { label: 'Requests', period: 2592000, stat: 'Sum', visible: false, id: 'requests' },
+                  ],
+                  [
+                    'CustomNamespace',
+                    'CustomErrorCountMetric',
+                    { label: 'Errors', period: 2592000, stat: 'Sum', visible: false, id: 'errors' },
+                  ],
+                ]),
+              }),
+            }),
+          ]),
+        }),
+      );
+    });
+  });
+
+  describe('CustomLatency', () => {
+    const slos = [
+      {
+        type: 'CustomLatency',
+        namespace: 'CustomNamespace',
+        latencyMetricName: 'CustomLatencyMetric',
+        title: 'My Custom Latency',
+        sloThreshold: 0.99,
+        latencyThreshold: 2000,
+      },
+    ];
+
+    it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
+      const stack = new Stack();
+      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
+      const dashBody = Capture.anyType();
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Dashboard', {
+          DashboardBody: dashBody.capture(),
+          DashboardName: 'TestAlarmsDashboard',
+        }),
+      );
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      expect(dashObj).toEqual(
+        expect.objectContaining({
+          widgets: expect.arrayContaining([
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: `My Custom Latency - 60 minutes`,
+                metrics: expect.arrayContaining([
+                  ['CustomNamespace', 'CustomLatencyMetric', { label: 'Latency p85.60', period: 3600, stat: 'p85.60' }],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My Custom Latency - 6 hours',
+                metrics: expect.arrayContaining([
+                  [
+                    'CustomNamespace',
+                    'CustomLatencyMetric',
+                    { label: 'Latency p94.00', period: 21600, stat: 'p94.00' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My Custom Latency - 1 day',
+                metrics: expect.arrayContaining([
+                  [
+                    'CustomNamespace',
+                    'CustomLatencyMetric',
+                    { label: 'Latency p99.00', period: 86400, stat: 'p99.00' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My Custom Latency - 30 days',
+                metrics: expect.arrayContaining([
+                  [
+                    'CustomNamespace',
+                    'CustomLatencyMetric',
+                    { label: 'Latency p99.00', period: 2592000, stat: 'p99.00' },
+                  ],
+                ]),
+              }),
+            }),
+          ]),
+        }),
+      );
+    });
   });
 });

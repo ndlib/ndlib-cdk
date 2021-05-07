@@ -69,6 +69,23 @@ export interface IElasticSearchSLI {
   readonly domainName: string;
 }
 
+/**
+ * Properties specific to Custom Availability Metric based Service Level Indicators
+ */
+export interface ICustomAvailibilitySLI {
+  readonly namespace: string;
+  readonly errorsMetricName: string;
+  readonly countsMetricName: string;
+}
+
+/**
+ * Properties specific to Custom Latency Metric based Service Level Indicators
+ */
+export interface ICustomLatencySLI {
+  readonly namespace: string;
+  readonly latencyMetricName: string;
+}
+
 // SLO types are combinations of the objective and the indicator
 export type ApiAvailabilitySLO = IAvailabilitySLO & IApiSLI;
 export type ApiLatencySLO = ILatencySLO & IApiSLI;
@@ -76,13 +93,17 @@ export type CloudfrontAvailabilitySLO = IAvailabilitySLO & ICloudfrontSLI;
 export type CloudfrontLatencySLO = ILatencySLO & ICloudfrontSLI;
 export type ElasticSearchAvailabilitySLO = IAvailabilitySLO & IElasticSearchSLI;
 export type ElasticSearchLatencySLO = ILatencySLO & IElasticSearchSLI;
+export type CustomAvailabilitySLO = IAvailabilitySLO & ICustomAvailibilitySLI;
+export type CustomLatencySLO = ILatencySLO & ICustomLatencySLI;
 export type AnySLO =
   | ApiAvailabilitySLO
   | ApiLatencySLO
   | CloudfrontAvailabilitySLO
   | CloudfrontLatencySLO
   | ElasticSearchAvailabilitySLO
-  | ElasticSearchLatencySLO;
+  | ElasticSearchLatencySLO
+  | CustomAvailabilitySLO
+  | CustomLatencySLO;
 
 /**
  * Defines a configuration for alerting on burn rates within a window

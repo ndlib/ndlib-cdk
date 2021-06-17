@@ -428,6 +428,198 @@ describe('SLOAlarmsDashboard', () => {
     });
   });
 
+  describe('AppSyncAvailability', () => {
+    const slos = [{ type: 'AppSyncAvailability', apiId: 'myApiId', title: 'My API', sloThreshold: 0.99 }];
+
+    it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
+      const stack = new Stack();
+      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
+      const dashBody = Capture.anyType();
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Dashboard', {
+          DashboardBody: dashBody.capture(),
+          DashboardName: 'TestAlarmsDashboard',
+        }),
+      );
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      expect(dashObj).toEqual(
+        expect.objectContaining({
+          widgets: expect.arrayContaining([
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: `My API - 60 minutes`,
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '(requests - errors)/requests' }],
+                  [
+                    'AWS/AppSync',
+                    '5XXError',
+                    'GraphQLAPIId',
+                    'myApiId',
+                    { label: 'Requests', period: 3600, stat: 'SampleCount', visible: false, id: 'requests' },
+                  ],
+                  [
+                    'AWS/AppSync',
+                    '5XXError',
+                    'GraphQLAPIId',
+                    'myApiId',
+                    { label: 'Error rate', period: 3600, stat: 'Sum', visible: false, id: 'errors' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My API - 6 hours',
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '(requests - errors)/requests' }],
+                  [
+                    'AWS/AppSync',
+                    '5XXError',
+                    'GraphQLAPIId',
+                    'myApiId',
+                    { label: 'Requests', period: 21600, stat: 'SampleCount', visible: false, id: 'requests' },
+                  ],
+                  [
+                    'AWS/AppSync',
+                    '5XXError',
+                    'GraphQLAPIId',
+                    'myApiId',
+                    { label: 'Error rate', period: 21600, stat: 'Sum', visible: false, id: 'errors' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My API - 1 day',
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '(requests - errors)/requests' }],
+                  [
+                    'AWS/AppSync',
+                    '5XXError',
+                    'GraphQLAPIId',
+                    'myApiId',
+                    { label: 'Requests', period: 86400, stat: 'SampleCount', visible: false, id: 'requests' },
+                  ],
+                  [
+                    'AWS/AppSync',
+                    '5XXError',
+                    'GraphQLAPIId',
+                    'myApiId',
+                    { label: 'Error rate', period: 86400, stat: 'Sum', visible: false, id: 'errors' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My API - 30 days',
+                metrics: expect.arrayContaining([
+                  [{ label: 'Availability', expression: '(requests - errors)/requests' }],
+                  [
+                    'AWS/AppSync',
+                    '5XXError',
+                    'GraphQLAPIId',
+                    'myApiId',
+                    { label: 'Requests', period: 2592000, stat: 'SampleCount', visible: false, id: 'requests' },
+                  ],
+                  [
+                    'AWS/AppSync',
+                    '5XXError',
+                    'GraphQLAPIId',
+                    'myApiId',
+                    { label: 'Error rate', period: 2592000, stat: 'Sum', visible: false, id: 'errors' },
+                  ],
+                ]),
+              }),
+            }),
+          ]),
+        }),
+      );
+    });
+  });
+
+  describe('AppSyncLatency', () => {
+    const slos = [
+      { type: 'AppSyncLatency', apiId: 'myApiId', title: 'My API', sloThreshold: 0.99, latencyThreshold: 2000 },
+    ];
+
+    it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
+      const stack = new Stack();
+      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
+      const dashBody = Capture.anyType();
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Dashboard', {
+          DashboardBody: dashBody.capture(),
+          DashboardName: 'TestAlarmsDashboard',
+        }),
+      );
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      expect(dashObj).toEqual(
+        expect.objectContaining({
+          widgets: expect.arrayContaining([
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: `My API - 60 minutes`,
+                metrics: expect.arrayContaining([
+                  [
+                    'AWS/AppSync',
+                    'Latency',
+                    'GraphQLAPIId',
+                    'myApiId',
+                    { label: 'Latency p85.60', period: 3600, stat: 'p85.60' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My API - 6 hours',
+                metrics: expect.arrayContaining([
+                  [
+                    'AWS/AppSync',
+                    'Latency',
+                    'GraphQLAPIId',
+                    'myApiId',
+                    { label: 'Latency p94.00', period: 21600, stat: 'p94.00' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My API - 1 day',
+                metrics: expect.arrayContaining([
+                  [
+                    'AWS/AppSync',
+                    'Latency',
+                    'GraphQLAPIId',
+                    'myApiId',
+                    { label: 'Latency p99.00', period: 86400, stat: 'p99.00' },
+                  ],
+                ]),
+              }),
+            }),
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: 'My API - 30 days',
+                metrics: expect.arrayContaining([
+                  [
+                    'AWS/AppSync',
+                    'Latency',
+                    'GraphQLAPIId',
+                    'myApiId',
+                    { label: 'Latency p99.00', period: 2592000, stat: 'p99.00' },
+                  ],
+                ]),
+              }),
+            }),
+          ]),
+        }),
+      );
+    });
+  });
+
   describe('ElasticSearchAvailability', () => {
     const slos = [
       {

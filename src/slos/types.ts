@@ -86,6 +86,13 @@ export interface ICustomLatencySLI {
   readonly latencyMetricName: string;
 }
 
+/**
+ * Properties specific to Appsync based Service Level Indicators
+ */
+export interface IAppSyncSLI {
+  readonly apiId: string;
+}
+
 // SLO types are combinations of the objective and the indicator
 export type ApiAvailabilitySLO = IAvailabilitySLO & IApiSLI;
 export type ApiLatencySLO = ILatencySLO & IApiSLI;
@@ -95,6 +102,8 @@ export type ElasticSearchAvailabilitySLO = IAvailabilitySLO & IElasticSearchSLI;
 export type ElasticSearchLatencySLO = ILatencySLO & IElasticSearchSLI;
 export type CustomAvailabilitySLO = IAvailabilitySLO & ICustomAvailibilitySLI;
 export type CustomLatencySLO = ILatencySLO & ICustomLatencySLI;
+export type AppSyncAvailabilitySLO = IAvailabilitySLO & IAppSyncSLI;
+export type AppSyncLatencySLO = ILatencySLO & IAppSyncSLI;
 export type AnySLO =
   | ApiAvailabilitySLO
   | ApiLatencySLO
@@ -103,7 +112,9 @@ export type AnySLO =
   | ElasticSearchAvailabilitySLO
   | ElasticSearchLatencySLO
   | CustomAvailabilitySLO
-  | CustomLatencySLO;
+  | CustomLatencySLO
+  | AppSyncAvailabilitySLO
+  | AppSyncLatencySLO;
 
 /**
  * Defines a configuration for alerting on burn rates within a window

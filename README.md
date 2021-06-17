@@ -152,6 +152,19 @@ const slos = [
     latencyThreshold: 2000,
   },
   {
+    type: 'AppSyncAvailability',
+    apiId: 'myAppSyncAPI-prod',
+    title: 'AppSync API',
+    sloThreshold: 0.99,
+  },
+  {
+    type: 'AppSyncLatency',
+    apiId: 'myAppSyncAPI-prod',
+    title: 'AppSync API',
+    sloThreshold: 0.95,
+    latencyThreshold: 2000,
+  },
+  {
     type: 'ElasticSearchAvailability',
     domainName: 'myes-prod',
     accountId: '1234567890',

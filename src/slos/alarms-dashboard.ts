@@ -2,6 +2,8 @@ import { Dashboard, DashboardProps } from '@aws-cdk/aws-cloudwatch';
 import * as cdk from '@aws-cdk/core';
 import { ApiAvailabilityWidget } from './api-availability-widget';
 import { ApiLatencyWidget } from './api-latency-widget';
+import { AppSyncAvailabilityWidget } from './appsync-availability-widget';
+import { AppSyncLatencyWidget } from './appsync-latency-widget';
 import { CloudfrontAvailabilityWidget } from './cloudfront-availability-widget';
 import { CloudfrontLatencyWidget } from './cloudfront-latency-widget';
 import { CustomAvailabilityWidget } from './custom-availability-widget';
@@ -12,6 +14,8 @@ import {
   AnySLO,
   ApiAvailabilitySLO,
   ApiLatencySLO,
+  AppSyncAvailabilitySLO,
+  AppSyncLatencySLO,
   CloudfrontAvailabilitySLO,
   CloudfrontLatencySLO,
   CustomAvailabilitySLO,
@@ -53,6 +57,32 @@ export class SLOAlarmsDashboard extends Dashboard {
     return windows.map(
       sloWindow =>
         new ApiLatencyWidget({
+          ...slo,
+          sloWindow,
+          showBurnRateThreshold: true,
+          addPeriodToTitle: true,
+        }),
+    );
+  };
+
+  // Creates an array of AppSyncAvailabilityWidgets for each window we are using
+  public static appSyncAvailabilityAlarmsRow = (windows: IAlertConfig[], slo: AppSyncAvailabilitySLO) => {
+    return windows.map(
+      sloWindow =>
+        new AppSyncAvailabilityWidget({
+          ...slo,
+          sloWindow,
+          showBurnRateThreshold: true,
+          addPeriodToTitle: true,
+        }),
+    );
+  };
+
+  // Creates an array of AppSyncLatencyWidgets for each window we are using
+  public static appSyncLatencyAlarmsRow = (windows: IAlertConfig[], slo: AppSyncLatencySLO) => {
+    return windows.map(
+      sloWindow =>
+        new AppSyncLatencyWidget({
           ...slo,
           sloWindow,
           showBurnRateThreshold: true,
@@ -149,6 +179,12 @@ export class SLOAlarmsDashboard extends Dashboard {
           break;
         case 'ApiLatency':
           result.push(SLOAlarmsDashboard.apiLatencyAlarmsRow(windows, slo as ApiLatencySLO));
+          break;
+        case 'AppSyncAvailability':
+          result.push(SLOAlarmsDashboard.appSyncAvailabilityAlarmsRow(windows, slo as AppSyncAvailabilitySLO));
+          break;
+        case 'AppSyncLatency':
+          result.push(SLOAlarmsDashboard.appSyncLatencyAlarmsRow(windows, slo as AppSyncLatencySLO));
           break;
         case 'CloudfrontAvailability':
           result.push(SLOAlarmsDashboard.cloudfrontAvailabilityAlarmsRow(windows, slo as CloudfrontAvailabilitySLO));

@@ -153,7 +153,7 @@ describe('SLOPerformanceDashboard', () => {
               properties: expect.objectContaining({
                 title: `My Cloudfront - Availability`,
                 metrics: [
-                  [{ label: 'Availability', expression: '1-(errorRate/100)' }],
+                  [expect.objectContaining({ label: 'Availability', expression: '1-(errorRate/100)' })],
                   [
                     'AWS/CloudFront',
                     '5xxErrorRate',
@@ -161,7 +161,7 @@ describe('SLOPerformanceDashboard', () => {
                     'myDistributionId',
                     'Region',
                     'Global',
-                    { label: 'Error rate', period: 2592000, visible: false, id: 'errorRate' },
+                    expect.objectContaining({ label: 'Error rate', period: 2592000, visible: false, id: 'errorRate' }),
                   ],
                 ],
               }),
@@ -248,20 +248,37 @@ describe('SLOPerformanceDashboard', () => {
               properties: expect.objectContaining({
                 title: `My API - Availability`,
                 metrics: [
-                  [{ label: 'Availability', expression: '(gatewayRequests - gatewayErrors)/gatewayRequests' }],
+                  [
+                    expect.objectContaining({
+                      label: 'Availability',
+                      expression: '(gatewayRequests - gatewayErrors)/gatewayRequests',
+                    }),
+                  ],
                   [
                     'AWS/ApiGateway',
                     'Count',
                     'ApiName',
                     'myApiName',
-                    { label: 'Requests', period: 2592000, stat: 'Sum', visible: false, id: 'gatewayRequests' },
+                    expect.objectContaining({
+                      label: 'Requests',
+                      period: 2592000,
+                      stat: 'Sum',
+                      visible: false,
+                      id: 'gatewayRequests',
+                    }),
                   ],
                   [
                     'AWS/ApiGateway',
                     '5XXError',
                     'ApiName',
                     'myApiName',
-                    { label: 'Error rate', period: 2592000, stat: 'Sum', visible: false, id: 'gatewayErrors' },
+                    expect.objectContaining({
+                      label: 'Error rate',
+                      period: 2592000,
+                      stat: 'Sum',
+                      visible: false,
+                      id: 'gatewayErrors',
+                    }),
                   ],
                 ],
               }),
@@ -304,7 +321,7 @@ describe('SLOPerformanceDashboard', () => {
                     'Latency',
                     'ApiName',
                     'myApiName',
-                    { label: 'Latency p99.00', period: 2592000, stat: 'p99.00' },
+                    expect.objectContaining({ label: 'Latency p99.00', period: 2592000, stat: 'p99.00' }),
                   ],
                 ],
               }),
@@ -340,20 +357,32 @@ describe('SLOPerformanceDashboard', () => {
               properties: expect.objectContaining({
                 title: `My AppSync API - Availability`,
                 metrics: [
-                  [{ label: 'Availability', expression: '(requests - errors)/requests' }],
+                  [expect.objectContaining({ label: 'Availability', expression: '(requests - errors)/requests' })],
                   [
                     'AWS/AppSync',
                     '5XXError',
                     'GraphQLAPIId',
                     'myApiId',
-                    { label: 'Requests', period: 2592000, stat: 'SampleCount', visible: false, id: 'requests' },
+                    expect.objectContaining({
+                      label: 'Requests',
+                      period: 2592000,
+                      stat: 'SampleCount',
+                      visible: false,
+                      id: 'requests',
+                    }),
                   ],
                   [
                     'AWS/AppSync',
                     '5XXError',
                     'GraphQLAPIId',
                     'myApiId',
-                    { label: 'Error rate', period: 2592000, stat: 'Sum', visible: false, id: 'errors' },
+                    expect.objectContaining({
+                      label: 'Error rate',
+                      period: 2592000,
+                      stat: 'Sum',
+                      visible: false,
+                      id: 'errors',
+                    }),
                   ],
                 ],
               }),
@@ -396,7 +425,7 @@ describe('SLOPerformanceDashboard', () => {
                     'Latency',
                     'GraphQLAPIId',
                     'myApiId',
-                    { label: 'Latency p99.00', period: 2592000, stat: 'p99.00' },
+                    expect.objectContaining({ label: 'Latency p99.00', period: 2592000, stat: 'p99.00' }),
                   ],
                 ],
               }),
@@ -441,16 +470,28 @@ describe('SLOPerformanceDashboard', () => {
               properties: expect.objectContaining({
                 title: `My Custom Availability - Availability`,
                 metrics: [
-                  [{ label: 'Availability', expression: '(requests - errors)/requests' }],
+                  [expect.objectContaining({ label: 'Availability', expression: '(requests - errors)/requests' })],
                   [
                     'CustomNamespace',
                     'CustomRequestCountMetric',
-                    { label: 'Requests', period: 2592000, stat: 'Sum', visible: false, id: 'requests' },
+                    expect.objectContaining({
+                      label: 'Requests',
+                      period: 2592000,
+                      stat: 'Sum',
+                      visible: false,
+                      id: 'requests',
+                    }),
                   ],
                   [
                     'CustomNamespace',
                     'CustomErrorCountMetric',
-                    { label: 'Errors', period: 2592000, stat: 'Sum', visible: false, id: 'errors' },
+                    expect.objectContaining({
+                      label: 'Errors',
+                      period: 2592000,
+                      stat: 'Sum',
+                      visible: false,
+                      id: 'errors',
+                    }),
                   ],
                 ],
               }),
@@ -498,7 +539,7 @@ describe('SLOPerformanceDashboard', () => {
                   [
                     'CustomNamespace',
                     'CustomLatencyMetric',
-                    { label: 'Latency p99.00', period: 2592000, stat: 'p99.00' },
+                    expect.objectContaining({ label: 'Latency p99.00', period: 2592000, stat: 'p99.00' }),
                   ],
                 ]),
               }),

@@ -549,20 +549,31 @@ describe('SLOAlarms', () => {
           EvaluationPeriods: 1,
           AlarmName: 'My Cloudfront Latency P95 >= 200ms - 2.00% of 30 days budget burned in 5 minutes',
           DatapointsToAlarm: 1,
-          Dimensions: [
+          Metrics: [
             {
-              Name: 'DistributionId',
-              Value: 'myDistributionId',
-            },
-            {
-              Name: 'Region',
-              Value: 'Global',
+              Id: 'm1',
+              Label: 'Latency p28.00',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'DistributionId',
+                      Value: 'myDistributionId',
+                    },
+                    {
+                      Name: 'Region',
+                      Value: 'Global',
+                    },
+                  ],
+                  MetricName: 'OriginLatency',
+                  Namespace: 'AWS/CloudFront',
+                },
+                Period: 300,
+                Stat: 'p28.00',
+              },
+              ReturnData: true,
             },
           ],
-          ExtendedStatistic: 'p28.00',
-          MetricName: 'OriginLatency',
-          Namespace: 'AWS/CloudFront',
-          Period: 300,
           Threshold: 200,
         }),
       );
@@ -578,20 +589,31 @@ describe('SLOAlarms', () => {
           EvaluationPeriods: 1,
           AlarmName: 'My Cloudfront Latency P95 >= 200ms - 2.00% of 30 days budget burned in 60 minutes',
           DatapointsToAlarm: 1,
-          Dimensions: [
+          Metrics: [
             {
-              Name: 'DistributionId',
-              Value: 'myDistributionId',
-            },
-            {
-              Name: 'Region',
-              Value: 'Global',
+              Id: 'm1',
+              Label: 'Latency p28.00',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'DistributionId',
+                      Value: 'myDistributionId',
+                    },
+                    {
+                      Name: 'Region',
+                      Value: 'Global',
+                    },
+                  ],
+                  MetricName: 'OriginLatency',
+                  Namespace: 'AWS/CloudFront',
+                },
+                Period: 3600,
+                Stat: 'p28.00',
+              },
+              ReturnData: true,
             },
           ],
-          ExtendedStatistic: 'p28.00',
-          MetricName: 'OriginLatency',
-          Namespace: 'AWS/CloudFront',
-          Period: 3600,
           Threshold: 200,
         }),
       );
@@ -607,20 +629,31 @@ describe('SLOAlarms', () => {
           EvaluationPeriods: 1,
           AlarmName: 'My Cloudfront Latency P95 >= 200ms - 5.00% of 30 days budget burned in 30 minutes',
           DatapointsToAlarm: 1,
-          Dimensions: [
+          Metrics: [
             {
-              Name: 'DistributionId',
-              Value: 'myDistributionId',
-            },
-            {
-              Name: 'Region',
-              Value: 'Global',
+              Id: 'm1',
+              Label: 'Latency p70.00',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'DistributionId',
+                      Value: 'myDistributionId',
+                    },
+                    {
+                      Name: 'Region',
+                      Value: 'Global',
+                    },
+                  ],
+                  MetricName: 'OriginLatency',
+                  Namespace: 'AWS/CloudFront',
+                },
+                Period: 1800,
+                Stat: 'p70.00',
+              },
+              ReturnData: true,
             },
           ],
-          ExtendedStatistic: 'p70.00',
-          MetricName: 'OriginLatency',
-          Namespace: 'AWS/CloudFront',
-          Period: 1800,
           Threshold: 200,
         }),
       );
@@ -636,20 +669,31 @@ describe('SLOAlarms', () => {
           EvaluationPeriods: 1,
           AlarmName: 'My Cloudfront Latency P95 >= 200ms - 5.00% of 30 days budget burned in 6 hours',
           DatapointsToAlarm: 1,
-          Dimensions: [
+          Metrics: [
             {
-              Name: 'DistributionId',
-              Value: 'myDistributionId',
-            },
-            {
-              Name: 'Region',
-              Value: 'Global',
+              Id: 'm1',
+              Label: 'Latency p70.00',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'DistributionId',
+                      Value: 'myDistributionId',
+                    },
+                    {
+                      Name: 'Region',
+                      Value: 'Global',
+                    },
+                  ],
+                  MetricName: 'OriginLatency',
+                  Namespace: 'AWS/CloudFront',
+                },
+                Period: 21600,
+                Stat: 'p70.00',
+              },
+              ReturnData: true,
             },
           ],
-          ExtendedStatistic: 'p70.00',
-          MetricName: 'OriginLatency',
-          Namespace: 'AWS/CloudFront',
-          Period: 21600,
           Threshold: 200,
         }),
       );
@@ -665,20 +709,31 @@ describe('SLOAlarms', () => {
           EvaluationPeriods: 1,
           AlarmName: 'My Cloudfront Latency P95 >= 200ms - 10.00% of 30 days budget burned in 6 hours',
           DatapointsToAlarm: 1,
-          Dimensions: [
+          Metrics: [
             {
-              Name: 'DistributionId',
-              Value: 'myDistributionId',
-            },
-            {
-              Name: 'Region',
-              Value: 'Global',
+              Id: 'm1',
+              Label: 'Latency p95.00',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'DistributionId',
+                      Value: 'myDistributionId',
+                    },
+                    {
+                      Name: 'Region',
+                      Value: 'Global',
+                    },
+                  ],
+                  MetricName: 'OriginLatency',
+                  Namespace: 'AWS/CloudFront',
+                },
+                Period: 21600,
+                Stat: 'p95.00',
+              },
+              ReturnData: true,
             },
           ],
-          ExtendedStatistic: 'p95.00',
-          MetricName: 'OriginLatency',
-          Namespace: 'AWS/CloudFront',
-          Period: 21600,
           Threshold: 200,
         }),
       );
@@ -694,20 +749,31 @@ describe('SLOAlarms', () => {
           EvaluationPeriods: 1,
           AlarmName: 'My Cloudfront Latency P95 >= 200ms - 10.00% of 30 days budget burned in 1 day',
           DatapointsToAlarm: 1,
-          Dimensions: [
+          Metrics: [
             {
-              Name: 'DistributionId',
-              Value: 'myDistributionId',
-            },
-            {
-              Name: 'Region',
-              Value: 'Global',
+              Id: 'm1',
+              Label: 'Latency p95.00',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'DistributionId',
+                      Value: 'myDistributionId',
+                    },
+                    {
+                      Name: 'Region',
+                      Value: 'Global',
+                    },
+                  ],
+                  MetricName: 'OriginLatency',
+                  Namespace: 'AWS/CloudFront',
+                },
+                Period: 86400,
+                Stat: 'p95.00',
+              },
+              ReturnData: true,
             },
           ],
-          ExtendedStatistic: 'p95.00',
-          MetricName: 'OriginLatency',
-          Namespace: 'AWS/CloudFront',
-          Period: 86400,
           Threshold: 200,
         }),
       );
@@ -1275,16 +1341,27 @@ describe('SLOAlarms', () => {
           EvaluationPeriods: 1,
           AlarmName: 'My API Latency P99 >= 2000ms - 2.00% of 30 days budget burned in 5 minutes',
           DatapointsToAlarm: 1,
-          Dimensions: [
+          Metrics: [
             {
-              Name: 'ApiName',
-              Value: 'myApiName',
+              Id: 'm1',
+              Label: 'Latency p85.60',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'ApiName',
+                      Value: 'myApiName',
+                    },
+                  ],
+                  MetricName: 'Latency',
+                  Namespace: 'AWS/ApiGateway',
+                },
+                Period: 300,
+                Stat: 'p85.60',
+              },
+              ReturnData: true,
             },
           ],
-          ExtendedStatistic: 'p85.60',
-          MetricName: 'Latency',
-          Namespace: 'AWS/ApiGateway',
-          Period: 300,
           Threshold: 2000,
         }),
       );
@@ -1300,16 +1377,27 @@ describe('SLOAlarms', () => {
           EvaluationPeriods: 1,
           AlarmName: 'My API Latency P99 >= 2000ms - 2.00% of 30 days budget burned in 60 minutes',
           DatapointsToAlarm: 1,
-          Dimensions: [
+          Metrics: [
             {
-              Name: 'ApiName',
-              Value: 'myApiName',
+              Id: 'm1',
+              Label: 'Latency p85.60',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'ApiName',
+                      Value: 'myApiName',
+                    },
+                  ],
+                  MetricName: 'Latency',
+                  Namespace: 'AWS/ApiGateway',
+                },
+                Period: 3600,
+                Stat: 'p85.60',
+              },
+              ReturnData: true,
             },
           ],
-          ExtendedStatistic: 'p85.60',
-          MetricName: 'Latency',
-          Namespace: 'AWS/ApiGateway',
-          Period: 3600,
           Threshold: 2000,
         }),
       );
@@ -1325,16 +1413,27 @@ describe('SLOAlarms', () => {
           EvaluationPeriods: 1,
           AlarmName: 'My API Latency P99 >= 2000ms - 5.00% of 30 days budget burned in 30 minutes',
           DatapointsToAlarm: 1,
-          Dimensions: [
+          Metrics: [
             {
-              Name: 'ApiName',
-              Value: 'myApiName',
+              Id: 'm1',
+              Label: 'Latency p94.00',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'ApiName',
+                      Value: 'myApiName',
+                    },
+                  ],
+                  MetricName: 'Latency',
+                  Namespace: 'AWS/ApiGateway',
+                },
+                Period: 1800,
+                Stat: 'p94.00',
+              },
+              ReturnData: true,
             },
           ],
-          ExtendedStatistic: 'p94.00',
-          MetricName: 'Latency',
-          Namespace: 'AWS/ApiGateway',
-          Period: 1800,
           Threshold: 2000,
         }),
       );
@@ -1350,16 +1449,27 @@ describe('SLOAlarms', () => {
           EvaluationPeriods: 1,
           AlarmName: 'My API Latency P99 >= 2000ms - 5.00% of 30 days budget burned in 6 hours',
           DatapointsToAlarm: 1,
-          Dimensions: [
+          Metrics: [
             {
-              Name: 'ApiName',
-              Value: 'myApiName',
+              Id: 'm1',
+              Label: 'Latency p94.00',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'ApiName',
+                      Value: 'myApiName',
+                    },
+                  ],
+                  MetricName: 'Latency',
+                  Namespace: 'AWS/ApiGateway',
+                },
+                Period: 21600,
+                Stat: 'p94.00',
+              },
+              ReturnData: true,
             },
           ],
-          ExtendedStatistic: 'p94.00',
-          MetricName: 'Latency',
-          Namespace: 'AWS/ApiGateway',
-          Period: 21600,
           Threshold: 2000,
         }),
       );
@@ -1375,16 +1485,27 @@ describe('SLOAlarms', () => {
           EvaluationPeriods: 1,
           AlarmName: 'My API Latency P99 >= 2000ms - 10.00% of 30 days budget burned in 6 hours',
           DatapointsToAlarm: 1,
-          Dimensions: [
+          Metrics: [
             {
-              Name: 'ApiName',
-              Value: 'myApiName',
+              Id: 'm1',
+              Label: 'Latency p99.00',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'ApiName',
+                      Value: 'myApiName',
+                    },
+                  ],
+                  MetricName: 'Latency',
+                  Namespace: 'AWS/ApiGateway',
+                },
+                Period: 21600,
+                Stat: 'p99.00',
+              },
+              ReturnData: true,
             },
           ],
-          ExtendedStatistic: 'p99.00',
-          MetricName: 'Latency',
-          Namespace: 'AWS/ApiGateway',
-          Period: 21600,
           Threshold: 2000,
         }),
       );
@@ -1400,16 +1521,27 @@ describe('SLOAlarms', () => {
           EvaluationPeriods: 1,
           AlarmName: 'My API Latency P99 >= 2000ms - 10.00% of 30 days budget burned in 1 day',
           DatapointsToAlarm: 1,
-          Dimensions: [
+          Metrics: [
             {
-              Name: 'ApiName',
-              Value: 'myApiName',
+              Id: 'm1',
+              Label: 'Latency p99.00',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'ApiName',
+                      Value: 'myApiName',
+                    },
+                  ],
+                  MetricName: 'Latency',
+                  Namespace: 'AWS/ApiGateway',
+                },
+                Period: 86400,
+                Stat: 'p99.00',
+              },
+              ReturnData: true,
             },
           ],
-          ExtendedStatistic: 'p99.00',
-          MetricName: 'Latency',
-          Namespace: 'AWS/ApiGateway',
-          Period: 86400,
           Threshold: 2000,
         }),
       );
@@ -1977,16 +2109,27 @@ describe('SLOAlarms', () => {
           EvaluationPeriods: 1,
           AlarmName: 'My AppSync API Latency P99 >= 2000ms - 2.00% of 30 days budget burned in 5 minutes',
           DatapointsToAlarm: 1,
-          Dimensions: [
+          Metrics: [
             {
-              Name: 'GraphQLAPIId',
-              Value: 'myApiId',
+              Id: 'm1',
+              Label: 'Latency p85.60',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'GraphQLAPIId',
+                      Value: 'myApiId',
+                    },
+                  ],
+                  MetricName: 'Latency',
+                  Namespace: 'AWS/AppSync',
+                },
+                Period: 300,
+                Stat: 'p85.60',
+              },
+              ReturnData: true,
             },
           ],
-          ExtendedStatistic: 'p85.60',
-          MetricName: 'Latency',
-          Namespace: 'AWS/AppSync',
-          Period: 300,
           Threshold: 2000,
         }),
       );
@@ -2002,16 +2145,27 @@ describe('SLOAlarms', () => {
           EvaluationPeriods: 1,
           AlarmName: 'My AppSync API Latency P99 >= 2000ms - 2.00% of 30 days budget burned in 60 minutes',
           DatapointsToAlarm: 1,
-          Dimensions: [
+          Metrics: [
             {
-              Name: 'GraphQLAPIId',
-              Value: 'myApiId',
+              Id: 'm1',
+              Label: 'Latency p85.60',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'GraphQLAPIId',
+                      Value: 'myApiId',
+                    },
+                  ],
+                  MetricName: 'Latency',
+                  Namespace: 'AWS/AppSync',
+                },
+                Period: 3600,
+                Stat: 'p85.60',
+              },
+              ReturnData: true,
             },
           ],
-          ExtendedStatistic: 'p85.60',
-          MetricName: 'Latency',
-          Namespace: 'AWS/AppSync',
-          Period: 3600,
           Threshold: 2000,
         }),
       );
@@ -2027,16 +2181,27 @@ describe('SLOAlarms', () => {
           EvaluationPeriods: 1,
           AlarmName: 'My AppSync API Latency P99 >= 2000ms - 5.00% of 30 days budget burned in 30 minutes',
           DatapointsToAlarm: 1,
-          Dimensions: [
+          Metrics: [
             {
-              Name: 'GraphQLAPIId',
-              Value: 'myApiId',
+              Id: 'm1',
+              Label: 'Latency p94.00',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'GraphQLAPIId',
+                      Value: 'myApiId',
+                    },
+                  ],
+                  MetricName: 'Latency',
+                  Namespace: 'AWS/AppSync',
+                },
+                Period: 1800,
+                Stat: 'p94.00',
+              },
+              ReturnData: true,
             },
           ],
-          ExtendedStatistic: 'p94.00',
-          MetricName: 'Latency',
-          Namespace: 'AWS/AppSync',
-          Period: 1800,
           Threshold: 2000,
         }),
       );
@@ -2052,16 +2217,27 @@ describe('SLOAlarms', () => {
           EvaluationPeriods: 1,
           AlarmName: 'My AppSync API Latency P99 >= 2000ms - 5.00% of 30 days budget burned in 6 hours',
           DatapointsToAlarm: 1,
-          Dimensions: [
+          Metrics: [
             {
-              Name: 'GraphQLAPIId',
-              Value: 'myApiId',
+              Id: 'm1',
+              Label: 'Latency p94.00',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'GraphQLAPIId',
+                      Value: 'myApiId',
+                    },
+                  ],
+                  MetricName: 'Latency',
+                  Namespace: 'AWS/AppSync',
+                },
+                Period: 21600,
+                Stat: 'p94.00',
+              },
+              ReturnData: true,
             },
           ],
-          ExtendedStatistic: 'p94.00',
-          MetricName: 'Latency',
-          Namespace: 'AWS/AppSync',
-          Period: 21600,
           Threshold: 2000,
         }),
       );
@@ -2077,16 +2253,27 @@ describe('SLOAlarms', () => {
           EvaluationPeriods: 1,
           AlarmName: 'My AppSync API Latency P99 >= 2000ms - 10.00% of 30 days budget burned in 6 hours',
           DatapointsToAlarm: 1,
-          Dimensions: [
+          Metrics: [
             {
-              Name: 'GraphQLAPIId',
-              Value: 'myApiId',
+              Id: 'm1',
+              Label: 'Latency p99.00',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'GraphQLAPIId',
+                      Value: 'myApiId',
+                    },
+                  ],
+                  MetricName: 'Latency',
+                  Namespace: 'AWS/AppSync',
+                },
+                Period: 21600,
+                Stat: 'p99.00',
+              },
+              ReturnData: true,
             },
           ],
-          ExtendedStatistic: 'p99.00',
-          MetricName: 'Latency',
-          Namespace: 'AWS/AppSync',
-          Period: 21600,
           Threshold: 2000,
         }),
       );
@@ -2102,16 +2289,27 @@ describe('SLOAlarms', () => {
           EvaluationPeriods: 1,
           AlarmName: 'My AppSync API Latency P99 >= 2000ms - 10.00% of 30 days budget burned in 1 day',
           DatapointsToAlarm: 1,
-          Dimensions: [
+          Metrics: [
             {
-              Name: 'GraphQLAPIId',
-              Value: 'myApiId',
+              Id: 'm1',
+              Label: 'Latency p99.00',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'GraphQLAPIId',
+                      Value: 'myApiId',
+                    },
+                  ],
+                  MetricName: 'Latency',
+                  Namespace: 'AWS/AppSync',
+                },
+                Period: 86400,
+                Stat: 'p99.00',
+              },
+              ReturnData: true,
             },
           ],
-          ExtendedStatistic: 'p99.00',
-          MetricName: 'Latency',
-          Namespace: 'AWS/AppSync',
-          Period: 86400,
           Threshold: 2000,
         }),
       );

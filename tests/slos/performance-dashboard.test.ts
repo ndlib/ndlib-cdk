@@ -315,6 +315,98 @@ describe('SLOPerformanceDashboard', () => {
     });
   });
 
+  describe('AppSyncAvailability', () => {
+    const slos = [{ type: 'AppSyncAvailability', apiId: 'myApiId', title: 'My AppSync API', sloThreshold: 0.99 }];
+
+    it('constructs a dashboard with a 30 day window widget', () => {
+      const stack = new Stack();
+      new SLOPerformanceDashboard(stack, 'TestPerformanceDashboard', {
+        slos,
+        dashboardName: 'TestPerformanceDashboard',
+      });
+
+      const dashBody = Capture.anyType();
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Dashboard', {
+          DashboardBody: dashBody.capture(),
+          DashboardName: 'TestPerformanceDashboard',
+        }),
+      );
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      expect(dashObj).toEqual(
+        expect.objectContaining({
+          widgets: expect.arrayContaining([
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: `My AppSync API - Availability`,
+                metrics: [
+                  [{ label: 'Availability', expression: '(requests - errors)/requests' }],
+                  [
+                    'AWS/AppSync',
+                    '5XXError',
+                    'GraphQLAPIId',
+                    'myApiId',
+                    { label: 'Requests', period: 2592000, stat: 'SampleCount', visible: false, id: 'requests' },
+                  ],
+                  [
+                    'AWS/AppSync',
+                    '5XXError',
+                    'GraphQLAPIId',
+                    'myApiId',
+                    { label: 'Error rate', period: 2592000, stat: 'Sum', visible: false, id: 'errors' },
+                  ],
+                ],
+              }),
+            }),
+          ]),
+        }),
+      );
+    });
+  });
+
+  describe('AppSyncLatency', () => {
+    const slos = [
+      { type: 'AppSyncLatency', apiId: 'myApiId', title: 'My AppSync API', sloThreshold: 0.99, latencyThreshold: 2000 },
+    ];
+
+    it('constructs a dashboard with a 30 day window widget', () => {
+      const stack = new Stack();
+      new SLOPerformanceDashboard(stack, 'TestPerformanceDashboard', {
+        slos,
+        dashboardName: 'TestPerformanceDashboard',
+      });
+
+      const dashBody = Capture.anyType();
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Dashboard', {
+          DashboardBody: dashBody.capture(),
+          DashboardName: 'TestPerformanceDashboard',
+        }),
+      );
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      expect(dashObj).toEqual(
+        expect.objectContaining({
+          widgets: expect.arrayContaining([
+            expect.objectContaining({
+              properties: expect.objectContaining({
+                title: `My AppSync API - Latency 2000ms`,
+                metrics: [
+                  [
+                    'AWS/AppSync',
+                    'Latency',
+                    'GraphQLAPIId',
+                    'myApiId',
+                    { label: 'Latency p99.00', period: 2592000, stat: 'p99.00' },
+                  ],
+                ],
+              }),
+            }),
+          ]),
+        }),
+      );
+    });
+  });
+
   describe('CustomAvailability', () => {
     const slos = [
       {

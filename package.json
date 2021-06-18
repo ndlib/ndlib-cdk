@@ -16,7 +16,7 @@
     "preversion": "npm test && npm run lint",
     "version": "npm run generate-changelog && npm run format && git add CHANGELOG.md && git checkout -B bump-$npm_package_version && git add -A src",
     "postversion": "git push --set-upstream origin bump-$npm_package_version && git push --tags",
-    "watch": "tsc-watch --onSuccess \"npm run test\""
+    "watch": "tsc-watch"
   },
   "repository": {
     "type": "git",

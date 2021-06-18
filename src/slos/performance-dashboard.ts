@@ -2,6 +2,8 @@ import { Dashboard, DashboardProps } from '@aws-cdk/aws-cloudwatch';
 import * as cdk from '@aws-cdk/core';
 import { ApiAvailabilityWidget } from './api-availability-widget';
 import { ApiLatencyWidget } from './api-latency-widget';
+import { AppSyncAvailabilityWidget } from './appsync-availability-widget';
+import { AppSyncLatencyWidget } from './appsync-latency-widget';
 import { CloudfrontAvailabilityWidget } from './cloudfront-availability-widget';
 import { CloudfrontLatencyWidget } from './cloudfront-latency-widget';
 import { CustomAvailabilityWidget } from './custom-availability-widget';
@@ -12,6 +14,8 @@ import {
   AnySLO,
   ApiAvailabilitySLO,
   ApiLatencySLO,
+  AppSyncAvailabilitySLO,
+  AppSyncLatencySLO,
   CloudfrontAvailabilitySLO,
   CloudfrontLatencySLO,
   CustomAvailabilitySLO,
@@ -61,6 +65,26 @@ export class SLOPerformanceDashboard extends Dashboard {
                 ...apiLatencySlo,
                 sloWindow: Windows.thirtyDays,
                 title: `${apiLatencySlo.title} - Latency ${apiLatencySlo.latencyThreshold}ms`,
+              }),
+            );
+            break;
+          case 'AppSyncAvailability':
+            const appSyncAvailabilitySlo = slo as AppSyncAvailabilitySLO;
+            lastRow.push(
+              new AppSyncAvailabilityWidget({
+                ...appSyncAvailabilitySlo,
+                sloWindow: Windows.thirtyDays,
+                title: `${appSyncAvailabilitySlo.title} - Availability`,
+              }),
+            );
+            break;
+          case 'AppSyncLatency':
+            const appSyncLatencySlo = slo as AppSyncLatencySLO;
+            lastRow.push(
+              new AppSyncLatencyWidget({
+                ...appSyncLatencySlo,
+                sloWindow: Windows.thirtyDays,
+                title: `${appSyncLatencySlo.title} - Latency ${appSyncLatencySlo.latencyThreshold}ms`,
               }),
             );
             break;

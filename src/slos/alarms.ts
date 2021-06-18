@@ -3,6 +3,8 @@ import { Topic } from '@aws-cdk/aws-sns';
 import { Construct } from '@aws-cdk/core';
 import { ApiAvailabilityMetric } from './api-availability-metric';
 import { ApiLatencyMetric } from './api-latency-metric';
+import { AppSyncAvailabilityMetric } from './appsync-availability-metric';
+import { AppSyncLatencyMetric } from './appsync-latency-metric';
 import { CloudfrontAvailabilityMetric } from './cloudfront-availability-metric';
 import { CloudfrontLatencyMetric } from './cloudfront-latency-metric';
 import { CustomAvailabilityMetric } from './custom-availability-metric';
@@ -13,6 +15,8 @@ import {
   AnySLO,
   ApiAvailabilitySLO,
   ApiLatencySLO,
+  AppSyncAvailabilitySLO,
+  AppSyncLatencySLO,
   CloudfrontAvailabilitySLO,
   CloudfrontLatencySLO,
   CustomAvailabilitySLO,
@@ -102,6 +106,52 @@ export class SLOAlarms extends Construct {
   public static apiLatencyAlarm = (sloWindow: IAlertConfig, scope: Construct, slo: AnySLO, alarmName: string) => {
     const typedSlo = slo as ApiLatencySLO;
     const metric = new ApiLatencyMetric({
+      ...typedSlo,
+      sloWindow,
+    });
+    return new Alarm(scope, alarmName, {
+      metric,
+      threshold: typedSlo.latencyThreshold,
+      alarmName,
+      evaluationPeriods: 1,
+      datapointsToAlarm: 1,
+      comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+    });
+  };
+
+  /**
+   * Factory method for constructing an Alarm based on an AppSyncAvailabilitySLO
+   */
+  public static appSyncAvailabilityAlarm = (
+    sloWindow: IAlertConfig,
+    scope: Construct,
+    slo: AnySLO,
+    alarmName: string,
+  ) => {
+    const typedSlo = slo as AppSyncAvailabilitySLO;
+    const metric = new AppSyncAvailabilityMetric({
+      ...typedSlo,
+      sloWindow,
+    });
+    const sloBudget = 1 - typedSlo.sloThreshold;
+    let alarmThreshold = 1 - sloWindow.burnRateThreshold * sloBudget;
+    alarmThreshold = Math.max(0, Math.min(alarmThreshold, 1));
+    return new Alarm(scope, alarmName, {
+      metric,
+      threshold: alarmThreshold,
+      alarmName,
+      evaluationPeriods: 1,
+      datapointsToAlarm: 1,
+      comparisonOperator: ComparisonOperator.LESS_THAN_OR_EQUAL_TO_THRESHOLD,
+    });
+  };
+
+  /**
+   * Factory method for constructing an Alarm based on an AppSyncLatencySLO
+   */
+  public static appSyncLatencyAlarm = (sloWindow: IAlertConfig, scope: Construct, slo: AnySLO, alarmName: string) => {
+    const typedSlo = slo as AppSyncLatencySLO;
+    const metric = new AppSyncLatencyMetric({
       ...typedSlo,
       sloWindow,
     });
@@ -359,6 +409,15 @@ export class SLOAlarms extends Construct {
           const apiLatencySLO = slo as ApiLatencySLO;
           parentName = `${slo.title} Latency P${slo.sloThreshold * 100} >= ${apiLatencySLO.latencyThreshold}ms`;
           alarmFactory = SLOAlarms.apiLatencyAlarm;
+          break;
+        case 'AppSyncAvailability':
+          parentName = `${slo.title} Availability <= ${slo.sloThreshold}`;
+          alarmFactory = SLOAlarms.appSyncAvailabilityAlarm;
+          break;
+        case 'AppSyncLatency':
+          const appSyncLatencySLO = slo as AppSyncLatencySLO;
+          parentName = `${slo.title} Latency P${slo.sloThreshold * 100} >= ${appSyncLatencySLO.latencyThreshold}ms`;
+          alarmFactory = SLOAlarms.appSyncLatencyAlarm;
           break;
         case 'CloudfrontAvailability':
           parentName = `${slo.title} Availability <= ${slo.sloThreshold}`;

@@ -14,6 +14,8 @@ describe('SLOAlarms', () => {
     },
     { type: 'ApiAvailability', apiName: 'myApiName', title: 'My API', sloThreshold: 0.99 },
     { type: 'ApiLatency', apiName: 'myApiName', title: 'My API', sloThreshold: 0.99, latencyThreshold: 2000 },
+    { type: 'AppSyncAvailability', apiId: 'myApiId', title: 'My AppSync API', sloThreshold: 0.99 },
+    { type: 'AppSyncLatency', apiId: 'myApiId', title: 'My AppSync API', sloThreshold: 0.99, latencyThreshold: 2000 },
     {
       type: 'ElasticSearchAvailability',
       domainName: 'domainName',
@@ -1501,6 +1503,708 @@ describe('SLOAlarms', () => {
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::CompositeAlarm', {
           AlarmName: 'My API Latency P99 >= 2000ms (High Severity)',
+          AlarmDescription:
+            'Service is at risk of exceeding its error budget. Please use the links below to troubleshoot the problem:\n\nDashboard: dashboardLink\nRun book: runbookLink\nAlarms Dashboard: alarmsDashboardLink\n',
+        }),
+      );
+    });
+  });
+
+  describe('AppSyncAvailability', () => {
+    it('constructs an alarm for the 2.00% of 30 days budget burned in 5 minutes window', () => {
+      const stack = new Stack();
+      new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Alarm', {
+          ComparisonOperator: 'LessThanOrEqualToThreshold',
+          EvaluationPeriods: 1,
+          AlarmName: 'My AppSync API Availability <= 0.99 - 2.00% of 30 days budget burned in 5 minutes',
+          DatapointsToAlarm: 1,
+          Metrics: [
+            {
+              Expression: '(requests - errors)/requests',
+              Id: 'expr_1',
+              Label: 'Availability',
+            },
+            {
+              Id: 'requests',
+              Label: 'Requests',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'GraphQLAPIId',
+                      Value: 'myApiId',
+                    },
+                  ],
+                  MetricName: '5XXError',
+                  Namespace: 'AWS/AppSync',
+                },
+                Period: 300,
+                Stat: 'SampleCount',
+              },
+              ReturnData: false,
+            },
+            {
+              Id: 'errors',
+              Label: 'Error rate',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'GraphQLAPIId',
+                      Value: 'myApiId',
+                    },
+                  ],
+                  MetricName: '5XXError',
+                  Namespace: 'AWS/AppSync',
+                },
+                Period: 300,
+                Stat: 'Sum',
+              },
+              ReturnData: false,
+            },
+          ],
+          Threshold: 0.8559999999999999,
+        }),
+      );
+    });
+
+    it('constructs an alarm for the 2.00% of 30 days budget burned in 60 minutes window', () => {
+      const stack = new Stack();
+      new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Alarm', {
+          ComparisonOperator: 'LessThanOrEqualToThreshold',
+          EvaluationPeriods: 1,
+          AlarmName: 'My AppSync API Availability <= 0.99 - 2.00% of 30 days budget burned in 60 minutes',
+          DatapointsToAlarm: 1,
+          Metrics: [
+            {
+              Expression: '(requests - errors)/requests',
+              Id: 'expr_1',
+              Label: 'Availability',
+            },
+            {
+              Id: 'requests',
+              Label: 'Requests',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'GraphQLAPIId',
+                      Value: 'myApiId',
+                    },
+                  ],
+                  MetricName: '5XXError',
+                  Namespace: 'AWS/AppSync',
+                },
+                Period: 3600,
+                Stat: 'SampleCount',
+              },
+              ReturnData: false,
+            },
+            {
+              Id: 'errors',
+              Label: 'Error rate',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'GraphQLAPIId',
+                      Value: 'myApiId',
+                    },
+                  ],
+                  MetricName: '5XXError',
+                  Namespace: 'AWS/AppSync',
+                },
+                Period: 3600,
+                Stat: 'Sum',
+              },
+              ReturnData: false,
+            },
+          ],
+          Threshold: 0.8559999999999999,
+        }),
+      );
+    });
+
+    it('constructs an alarm for the 5.00% of 30 days budget burned in 30 minutes window', () => {
+      const stack = new Stack();
+      new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Alarm', {
+          ComparisonOperator: 'LessThanOrEqualToThreshold',
+          EvaluationPeriods: 1,
+          AlarmName: 'My AppSync API Availability <= 0.99 - 5.00% of 30 days budget burned in 30 minutes',
+          DatapointsToAlarm: 1,
+          Metrics: [
+            {
+              Expression: '(requests - errors)/requests',
+              Id: 'expr_1',
+              Label: 'Availability',
+            },
+            {
+              Id: 'requests',
+              Label: 'Requests',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'GraphQLAPIId',
+                      Value: 'myApiId',
+                    },
+                  ],
+                  MetricName: '5XXError',
+                  Namespace: 'AWS/AppSync',
+                },
+                Period: 1800,
+                Stat: 'SampleCount',
+              },
+              ReturnData: false,
+            },
+            {
+              Id: 'errors',
+              Label: 'Error rate',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'GraphQLAPIId',
+                      Value: 'myApiId',
+                    },
+                  ],
+                  MetricName: '5XXError',
+                  Namespace: 'AWS/AppSync',
+                },
+                Period: 1800,
+                Stat: 'Sum',
+              },
+              ReturnData: false,
+            },
+          ],
+          Threshold: 0.94,
+        }),
+      );
+    });
+
+    it('constructs an alarm for the 5.00% of 30 days budget burned in 6 hours window', () => {
+      const stack = new Stack();
+      new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Alarm', {
+          ComparisonOperator: 'LessThanOrEqualToThreshold',
+          EvaluationPeriods: 1,
+          AlarmName: 'My AppSync API Availability <= 0.99 - 5.00% of 30 days budget burned in 6 hours',
+          DatapointsToAlarm: 1,
+          Metrics: [
+            {
+              Expression: '(requests - errors)/requests',
+              Id: 'expr_1',
+              Label: 'Availability',
+            },
+            {
+              Id: 'requests',
+              Label: 'Requests',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'GraphQLAPIId',
+                      Value: 'myApiId',
+                    },
+                  ],
+                  MetricName: '5XXError',
+                  Namespace: 'AWS/AppSync',
+                },
+                Period: 21600,
+                Stat: 'SampleCount',
+              },
+              ReturnData: false,
+            },
+            {
+              Id: 'errors',
+              Label: 'Error rate',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'GraphQLAPIId',
+                      Value: 'myApiId',
+                    },
+                  ],
+                  MetricName: '5XXError',
+                  Namespace: 'AWS/AppSync',
+                },
+                Period: 21600,
+                Stat: 'Sum',
+              },
+              ReturnData: false,
+            },
+          ],
+          Threshold: 0.94,
+        }),
+      );
+    });
+
+    it('constructs an alarm for the 10.00% of 30 days budget burned in 6 hours window', () => {
+      const stack = new Stack();
+      new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Alarm', {
+          ComparisonOperator: 'LessThanOrEqualToThreshold',
+          EvaluationPeriods: 1,
+          AlarmName: 'My AppSync API Availability <= 0.99 - 10.00% of 30 days budget burned in 6 hours',
+          DatapointsToAlarm: 1,
+          Metrics: [
+            {
+              Expression: '(requests - errors)/requests',
+              Id: 'expr_1',
+              Label: 'Availability',
+            },
+            {
+              Id: 'requests',
+              Label: 'Requests',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'GraphQLAPIId',
+                      Value: 'myApiId',
+                    },
+                  ],
+                  MetricName: '5XXError',
+                  Namespace: 'AWS/AppSync',
+                },
+                Period: 21600,
+                Stat: 'SampleCount',
+              },
+              ReturnData: false,
+            },
+            {
+              Id: 'errors',
+              Label: 'Error rate',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'GraphQLAPIId',
+                      Value: 'myApiId',
+                    },
+                  ],
+                  MetricName: '5XXError',
+                  Namespace: 'AWS/AppSync',
+                },
+                Period: 21600,
+                Stat: 'Sum',
+              },
+              ReturnData: false,
+            },
+          ],
+          Threshold: 0.99,
+        }),
+      );
+    });
+
+    it('constructs an alarm for the 10.00% of 30 days budget burned in 1 day window', () => {
+      const stack = new Stack();
+      new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Alarm', {
+          ComparisonOperator: 'LessThanOrEqualToThreshold',
+          EvaluationPeriods: 1,
+          AlarmName: 'My AppSync API Availability <= 0.99 - 10.00% of 30 days budget burned in 1 day',
+          DatapointsToAlarm: 1,
+          Metrics: [
+            {
+              Expression: '(requests - errors)/requests',
+              Id: 'expr_1',
+              Label: 'Availability',
+            },
+            {
+              Id: 'requests',
+              Label: 'Requests',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'GraphQLAPIId',
+                      Value: 'myApiId',
+                    },
+                  ],
+                  MetricName: '5XXError',
+                  Namespace: 'AWS/AppSync',
+                },
+                Period: 86400,
+                Stat: 'SampleCount',
+              },
+              ReturnData: false,
+            },
+            {
+              Id: 'errors',
+              Label: 'Error rate',
+              MetricStat: {
+                Metric: {
+                  Dimensions: [
+                    {
+                      Name: 'GraphQLAPIId',
+                      Value: 'myApiId',
+                    },
+                  ],
+                  MetricName: '5XXError',
+                  Namespace: 'AWS/AppSync',
+                },
+                Period: 86400,
+                Stat: 'Sum',
+              },
+              ReturnData: false,
+            },
+          ],
+          Threshold: 0.99,
+        }),
+      );
+    });
+
+    it('constructs a Low severity parent alarm that messages the Low severity SNS topic', () => {
+      const stack = new Stack();
+      new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::CompositeAlarm', {
+          AlarmName: 'My AppSync API Availability <= 0.99 (Low Severity)',
+          AlarmRule: {
+            'Fn::Join': [
+              '',
+              [
+                '(ALARM("',
+                {
+                  Ref: 'TestAlarmsMyAppSyncAPIAvailability0991000of30daysbudgetburnedin6hours9CB4A1EB',
+                },
+                '") AND ALARM("',
+                {
+                  Ref: 'TestAlarmsMyAppSyncAPIAvailability0991000of30daysbudgetburnedin1day6B7C8850',
+                },
+                '"))',
+              ],
+            ],
+          },
+          AlarmActions: [
+            {
+              Ref: 'LowSeverityTopic4780BF62',
+            },
+          ],
+          AlarmDescription:
+            'Service is at risk of exceeding its error budget. Please use the links below to troubleshoot the problem:\n\nDashboard: dashboardLink\nRun book: runbookLink\n',
+        }),
+      );
+    });
+
+    it('constructs a High severity parent alarm that messages the High severity SNS topic', () => {
+      const stack = new Stack();
+      new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::CompositeAlarm', {
+          AlarmName: 'My AppSync API Availability <= 0.99 (High Severity)',
+          AlarmRule: {
+            'Fn::Join': [
+              '',
+              [
+                '(ALARM("',
+                {
+                  Ref: 'TestAlarmsMyAppSyncAPIAvailability099200of30daysbudgetburnedin5minutes1F3F31B5',
+                },
+                '") AND ALARM("',
+                {
+                  Ref: 'TestAlarmsMyAppSyncAPIAvailability099200of30daysbudgetburnedin60minutes40D14724',
+                },
+                '")) OR (ALARM("',
+                {
+                  Ref: 'TestAlarmsMyAppSyncAPIAvailability099500of30daysbudgetburnedin30minutes46E7908F',
+                },
+                '") AND ALARM("',
+                {
+                  Ref: 'TestAlarmsMyAppSyncAPIAvailability099500of30daysbudgetburnedin6hours687E0054',
+                },
+                '"))',
+              ],
+            ],
+          },
+          AlarmActions: [
+            {
+              Ref: 'HighSeverityTopicC74B35F8',
+            },
+          ],
+          AlarmDescription:
+            'Service is at risk of exceeding its error budget. Please use the links below to troubleshoot the problem:\n\nDashboard: dashboardLink\nRun book: runbookLink\n',
+        }),
+      );
+    });
+
+    it('constructs a parent alarm with an alarms dashboard link when one is included', () => {
+      const stack = new Stack();
+      new SLOAlarms(stack, 'TestAlarms', {
+        alarmsDashboardLink: 'alarmsDashboardLink',
+        dashboardLink: 'dashboardLink',
+        runbookLink: 'runbookLink',
+        slos,
+      });
+
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::CompositeAlarm', {
+          AlarmName: 'My API Availability <= 0.99 (High Severity)',
+          AlarmDescription:
+            'Service is at risk of exceeding its error budget. Please use the links below to troubleshoot the problem:\n\nDashboard: dashboardLink\nRun book: runbookLink\nAlarms Dashboard: alarmsDashboardLink\n',
+        }),
+      );
+    });
+  });
+
+  describe('ApiLatency', () => {
+    it('constructs an alarm for the 2.00% of 30 days budget burned in 5 minutes window', () => {
+      const stack = new Stack();
+      new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Alarm', {
+          ComparisonOperator: 'GreaterThanOrEqualToThreshold',
+          EvaluationPeriods: 1,
+          AlarmName: 'My AppSync API Latency P99 >= 2000ms - 2.00% of 30 days budget burned in 5 minutes',
+          DatapointsToAlarm: 1,
+          Dimensions: [
+            {
+              Name: 'GraphQLAPIId',
+              Value: 'myApiId',
+            },
+          ],
+          ExtendedStatistic: 'p85.60',
+          MetricName: 'Latency',
+          Namespace: 'AWS/AppSync',
+          Period: 300,
+          Threshold: 2000,
+        }),
+      );
+    });
+
+    it('constructs an alarm for the 2.00% of 30 days budget burned in 60 minutes window', () => {
+      const stack = new Stack();
+      new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Alarm', {
+          ComparisonOperator: 'GreaterThanOrEqualToThreshold',
+          EvaluationPeriods: 1,
+          AlarmName: 'My AppSync API Latency P99 >= 2000ms - 2.00% of 30 days budget burned in 60 minutes',
+          DatapointsToAlarm: 1,
+          Dimensions: [
+            {
+              Name: 'GraphQLAPIId',
+              Value: 'myApiId',
+            },
+          ],
+          ExtendedStatistic: 'p85.60',
+          MetricName: 'Latency',
+          Namespace: 'AWS/AppSync',
+          Period: 3600,
+          Threshold: 2000,
+        }),
+      );
+    });
+
+    it('constructs an alarm for the 5.00% of 30 days budget burned in 30 minutes window', () => {
+      const stack = new Stack();
+      new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Alarm', {
+          ComparisonOperator: 'GreaterThanOrEqualToThreshold',
+          EvaluationPeriods: 1,
+          AlarmName: 'My AppSync API Latency P99 >= 2000ms - 5.00% of 30 days budget burned in 30 minutes',
+          DatapointsToAlarm: 1,
+          Dimensions: [
+            {
+              Name: 'GraphQLAPIId',
+              Value: 'myApiId',
+            },
+          ],
+          ExtendedStatistic: 'p94.00',
+          MetricName: 'Latency',
+          Namespace: 'AWS/AppSync',
+          Period: 1800,
+          Threshold: 2000,
+        }),
+      );
+    });
+
+    it('constructs an alarm for the 5.00% of 30 days budget burned in 6 hours window', () => {
+      const stack = new Stack();
+      new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Alarm', {
+          ComparisonOperator: 'GreaterThanOrEqualToThreshold',
+          EvaluationPeriods: 1,
+          AlarmName: 'My AppSync API Latency P99 >= 2000ms - 5.00% of 30 days budget burned in 6 hours',
+          DatapointsToAlarm: 1,
+          Dimensions: [
+            {
+              Name: 'GraphQLAPIId',
+              Value: 'myApiId',
+            },
+          ],
+          ExtendedStatistic: 'p94.00',
+          MetricName: 'Latency',
+          Namespace: 'AWS/AppSync',
+          Period: 21600,
+          Threshold: 2000,
+        }),
+      );
+    });
+
+    it('constructs an alarm for the 10.00% of 30 days budget burned in 6 hours window', () => {
+      const stack = new Stack();
+      new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Alarm', {
+          ComparisonOperator: 'GreaterThanOrEqualToThreshold',
+          EvaluationPeriods: 1,
+          AlarmName: 'My AppSync API Latency P99 >= 2000ms - 10.00% of 30 days budget burned in 6 hours',
+          DatapointsToAlarm: 1,
+          Dimensions: [
+            {
+              Name: 'GraphQLAPIId',
+              Value: 'myApiId',
+            },
+          ],
+          ExtendedStatistic: 'p99.00',
+          MetricName: 'Latency',
+          Namespace: 'AWS/AppSync',
+          Period: 21600,
+          Threshold: 2000,
+        }),
+      );
+    });
+
+    it('constructs an alarm for the 10.00% of 30 days budget burned in 1 day window', () => {
+      const stack = new Stack();
+      new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::Alarm', {
+          ComparisonOperator: 'GreaterThanOrEqualToThreshold',
+          EvaluationPeriods: 1,
+          AlarmName: 'My AppSync API Latency P99 >= 2000ms - 10.00% of 30 days budget burned in 1 day',
+          DatapointsToAlarm: 1,
+          Dimensions: [
+            {
+              Name: 'GraphQLAPIId',
+              Value: 'myApiId',
+            },
+          ],
+          ExtendedStatistic: 'p99.00',
+          MetricName: 'Latency',
+          Namespace: 'AWS/AppSync',
+          Period: 86400,
+          Threshold: 2000,
+        }),
+      );
+    });
+
+    it('constructs a Low severity parent alarm that messages the Low severity SNS topic', () => {
+      const stack = new Stack();
+      new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::CompositeAlarm', {
+          AlarmName: 'My AppSync API Latency P99 >= 2000ms (Low Severity)',
+          AlarmRule: {
+            'Fn::Join': [
+              '',
+              [
+                '(ALARM("',
+                {
+                  Ref: 'TestAlarmsMyAppSyncAPILatencyP992000ms1000of30daysbudgetburnedin6hoursE7F37285',
+                },
+                '") AND ALARM("',
+                {
+                  Ref: 'TestAlarmsMyAppSyncAPILatencyP992000ms1000of30daysbudgetburnedin1day79FC1CE0',
+                },
+                '"))',
+              ],
+            ],
+          },
+          AlarmActions: [
+            {
+              Ref: 'LowSeverityTopic4780BF62',
+            },
+          ],
+          AlarmDescription:
+            'Service is at risk of exceeding its error budget. Please use the links below to troubleshoot the problem:\n\nDashboard: dashboardLink\nRun book: runbookLink\n',
+        }),
+      );
+    });
+
+    it('constructs a High severity parent alarm that messages the High severity SNS topic', () => {
+      const stack = new Stack();
+      new SLOAlarms(stack, 'TestAlarms', { dashboardLink: 'dashboardLink', runbookLink: 'runbookLink', slos });
+
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::CompositeAlarm', {
+          AlarmName: 'My AppSync API Latency P99 >= 2000ms (High Severity)',
+          AlarmRule: {
+            'Fn::Join': [
+              '',
+              [
+                '(ALARM("',
+                {
+                  Ref: 'TestAlarmsMyAppSyncAPILatencyP992000ms200of30daysbudgetburnedin5minutes36B030DA',
+                },
+                '") AND ALARM("',
+                {
+                  Ref: 'TestAlarmsMyAppSyncAPILatencyP992000ms200of30daysbudgetburnedin60minutes6C562D1E',
+                },
+                '")) OR (ALARM("',
+                {
+                  Ref: 'TestAlarmsMyAppSyncAPILatencyP992000ms500of30daysbudgetburnedin30minutes10771BAC',
+                },
+                '") AND ALARM("',
+                {
+                  Ref: 'TestAlarmsMyAppSyncAPILatencyP992000ms500of30daysbudgetburnedin6hoursB07C9628',
+                },
+                '"))',
+              ],
+            ],
+          },
+          AlarmActions: [
+            {
+              Ref: 'HighSeverityTopicC74B35F8',
+            },
+          ],
+          AlarmDescription:
+            'Service is at risk of exceeding its error budget. Please use the links below to troubleshoot the problem:\n\nDashboard: dashboardLink\nRun book: runbookLink\n',
+        }),
+      );
+    });
+
+    it('constructs a parent alarm with an alarms dashboard link when one is included', () => {
+      const stack = new Stack();
+      new SLOAlarms(stack, 'TestAlarms', {
+        alarmsDashboardLink: 'alarmsDashboardLink',
+        dashboardLink: 'dashboardLink',
+        runbookLink: 'runbookLink',
+        slos,
+      });
+
+      cdkExpect(stack).to(
+        haveResourceLike('AWS::CloudWatch::CompositeAlarm', {
+          AlarmName: 'My AppSync API Latency P99 >= 2000ms (High Severity)',
           AlarmDescription:
             'Service is at risk of exceeding its error budget. Please use the links below to troubleshoot the problem:\n\nDashboard: dashboardLink\nRun book: runbookLink\nAlarms Dashboard: alarmsDashboardLink\n',
         }),

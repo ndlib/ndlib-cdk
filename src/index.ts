@@ -11,3 +11,4 @@ export * from './docker-codebuild-action';
 export * from './edge-lambdas';
 export * from './newman-runner';
 export * from './static-host';
+export * from './pipeline-s3-sync';

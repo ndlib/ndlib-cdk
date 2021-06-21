@@ -355,3 +355,44 @@ pipeline.addStage({
   actions: [buildAction, newmanRunner.action, approvalAction],
 });
 ```
+
+## Pipeline S3 Sync
+
+This construct creates a codebuild project which takes an input artifact and pushes the contents to an s3 bucket. This is useful in pipelines for static sites, as well as sites that need to be compiled earlier in the pipeline. The concept is similar to a [BucketDeployment](https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-s3-deployment.BucketDeployment.html), but works around the issue of deploying large files since BucketDeployment relies on a Lambda.
+
+Example:
+
+```typescript
+import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline';
+import { Stack } from '@aws-cdk/core';
+import { PipelineS3Sync } from '@ndlib/ndlib-cdk';
+
+const stack = new Stack();
+const pipeline = Pipeline(stack, 'MyPipeline');
+const appSourceArtifact = new Artifact('AppCode');
+// ...
+const s3Sync = new PipelineS3Sync(this, 'S3SyncProd', {
+  bucketNamePrefix: this.stackName,
+  bucketParamPath: '/all/stacks/targetStackName/site-bucket-name',
+  cloudFrontParamPath: '/all/stacks/targetStackName/distribution-id',
+  inputBuildArtifact: appSourceArtifact,
+});
+```
+
+PipelineS3Sync also handles assigning content types based on filename patterns. To do so, provide an array of patterns with the content type they should be assigned like so:
+
+```typescript
+new PipelineS3Sync(this, 'S3SyncProd', {
+  // ...
+  contentTypePatterns: [
+    {
+      pattern: '*.pdf',
+      contentType: 'application/pdf',
+    },
+    {
+      pattern: '*.csv',
+      contentType: 'text/plain',
+    },
+  ],
+});
+```

@@ -5,19 +5,11 @@ import * as cdk from '@aws-cdk/core';
 import * as path from 'path';
 import { IEdgeLambda, IEdgeLambdaProps } from '../index';
 
-export interface ISpaRedirectionLambdaProps extends IEdgeLambdaProps {
-  /**
-   * List of file extensions which should redirect. INCLUDE the dot. (Ex: .html)
-   * If omitted, a default list of extensions will be used.
-   */
-  fileExtensions?: string[];
-}
-
 export class SpaRedirectionLambda extends cdk.Construct implements IEdgeLambda {
   public readonly function: lambda.Function;
   public readonly behavior: Behavior;
 
-  constructor(scope: cdk.Construct, id: string, props: ISpaRedirectionLambdaProps) {
+  constructor(scope: cdk.Construct, id: string, props: IEdgeLambdaProps) {
     super(scope, id);
 
     this.function = new lambda.Function(scope, `${id}Function`, {
@@ -26,29 +18,6 @@ export class SpaRedirectionLambda extends cdk.Construct implements IEdgeLambda {
       handler: 'handler.handler',
       runtime: lambda.Runtime.NODEJS_12_X,
       timeout: cdk.Duration.seconds(10),
-      environment: {
-        EXTENSIONS: (props.fileExtensions?.length
-          ? props.fileExtensions
-          : [
-              '.html',
-              '.js',
-              '.json',
-              '.css',
-              '.jpg',
-              '.jpeg',
-              '.png',
-              '.ico',
-              '.map',
-              '.txt',
-              '.kml',
-              '.svg',
-              '.webmanifest',
-              '.webp',
-              '.xml',
-              '.zip',
-            ]
-        ).join(','),
-      },
       ...props,
     });
 

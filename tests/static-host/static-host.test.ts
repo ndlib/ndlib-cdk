@@ -8,8 +8,9 @@ import {
   SynthUtils,
   ABSENT,
 } from '@aws-cdk/assert';
+import { Bucket } from '@aws-cdk/aws-s3';
 import cdk = require('@aws-cdk/core');
-import { CfnDistribution, LambdaEdgeEventType } from '@aws-cdk/aws-cloudfront';
+import { CfnDistribution } from '@aws-cdk/aws-cloudfront';
 import { StaticHost } from '../../src/static-host';
 import { TransclusionLambda, SpaRedirectionLambda } from '../../src/edge-lambdas';
 
@@ -32,19 +33,19 @@ describe('StaticHost', () => {
       stackName: 'static-host-test',
       env,
     });
+    const testBucket = new Bucket(myStack, 'Bucket');
 
     const edgeLambdas = [];
     if (props.createLambdas) {
       edgeLambdas.push(
         new TransclusionLambda(myStack, 'Transclusion', {
-          eventType: LambdaEdgeEventType.ORIGIN_REQUEST,
+          originBucket: testBucket,
           isDefaultBehavior: false,
           pathPattern: '*.shtml',
         }),
       );
       edgeLambdas.push(
         new SpaRedirectionLambda(myStack, 'Redirection', {
-          eventType: LambdaEdgeEventType.ORIGIN_REQUEST,
           isDefaultBehavior: true,
         }),
       );

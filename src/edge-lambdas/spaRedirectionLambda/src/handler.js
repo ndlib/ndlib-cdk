@@ -7,9 +7,38 @@ exports.handler = (event, context, callback) => {
   const parsedPath = path.parse(request.uri);
   let newUri;
 
-  // this is not the best way that this we may need to do an s3 head request to fully
-  // detect if the file exists.
-  const validExtensions = process.env.EXTENSIONS.split(',');
+  // Set a default list of file extensions which can be accessed directly.
+  let validExtensions = [
+    '.html',
+    '.js',
+    '.json',
+    '.css',
+    '.jpg',
+    '.jpeg',
+    '.png',
+    '.ico',
+    '.map',
+    '.txt',
+    '.kml',
+    '.svg',
+    '.webmanifest',
+    '.webp',
+    '.xml',
+    '.zip',
+  ];
+  // If an origin request header exists for x-file-extensions, use that list instead.
+  if (
+    request.origin &&
+    request.origin.s3 &&
+    request.origin.s3.customHeaders &&
+    request.origin.s3.customHeaders['x-file-extensions'] &&
+    request.origin.s3.customHeaders['x-file-extensions'][0]
+  ) {
+    const headerValue = request.origin.s3.customHeaders['x-file-extensions'][0].value;
+    if (headerValue) {
+      validExtensions = headerValue.split(',');
+    }
+  }
   // if there is no extension or it is not in one of the extensions we expect to find on the
   // server.
   if (parsedPath.ext === '' || !validExtensions.includes(parsedPath.ext)) {

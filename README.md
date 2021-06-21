@@ -295,23 +295,23 @@ Lambda@Edge functions can also be connected to the CloudFront, but must be defin
 Example usage:
 
 ```typescript
-import cdk = require('@aws-cdk/core')
-import { Certificate } from '@aws-cdk/aws-certificatemanager'
-import { StaticHost, TransclusionLambda } from '@ndlib/ndlib-cdk'
+import cdk = require('@aws-cdk/core');
+import { Certificate } from '@aws-cdk/aws-certificatemanager';
+import { StaticHost, TransclusionLambda } from '@ndlib/ndlib-cdk';
 
-const stack = new cdk.Stack()
-const siteBucket = new Bucket(stack, 'Bucket')
+const stack = new cdk.Stack();
+const siteBucket = new Bucket(stack, 'Bucket');
 const transclusionLambda = new TransclusionLambda(stack, 'Transclusion', {
   isDefaultBehavior: true,
   originBucket: siteBucket,
-})
+});
 const host = new StaticHost(stack, 'MyStaticHost', {
   hostnamePrefix: 'my-site',
   domainName: 'domain.org',
   websiteCertificate: Certificate.fromCertificateArn(stack, 'ACMCert', 'arn:aws:acm:::certificate/example'),
   indexFilename: 'index.shtml',
   edgeLambdas: [transclusionLambda],
-})
+});
 ```
 
 ## Edge Lambdas

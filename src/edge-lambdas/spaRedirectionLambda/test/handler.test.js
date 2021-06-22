@@ -7,25 +7,6 @@ const testHandler = require('../src/handler').handler;
 // to send to the test handler. Returns a cloudfront origin
 // event object with the given uri.
 describe('URL ReWrites', () => {
-  process.env.EXTENSIONS = [
-    '.html',
-    '.js',
-    '.json',
-    '.css',
-    '.jpg',
-    '.jpeg',
-    '.png',
-    '.ico',
-    '.map',
-    '.txt',
-    '.kml',
-    '.svg',
-    '.webmanifest',
-    '.webp',
-    '.xml',
-    '.zip',
-  ].join(',');
-
   const newTestEvent = uri => ({
     Records: [
       {

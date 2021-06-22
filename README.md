@@ -377,6 +377,10 @@ const s3Sync = new PipelineS3Sync(this, 'S3SyncProd', {
   cloudFrontParamPath: '/all/stacks/targetStackName/distribution-id',
   inputBuildArtifact: appSourceArtifact,
 });
+pipeline.addStage({
+  stageName: 'Deploy',
+  actions: [s3Sync.action],
+});
 ```
 
 PipelineS3Sync also handles assigning content types based on filename patterns. To do so, provide an array of patterns with the content type they should be assigned like so:

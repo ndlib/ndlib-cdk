@@ -17,11 +17,6 @@ describe('SpaRedirectionLambda', () => {
           Handler: 'handler.handler',
           Runtime: 'nodejs12.x',
           Timeout: 10,
-          Environment: {
-            Variables: {
-              EXTENSIONS: '.html,.js,.json,.css,.jpg,.jpeg,.png,.ico,.map,.txt,.kml,.svg,.webmanifest,.webp,.xml,.zip',
-            },
-          },
         }),
       );
     });
@@ -51,7 +46,6 @@ describe('SpaRedirectionLambda', () => {
       minTtl: Duration.seconds(100),
       maxTtl: Duration.seconds(200),
       defaultTtl: Duration.seconds(150),
-      fileExtensions: ['.pdf', '.abcde'],
     });
 
     test('overrides defaults on function', () => {
@@ -61,11 +55,6 @@ describe('SpaRedirectionLambda', () => {
           Handler: 'handler.handler',
           Runtime: 'nodejs12.x',
           Timeout: 123,
-          Environment: {
-            Variables: {
-              EXTENSIONS: '.pdf,.abcde',
-            },
-          },
         }),
       );
     });

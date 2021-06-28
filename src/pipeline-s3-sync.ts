@@ -129,34 +129,6 @@ export class PipelineS3Sync extends Construct {
       }),
     });
 
-    // CDK will try to read logs when generating output for failed events
-    this.project.addToRolePolicy(
-      new PolicyStatement({
-        actions: ['logs:DescribeLogGroups'],
-        resources: ['*'],
-      }),
-    );
-
-    // Add permissions to read CDK bootstrap stack/bucket
-    this.project.addToRolePolicy(
-      new PolicyStatement({
-        actions: ['cloudformation:DescribeStacks'],
-        resources: [Fn.sub('arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/CDKToolkit/*')],
-      }),
-    );
-    this.project.addToRolePolicy(
-      new PolicyStatement({
-        actions: [
-          's3:ListBucket',
-          's3:GetObject',
-          's3:PutObject',
-          's3:ListBucketVersions',
-          's3:GetBucketLocation',
-          's3:GetBucketPolicy',
-        ],
-        resources: ['arn:aws:s3:::cdktoolkit-stagingbucket-*'],
-      }),
-    );
     this.project.addToRolePolicy(
       new PolicyStatement({
         actions: ['cloudFront:CreateInvalidation'],

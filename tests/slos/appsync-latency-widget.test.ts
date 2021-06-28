@@ -2,7 +2,7 @@ import { AppSyncLatencyWidget } from '../../src/slos/appsync-latency-widget';
 import { AppSyncLatencyMetric } from '../../src/slos/appsync-latency-metric';
 import { LatencyWidget } from '../../src/slos/latency-widget';
 import { Windows } from '../../src/slos/windows';
-import { mocked } from 'ts-jest/dist/util/testing';
+import { mocked } from 'ts-jest/utils';
 
 const mockInstance = { foo: 'bar' };
 

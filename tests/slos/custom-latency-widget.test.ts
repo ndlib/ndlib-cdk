@@ -2,7 +2,7 @@ import { CustomLatencyWidget } from '../../src/slos/custom-latency-widget';
 import { CustomLatencyMetric } from '../../src/slos/custom-latency-metric';
 import { LatencyWidget } from '../../src/slos/latency-widget';
 import { Windows } from '../../src/slos/windows';
-import { mocked } from 'ts-jest/dist/util/testing';
+import { mocked } from 'ts-jest/utils';
 
 const mockInstance = { foo: 'bar' };
 

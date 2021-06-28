@@ -2,7 +2,7 @@ import { CloudfrontAvailabilityWidget } from '../../src/slos/cloudfront-availabi
 import { CloudfrontAvailabilityMetric } from '../../src/slos/cloudfront-availability-metric';
 import { AvailabilityWidget } from '../../src/slos/availability-widget';
 import { Windows } from '../../src/slos/windows';
-import { mocked } from 'ts-jest/dist/util/testing';
+import { mocked } from 'ts-jest/utils';
 
 const mockInstance = { foo: 'bar' };
 

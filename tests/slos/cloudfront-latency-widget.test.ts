@@ -2,7 +2,7 @@ import { CloudfrontLatencyWidget } from '../../src/slos/cloudfront-latency-widge
 import { CloudfrontLatencyMetric } from '../../src/slos/cloudfront-latency-metric';
 import { LatencyWidget } from '../../src/slos/latency-widget';
 import { Windows } from '../../src/slos/windows';
-import { mocked } from 'ts-jest/dist/util/testing';
+import { mocked } from 'ts-jest/utils';
 
 const mockInstance = { foo: 'bar' };
 

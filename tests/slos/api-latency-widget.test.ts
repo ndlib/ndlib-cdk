@@ -2,7 +2,7 @@ import { ApiLatencyWidget } from '../../src/slos/api-latency-widget';
 import { ApiLatencyMetric } from '../../src/slos/api-latency-metric';
 import { LatencyWidget } from '../../src/slos/latency-widget';
 import { Windows } from '../../src/slos/windows';
-import { mocked } from 'ts-jest/dist/util/testing';
+import { mocked } from 'ts-jest/utils';
 
 const mockInstance = { foo: 'bar' };
 

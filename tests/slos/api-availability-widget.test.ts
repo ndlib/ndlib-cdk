@@ -2,7 +2,7 @@ import { ApiAvailabilityWidget } from '../../src/slos/api-availability-widget';
 import { ApiAvailabilityMetric } from '../../src/slos/api-availability-metric';
 import { AvailabilityWidget } from '../../src/slos/availability-widget';
 import { Windows } from '../../src/slos/windows';
-import { mocked } from 'ts-jest/dist/util/testing';
+import { mocked } from 'ts-jest/utils';
 
 const mockInstance = { foo: 'bar' };
 

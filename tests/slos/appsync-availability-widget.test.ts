@@ -2,7 +2,7 @@ import { AppSyncAvailabilityWidget } from '../../src/slos/appsync-availability-w
 import { AppSyncAvailabilityMetric } from '../../src/slos/appsync-availability-metric';
 import { AvailabilityWidget } from '../../src/slos/availability-widget';
 import { Windows } from '../../src/slos/windows';
-import { mocked } from 'ts-jest/dist/util/testing';
+import { mocked } from 'ts-jest/utils';
 
 const mockInstance = { foo: 'bar' };
 

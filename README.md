@@ -120,96 +120,24 @@ const slos = [
   {
     type: 'CloudfrontAvailability',
     distributionId: 'E123456789ABC',
-    title: 'HTTPS - CDN',
+    title: 'My Website',
     sloThreshold: 0.999,
-    alarmsEnabled: {
-      High: true,
-      Low: true,
-    },
   },
   {
     type: 'CloudfrontLatency',
     distributionId: 'E123456789ABC',
-    title: 'HTTPS - CDN',
+    title: 'My Website',
     sloThreshold: 0.95,
     latencyThreshold: 200,
-    alarmsEnabled: {
-      High: false,
-      Low: false,
-    },
-  },
-  {
-    type: 'ApiAvailability',
-    apiName: 'myapi-prod',
-    title: 'Backend API',
-    sloThreshold: 0.99,
-  },
-  {
-    type: 'ApiLatency',
-    apiName: 'myapi-prod',
-    title: 'Backend API',
-    sloThreshold: 0.95,
-    latencyThreshold: 2000,
-  },
-  {
-    type: 'AppSyncAvailability',
-    apiId: 'myAppSyncAPI-prod',
-    title: 'AppSync API',
-    sloThreshold: 0.99,
-  },
-  {
-    type: 'AppSyncLatency',
-    apiId: 'myAppSyncAPI-prod',
-    title: 'AppSync API',
-    sloThreshold: 0.95,
-    latencyThreshold: 2000,
-  },
-  {
-    type: 'ElasticSearchAvailability',
-    domainName: 'myes-prod',
-    accountId: '1234567890',
-    title: 'Search API',
-    sloThreshold: 0.99999,
-  },
-  {
-    type: 'ElasticSearchLatency',
-    domainName: 'myes-prod',
-    accountId: '1234567890',
-    title: 'Search API',
-    sloThreshold: 0.99,
-    latencyThreshold: 100,
-  },
-  {
-    type: 'CustomAvailability',
-    namespace: 'CustomNamespace',
-    errorsMetricName: 'CustomErrorCountMetric',
-    countsMetricName: 'CustomRequestCountMetric',
-    title: 'My Custom Availability',
-    sloThreshold: 0.99,
-  },
-  {
-    type: 'CustomLatency',
-    namespace: 'CustomNamespace',
-    latencyMetricName: 'CustomLatencyMetric',
-    title: 'My Custom Latency',
-    sloThreshold: 0.99,
-    latencyThreshold: 2000,
   },
 ];
 const stack = new cdk.Stack();
-
-// Create a dashboard representation of all of the alarms we're creating.
-const alarmsDash = new SLOAlarmsDashboard(stack, 'AlarmsDashboard', {
-  slos,
-  dashboardName: 'AlarmsDashboard',
-});
 
 // Create a dashboard that shows the 30 day performance of all of our SLOs
 const perfDash = new SLOPerformanceDashboard(stack, 'PerformanceDashboard', {
   slos,
   dashboardName: 'PerformanceDashboard',
 });
-const alarmsDashboardName = Fn.ref((perfDash.node.defaultChild as CfnDashboard).logicalId);
 
 // Create the multi-window alarms for each of the SLOs. This will also create an SNS topic that will
 // receive the alerts. The alarm will include links to the dashboards and runbooks given in its
@@ -218,11 +146,10 @@ const alarms = new SLOAlarms(stack, 'Alarms', {
   slos,
   dashboardLink: `https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards:name=My-Website`,
   runbookLink: 'https://github.com/myorg/myrunbooks',
-  alarmsDashboardLink: `https://console.aws.amazon.com/cloudwatch/home?region=${
-    cdk.Stack.of(this).region
-  }#dashboards:name=${alarmsDashboardName}`,
 });
 ```
+
+For more info see the [Service Level Objectives Readme](/src/slos/README.md)
 
 ## Artifact S3 Bucket
 

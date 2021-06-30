@@ -327,3 +327,32 @@ new PipelineS3Sync(this, 'S3SyncProd', {
   ],
 });
 ```
+
+## Source Watcher
+
+The SourceWatcher construct creates necessary resources to monitor a GitHub repository for changes. Based on the changes that are made, one or more pipelines may be invoked according to the configuration. This is similar to how CodePipelines can have a Webhook on the source action, except that it allows for _conditional_ triggering depending on where the changes reside within the repo. Therefore, if multiple pipelines share a repo, a change to files which only impact one do not have to trigger the unmodified pipeline.
+
+Example:
+
+```typescript
+import { Stack } from '@aws-cdk/core';
+import { SourceWatcher } from '@ndlib/ndlib-cdk';
+
+const stack = new Stack();
+new SourceWatcher(stack, 'TestProject', {
+  triggers: [
+    {
+      triggerPatterns: ['my/test/**/pattern.js', 'example/*.*'],
+      pipelineStackName: 'pipeline-a',
+    },
+    {
+      triggerPatterns: ['src/anotherExample.ts'],
+      pipelineStackName: 'pipeline-b',
+    },
+  ],
+  targetRepo: 'ndlib/myRepo',
+  targetBranch: 'main',
+  gitTokenPath: '/all/github/ndlib-git',
+  webhookResourceStackName: 'github-webhook-custom-resource-prod',
+});
+```

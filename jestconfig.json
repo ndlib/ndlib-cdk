@@ -1,7 +1,14 @@
 {
   "transform": {
-    "^.+\\.(t|j)sx?$": "ts-jest"
+    "^.+\\.tsx?$": "ts-jest"
   },
-  "collectCoverageFrom": ["src/**/*.{ts,tsx}", "!**/node_modules/**", "!**/vendor/**"],
-  "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"]
+  "testPathIgnorePatterns": ["/node_modules/", "/lib/"],
+  "collectCoverageFrom": [
+    "src/**/*.{ts,tsx}",
+    "src/*-lambdas/**/*.{js,jsx,ts,tsx}",
+    "!**/node_modules/**",
+    "!**/vendor/**"
+  ],
+  "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
+  "moduleDirectories": ["src/internal-lambdas/sourceWatcherLambda/src/node_modules", "node_modules"]
 }

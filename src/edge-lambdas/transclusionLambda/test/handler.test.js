@@ -1,6 +1,6 @@
-const lambdaHandler = require('../src/handler');
+const lambdaHandler = require('../src/handler')
 
-const hostname = 'www.example.com';
+const hostname = 'www.example.com'
 const indexBody = `
   <html>
   <body>
@@ -9,14 +9,14 @@ const indexBody = `
     <!-- #include virtual="/include2.shtml" -->
   </body>
   </html>
-`;
+`
 const firstIncludeBody = `<div>
       <h1>Navigation or something</h1>
       <!-- #include virtual="/foo/nestedInclude.shtml"-->
     </div>
-`;
-const nestedIncludeBody = '<span>I go under the nav heading</span>';
-const secondIncludeBody = '<div>a footer</div>';
+`
+const nestedIncludeBody = '<span>I go under the nav heading</span>'
+const secondIncludeBody = '<div>a footer</div>'
 
 const testEvent = {
   Records: [
@@ -45,35 +45,35 @@ const testEvent = {
       },
     },
   ],
-};
+}
 
 describe('transclusionLambda handler', () => {
   beforeEach(() => {
-    console.log = jest.fn();
+    console.log = jest.fn()
     lambdaHandler.getFromS3 = jest.fn().mockImplementation((bucketName, objectPath) => {
-      let responseBody;
+      let responseBody
       switch (objectPath) {
         case '/':
         case '/index.shtml':
-          responseBody = indexBody;
-          break;
+          responseBody = indexBody
+          break
         case '/include1.shtml':
-          responseBody = firstIncludeBody;
-          break;
+          responseBody = firstIncludeBody
+          break
         case '/include2.shtml':
-          responseBody = secondIncludeBody;
-          break;
+          responseBody = secondIncludeBody
+          break
         case '/foo/nestedInclude.shtml':
-          responseBody = nestedIncludeBody;
-          break;
+          responseBody = nestedIncludeBody
+          break
         default:
-          throw new Error('Unexpected path: ' + objectPath);
+          throw new Error('Unexpected path: ' + objectPath)
       }
       return Promise.resolve({
         Body: responseBody,
-      });
-    });
-  });
+      })
+    })
+  })
 
   test('recursively replaces includes with correct body content', async () => {
     const mockCallback = (ignore, data) => {
@@ -89,7 +89,7 @@ describe('transclusionLambda handler', () => {
     <div>a footer</div>
   </body>
   </html>
-`;
+`
       const expected = {
         body: expectedBody,
         bodyEncoding: 'text',
@@ -109,11 +109,11 @@ describe('transclusionLambda handler', () => {
             },
           ],
         },
-      };
-      expect(data).toEqual(expected);
-      expect(lambdaHandler.getFromS3).toHaveBeenCalledTimes(4);
-    };
+      }
+      expect(data).toEqual(expected)
+      expect(lambdaHandler.getFromS3).toHaveBeenCalledTimes(4)
+    }
 
-    await lambdaHandler.handler(testEvent, null, mockCallback);
-  });
-});
+    await lambdaHandler.handler(testEvent, null, mockCallback)
+  })
+})

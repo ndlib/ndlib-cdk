@@ -7,36 +7,36 @@ import {
   stringLike,
   SynthUtils,
   ABSENT,
-} from '@aws-cdk/assert';
-import { Bucket } from '@aws-cdk/aws-s3';
-import cdk = require('@aws-cdk/core');
-import { CfnDistribution } from '@aws-cdk/aws-cloudfront';
-import { StaticHost } from '../../src/static-host';
-import { TransclusionLambda, SpaRedirectionLambda } from '../../src/edge-lambdas';
+} from '@aws-cdk/assert'
+import { Bucket } from '@aws-cdk/aws-s3'
+import cdk = require('@aws-cdk/core')
+import { CfnDistribution } from '@aws-cdk/aws-cloudfront'
+import { StaticHost } from '../../src/static-host'
+import { TransclusionLambda, SpaRedirectionLambda } from '../../src/edge-lambdas'
 
 describe('StaticHost', () => {
   interface ISetupParams {
-    createDns?: boolean;
-    hostedZoneId?: string;
-    createLambdas?: boolean;
-    errorConfig?: CfnDistribution.CustomErrorResponseProperty[];
-    indexFilename?: string;
+    createDns?: boolean
+    hostedZoneId?: string
+    createLambdas?: boolean
+    errorConfig?: CfnDistribution.CustomErrorResponseProperty[]
+    indexFilename?: string
   }
 
   const setup = (props: ISetupParams) => {
     const env = {
       account: '123456789',
       region: 'us-east-1',
-    };
+    }
 
-    const app = new cdk.App();
+    const app = new cdk.App()
     const myStack = new cdk.Stack(app, 'TestStack', {
       stackName: 'static-host-test',
       env,
-    });
-    const testBucket = new Bucket(myStack, 'Bucket');
+    })
+    const testBucket = new Bucket(myStack, 'Bucket')
 
-    const edgeLambdas = [];
+    const edgeLambdas = []
     if (props.createLambdas) {
       edgeLambdas.push(
         new TransclusionLambda(myStack, 'Transclusion', {
@@ -44,12 +44,12 @@ describe('StaticHost', () => {
           isDefaultBehavior: false,
           pathPattern: '*.shtml',
         }),
-      );
+      )
       edgeLambdas.push(
         new SpaRedirectionLambda(myStack, 'Redirection', {
           isDefaultBehavior: true,
         }),
-      );
+      )
     }
 
     new StaticHost(myStack, 'TestStaticHost', {
@@ -66,12 +66,12 @@ describe('StaticHost', () => {
       hostedZoneId: props.hostedZoneId,
       edgeLambdas: edgeLambdas.length ? edgeLambdas : undefined, // Make sure no error on undefined
       errorConfig: props.errorConfig,
-    });
-    return myStack;
-  };
+    })
+    return myStack
+  }
 
   describe('default props', () => {
-    const stack = setup({});
+    const stack = setup({})
 
     test('creates an s3 bucket for the site contents', () => {
       expectCDK(stack).to(
@@ -83,8 +83,8 @@ describe('StaticHost', () => {
             LogFilePrefix: 's3/hostname.test.domain.org/',
           },
         }),
-      );
-    });
+      )
+    })
 
     test('creates a cloudfront with an appropriate domain name', () => {
       expectCDK(stack).to(
@@ -94,8 +94,8 @@ describe('StaticHost', () => {
             DefaultRootObject: 'index.html',
           },
         }),
-      );
-    });
+      )
+    })
 
     test('outputs s3 bucket name to ssm parameter', () => {
       expectCDK(stack).to(
@@ -107,8 +107,8 @@ describe('StaticHost', () => {
           Description: 'Bucket where the stack website deploys to.',
           Name: '/all/stacks/static-host-test/site-bucket-name',
         }),
-      );
-    });
+      )
+    })
 
     test('outputs cloudfront distribution id to ssm parameter', () => {
       expectCDK(stack).to(
@@ -120,8 +120,8 @@ describe('StaticHost', () => {
           Description: 'ID of the CloudFront distribution.',
           Name: '/all/stacks/static-host-test/distribution-id',
         }),
-      );
-    });
+      )
+    })
 
     test('does not include lambda associations in cloudfront', () => {
       expectCDK(stack).to(
@@ -133,13 +133,13 @@ describe('StaticHost', () => {
             },
           },
         }),
-      );
-    });
+      )
+    })
 
     test('does not create a route53 record for the domain', () => {
-      expectCDK(stack).to(countResources('AWS::Route53::RecordSet', 0));
-    });
-  });
+      expectCDK(stack).to(countResources('AWS::Route53::RecordSet', 0))
+    })
+  })
 
   describe('overridden props', () => {
     const stack = setup({
@@ -155,7 +155,7 @@ describe('StaticHost', () => {
         },
       ],
       indexFilename: '/test.html',
-    });
+    })
 
     test('associates spaRedirect and transclusion lambdas with cloudfront', () => {
       expectCDK(stack).to(
@@ -185,8 +185,8 @@ describe('StaticHost', () => {
             },
           },
         }),
-      );
-    });
+      )
+    })
 
     test('includes error configuration with cloudfront', () => {
       expectCDK(stack).to(
@@ -202,8 +202,8 @@ describe('StaticHost', () => {
             ]),
           },
         }),
-      );
-    });
+      )
+    })
 
     test('creates a route53 record for the domain', () => {
       expectCDK(stack).to(
@@ -218,16 +218,16 @@ describe('StaticHost', () => {
             },
           ],
         }),
-      );
-    });
-  });
+      )
+    })
+  })
 
   describe('validation', () => {
     test('throws an error when createDns is true and no hostedZoneId provided', () => {
       expect(() => {
-        const stack = setup({ createDns: true });
-        SynthUtils._synthesizeWithNested(stack);
-      }).toThrowError();
-    });
-  });
-});
+        const stack = setup({ createDns: true })
+        SynthUtils._synthesizeWithNested(stack)
+      }).toThrowError()
+    })
+  })
+})

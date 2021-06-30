@@ -1,21 +1,21 @@
-import { MathExpression, Metric } from '@aws-cdk/aws-cloudwatch';
-import { IAlertConfig } from './types';
+import { MathExpression, Metric } from '@aws-cdk/aws-cloudwatch'
+import { IAlertConfig } from './types'
 
 export interface IElasticSearchAvailabilityMetricProps {
   /**
    * The Account ID for the ES domain
    */
-  readonly accountId: string;
+  readonly accountId: string
 
   /**
    * The ES Domain Name for this metric
    */
-  readonly domainName: string;
+  readonly domainName: string
 
   /**
    * The SLO window that this metric will be used for.
    */
-  readonly sloWindow: IAlertConfig;
+  readonly sloWindow: IAlertConfig
 }
 
 /**
@@ -65,15 +65,15 @@ export class ElasticSearchAvailabilityMetric extends MathExpression {
         statistic: 'Sum',
         label: '5xx',
       }),
-    };
+    }
 
     const myProps = {
       label: 'Availability',
       expression: '(m2xx + m3xx + m4xx)/(m2xx + m3xx + m4xx + m5xx)',
       usingMetrics,
       period: props.sloWindow.alertWindow,
-    };
+    }
 
-    super({ ...props, ...myProps });
+    super({ ...props, ...myProps })
   }
 }

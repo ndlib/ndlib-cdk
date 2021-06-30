@@ -1,22 +1,22 @@
-import { AvailabilityWidget } from './availability-widget';
-import { CustomAvailabilityMetric } from './custom-availability-metric';
-import { ISLOWidgetProps } from './types';
+import { AvailabilityWidget } from './availability-widget'
+import { CustomAvailabilityMetric } from './custom-availability-metric'
+import { ISLOWidgetProps } from './types'
 
 export interface ICustomAvailabilityWidgetProps extends ISLOWidgetProps {
   /**
    * Name of the namespace for this metric
    */
-  readonly namespace: string;
+  readonly namespace: string
 
   /**
    * The custom metric name that will give the count of 5xx errors
    */
-  readonly errorsMetricName: string;
+  readonly errorsMetricName: string
 
   /**
    * The custom metric name that will give the count of requests
    */
-  readonly countsMetricName: string;
+  readonly countsMetricName: string
 }
 
 /**
@@ -29,7 +29,7 @@ export class CustomAvailabilityWidget extends AvailabilityWidget {
       errorsMetricName: props.errorsMetricName,
       countsMetricName: props.countsMetricName,
       sloWindow: props.sloWindow,
-    });
-    super({ availability, ...props });
+    })
+    super({ availability, ...props })
   }
 }

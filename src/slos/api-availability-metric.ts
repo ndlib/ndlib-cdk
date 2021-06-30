@@ -1,16 +1,16 @@
-import { MathExpression, Metric } from '@aws-cdk/aws-cloudwatch';
-import { IAlertConfig } from './types';
+import { MathExpression, Metric } from '@aws-cdk/aws-cloudwatch'
+import { IAlertConfig } from './types'
 
 export interface IApiAvailabilityMetricProps {
   /**
    * Name of the API for this metric
    */
-  readonly apiName: string;
+  readonly apiName: string
 
   /**
    * The SLO window that this metric will be used for.
    */
-  readonly sloWindow: IAlertConfig;
+  readonly sloWindow: IAlertConfig
 }
 
 /**
@@ -27,7 +27,7 @@ export class ApiAvailabilityMetric extends MathExpression {
       },
       statistic: 'Sum',
       label: 'Error rate',
-    });
+    })
 
     const gatewayRequests = new Metric({
       namespace: 'AWS/ApiGateway',
@@ -37,15 +37,15 @@ export class ApiAvailabilityMetric extends MathExpression {
       },
       statistic: 'Sum',
       label: 'Requests',
-    });
+    })
 
     const myProps = {
       label: 'Availability',
       expression: '(gatewayRequests - gatewayErrors)/gatewayRequests',
       usingMetrics: { gatewayRequests, gatewayErrors },
       period: props.sloWindow.alertWindow,
-    };
+    }
 
-    super({ ...props, ...myProps });
+    super({ ...props, ...myProps })
   }
 }

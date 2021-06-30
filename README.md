@@ -17,10 +17,10 @@ Creates an Aspect that will apply stack level tags to all stacks in the applicat
 Example usage:
 
 ```typescript
-import cdk = require('@aws-cdk/core');
-import { StackTags } from '@ndlib/ndlib-cdk';
-const app = new cdk.App();
-Aspects.of(app).add(new StackTags());
+import cdk = require('@aws-cdk/core')
+import { StackTags } from '@ndlib/ndlib-cdk'
+const app = new cdk.App()
+Aspects.of(app).add(new StackTags())
 ```
 
 ## HTTPS Application Load Balancer
@@ -30,16 +30,16 @@ Creates a common construction of an ALB that will redirect all traffic from HTTP
 Example usage:
 
 ```typescript
-import cdk = require('@aws-cdk/core');
-import ec2 = require('@aws-cdk/aws-ec2');
-import { HttpsAlb } from '@ndlib/ndlib-cdk';
-const stack = new cdk.Stack();
-const vpc = new ec2.Vpc(stack, 'Vpc');
+import cdk = require('@aws-cdk/core')
+import ec2 = require('@aws-cdk/aws-ec2')
+import { HttpsAlb } from '@ndlib/ndlib-cdk'
+const stack = new cdk.Stack()
+const vpc = new ec2.Vpc(stack, 'Vpc')
 const alb = new HttpsAlb(stack, 'PublicLoadBalancer', {
   certificateArns: ['MyCertificateArn'],
   internetFacing: true,
   vpc,
-});
+})
 ```
 
 ## Archive S3 Bucket
@@ -49,22 +49,22 @@ Creates an S3 Bucket with no public access that immediately transitions all depo
 The following example will immediately move objects to Glacier:
 
 ```typescript
-import cdk = require('@aws-cdk/core');
-import { ArchiveBucket } from '@ndlib/ndlib-cdk';
+import cdk = require('@aws-cdk/core')
+import { ArchiveBucket } from '@ndlib/ndlib-cdk'
 
-const stack = new cdk.Stack();
-const bucket = new ArchiveBucket(stack, 'Bucket');
+const stack = new cdk.Stack()
+const bucket = new ArchiveBucket(stack, 'Bucket')
 ```
 
 The following example will immediately move objects to Glacier Deep Archive, while overriding the default public access behavior of the bucket:
 
 ```typescript
-import cdk = require('@aws-cdk/core');
-import { ArchiveBucket } from '@ndlib/ndlib-cdk';
+import cdk = require('@aws-cdk/core')
+import { ArchiveBucket } from '@ndlib/ndlib-cdk'
 
-const stack = new cdk.Stack();
-const overrides = { blockPublicAccess: BlockPublicAccess.BLOCK_ACLS, deepArchive: true };
-const bucket = new ArchiveBucket(stack, 'Bucket', { ...overrides });
+const stack = new cdk.Stack()
+const overrides = { blockPublicAccess: BlockPublicAccess.BLOCK_ACLS, deepArchive: true }
+const bucket = new ArchiveBucket(stack, 'Bucket', { ...overrides })
 ```
 
 ## CodePipeline Email Notifications
@@ -78,15 +78,15 @@ Example message:
 Example usage:
 
 ```typescript
-import cdk = require('@aws-cdk/core');
-import { Pipeline } from '@aws-cdk/aws-codepipeline';
-import { PipelineNotifications } from '@ndlib/ndlib-cdk';
-const stack = new cdk.Stack();
-const pipeline = Pipeline(stack, { ... });
+import cdk = require('@aws-cdk/core')
+import { Pipeline } from '@aws-cdk/aws-codepipeline'
+import { PipelineNotifications } from '@ndlib/ndlib-cdk'
+const stack = new cdk.Stack()
+const pipeline = Pipeline(stack, { ... })
 const notifications = new PipelineNotifications(stack, 'TestPipelineNotifications', {
   pipeline,
-  receivers: 'me@myhost.com'
-});
+  receivers: 'me@myhost.com',
+})
 ```
 
 ## CodePipeline Slack Approval
@@ -98,17 +98,17 @@ Note: This assumes that you've already deployed an [approval lambda](https://git
 Example usage:
 
 ```typescript
-import cdk = require('@aws-cdk/core');
-import { Pipeline } from '@aws-cdk/aws-codepipeline';
-import { Topic } from '@aws-cdk/aws-sns';
-import { SlackApproval } from '@ndlib/ndlib-cdk';
-const stack = new cdk.Stack();
-const approvalTopic = new Topic(this, 'ApprovalTopic');
-const pipeline = Pipeline(stack, { ... });
+import cdk = require('@aws-cdk/core')
+import { Pipeline } from '@aws-cdk/aws-codepipeline'
+import { Topic } from '@aws-cdk/aws-sns'
+import { SlackApproval } from '@ndlib/ndlib-cdk'
+const stack = new cdk.Stack()
+const approvalTopic = new Topic(this, 'ApprovalTopic')
+const pipeline = Pipeline(stack, { ... })
 const slackApproval = new SlackApproval(this, 'SlackApproval', {
   approvalTopic,
   notifyStackName: 'slack-deployment-channel-notifier',
-});
+})
 ```
 
 ## Service Level Objectives
@@ -130,23 +130,23 @@ const slos = [
     sloThreshold: 0.95,
     latencyThreshold: 200,
   },
-];
-const stack = new cdk.Stack();
+]
+const stack = new cdk.Stack()
 
 // Create a dashboard that shows the 30 day performance of all of our SLOs
 const perfDash = new SLOPerformanceDashboard(stack, 'PerformanceDashboard', {
   slos,
   dashboardName: 'PerformanceDashboard',
-});
+})
 
 // Create the multi-window alarms for each of the SLOs. This will also create an SNS topic that will
 // receive the alerts. The alarm will include links to the dashboards and runbooks given in its
 // description.
 const alarms = new SLOAlarms(stack, 'Alarms', {
   slos,
-  dashboardLink: `https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards:name=My-Website`,
+  dashboardLink: 'https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards:name=My-Website',
   runbookLink: 'https://github.com/myorg/myrunbooks',
-});
+})
 ```
 
 For more info see the [Service Level Objectives Readme](/src/slos/README.md)
@@ -158,11 +158,11 @@ Creates an S3 Bucket with no public access and requires secure transport to take
 The following example will create a standard artifact bucket:
 
 ```typescript
-import cdk = require('@aws-cdk/core');
-import { ArtifactBucket } from '@ndlib/ndlib-cdk';
+import cdk = require('@aws-cdk/core')
+import { ArtifactBucket } from '@ndlib/ndlib-cdk'
 
-const stack = new cdk.Stack();
-const bucket = new ArtifactBucket(stack, 'Bucket');
+const stack = new cdk.Stack()
+const bucket = new ArtifactBucket(stack, 'Bucket')
 ```
 
 ## Docker CodeBuild Action
@@ -172,30 +172,30 @@ This is a factory helper method to ease the creation of CodeBuild projects that 
 The following example will create a Linux CodeBuild project, using DockerHub authentication credentials stored in Secrets Manager (under the `/test/credentials` path) and the `PipelineProject` CDK construct, that leverages the `alpine:3` DockerHub Image:
 
 ```typescript
-import cdk = require('@aws-cdk/core');
-import { PipelineProject } from '@aws-cdk/aws-codebuild';
-import { DockerCodeBuildAction } from '@ndlib/ndlib-cdk';
+import cdk = require('@aws-cdk/core')
+import { PipelineProject } from '@aws-cdk/aws-codebuild'
+import { DockerCodeBuildAction } from '@ndlib/ndlib-cdk'
 
-const stack = new cdk.Stack();
-const project = new PipelineProject(stack, `test-project`, {
+const stack = new cdk.Stack()
+const project = new PipelineProject(stack, 'test-project', {
   environment: {
     buildImage: DockerCodeBuildAction.fromLinuxDockerImage(stack, 'alpine-build-image', {
       image: 'alpine:3',
       credentialsContextKeyName: '/test/credentials',
     }),
   },
-});
+})
 ```
 
 The following example will create a Windows CodeBuild project, using DockerHub authentication credentials stored in Secrets Manager (under the `/test/credentials` path) and the `Project` CDK construct, that leverages the `mcr.microsoft.com/windows/servercore/iis` DockerHub Image:
 
 ```typescript
-import cdk = require('@aws-cdk/core');
-import { Project, BuildSpec } from '@aws-cdk/aws-codebuild';
-import { DockerCodeBuildAction } from '@ndlib/ndlib-cdk';
+import cdk = require('@aws-cdk/core')
+import { Project, BuildSpec } from '@aws-cdk/aws-codebuild'
+import { DockerCodeBuildAction } from '@ndlib/ndlib-cdk'
 
-const stack = new cdk.Stack();
-const project = new Project(stack, `test-project`, {
+const stack = new cdk.Stack()
+const project = new Project(stack, 'test-project', {
   buildSpec: BuildSpec.fromObject({
     phases: {
       build: {
@@ -210,7 +210,7 @@ const project = new Project(stack, `test-project`, {
       credentialsContextKeyName: '/test/credentials',
     }),
   },
-});
+})
 ```
 
 ## Static Host
@@ -222,23 +222,23 @@ Lambda@Edge functions can also be connected to the CloudFront, but must be defin
 Example usage:
 
 ```typescript
-import cdk = require('@aws-cdk/core');
-import { Certificate } from '@aws-cdk/aws-certificatemanager';
-import { StaticHost, TransclusionLambda } from '@ndlib/ndlib-cdk';
+import cdk = require('@aws-cdk/core')
+import { Certificate } from '@aws-cdk/aws-certificatemanager'
+import { StaticHost, TransclusionLambda } from '@ndlib/ndlib-cdk'
 
-const stack = new cdk.Stack();
-const siteBucket = new Bucket(stack, 'Bucket');
+const stack = new cdk.Stack()
+const siteBucket = new Bucket(stack, 'Bucket')
 const transclusionLambda = new TransclusionLambda(stack, 'Transclusion', {
   isDefaultBehavior: true,
   originBucket: siteBucket,
-});
+})
 const host = new StaticHost(stack, 'MyStaticHost', {
   hostnamePrefix: 'my-site',
   domainName: 'domain.org',
   websiteCertificate: Certificate.fromCertificateArn(stack, 'ACMCert', 'arn:aws:acm:::certificate/example'),
   indexFilename: 'index.shtml',
   edgeLambdas: [transclusionLambda],
-});
+})
 ```
 
 ## Edge Lambdas
@@ -261,13 +261,13 @@ This construct creates a CodeBuild project and an action which can be used in a 
 Example usage:
 
 ```typescript
-import { Pipeline } from '@aws-cdk/aws-codepipeline';
-import { Stack } from '@aws-cdk/core';
-import { NewmanPipelineProject } from '@ndlib/ndlib-cdk';
+import { Pipeline } from '@aws-cdk/aws-codepipeline'
+import { Stack } from '@aws-cdk/core'
+import { NewmanPipelineProject } from '@ndlib/ndlib-cdk'
 
-const stack = new Stack();
-const pipeline = Pipeline(stack, 'MyPipeline');
-const appSourceArtifact = new codepipeline.Artifact('AppCode');
+const stack = new Stack()
+const pipeline = Pipeline(stack, 'MyPipeline')
+const appSourceArtifact = new codepipeline.Artifact('AppCode')
 // ...
 const newmanRunner = new NewmanRunner(stack, 'TestProject', {
   sourceArtifact: appSourceArtifact,
@@ -276,11 +276,11 @@ const newmanRunner = new NewmanRunner(stack, 'TestProject', {
     hostname: 'https://www.example.com',
     foo: 'bar',
   },
-});
+})
 pipeline.addStage({
   stageName: 'Build',
   actions: [buildAction, newmanRunner.action, approvalAction],
-});
+})
 ```
 
 ## Pipeline S3 Sync
@@ -290,24 +290,24 @@ This construct creates a codebuild project which takes an input artifact and pus
 Example:
 
 ```typescript
-import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline';
-import { Stack } from '@aws-cdk/core';
-import { PipelineS3Sync } from '@ndlib/ndlib-cdk';
+import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline'
+import { Stack } from '@aws-cdk/core'
+import { PipelineS3Sync } from '@ndlib/ndlib-cdk'
 
-const stack = new Stack();
-const pipeline = Pipeline(stack, 'MyPipeline');
-const appSourceArtifact = new Artifact('AppCode');
+const stack = new Stack()
+const pipeline = Pipeline(stack, 'MyPipeline')
+const appSourceArtifact = new Artifact('AppCode')
 // ...
 const s3Sync = new PipelineS3Sync(this, 'S3SyncProd', {
   bucketNamePrefix: this.stackName,
   bucketParamPath: '/all/stacks/targetStackName/site-bucket-name',
   cloudFrontParamPath: '/all/stacks/targetStackName/distribution-id',
   inputBuildArtifact: appSourceArtifact,
-});
+})
 pipeline.addStage({
   stageName: 'Deploy',
   actions: [s3Sync.action],
-});
+})
 ```
 
 PipelineS3Sync also handles assigning content types based on filename patterns. To do so, provide an array of patterns with the content type they should be assigned like so:
@@ -325,7 +325,7 @@ new PipelineS3Sync(this, 'S3SyncProd', {
       contentType: 'text/plain',
     },
   ],
-});
+})
 ```
 
 ## Source Watcher
@@ -335,10 +335,10 @@ The SourceWatcher construct creates necessary resources to monitor a GitHub repo
 Example:
 
 ```typescript
-import { Stack } from '@aws-cdk/core';
-import { SourceWatcher } from '@ndlib/ndlib-cdk';
+import { Stack } from '@aws-cdk/core'
+import { SourceWatcher } from '@ndlib/ndlib-cdk'
 
-const stack = new Stack();
+const stack = new Stack()
 new SourceWatcher(stack, 'TestProject', {
   triggers: [
     {
@@ -354,7 +354,7 @@ new SourceWatcher(stack, 'TestProject', {
   targetBranch: 'main',
   gitTokenPath: '/all/github/ndlib-git',
   webhookResourceStackName: 'github-webhook-custom-resource-prod',
-});
+})
 ```
 
 NOTE: `webhookResourceStackName` refers to a stack which will manage contains the backend for a CustomResource webhook. Prior to using this construct, an instance of [ndlib/aws-github-webhook](https://github.com/ndlib/aws-github-webhook) should be deployed to the AWS account. One stack can be used for any number of SourceWatcher constructs.

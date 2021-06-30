@@ -1,15 +1,15 @@
-import { Dashboard, DashboardProps } from '@aws-cdk/aws-cloudwatch';
-import * as cdk from '@aws-cdk/core';
-import { ApiAvailabilityWidget } from './api-availability-widget';
-import { ApiLatencyWidget } from './api-latency-widget';
-import { AppSyncAvailabilityWidget } from './appsync-availability-widget';
-import { AppSyncLatencyWidget } from './appsync-latency-widget';
-import { CloudfrontAvailabilityWidget } from './cloudfront-availability-widget';
-import { CloudfrontLatencyWidget } from './cloudfront-latency-widget';
-import { CustomAvailabilityWidget } from './custom-availability-widget';
-import { CustomLatencyWidget } from './custom-latency-widget';
-import { ElasticSearchAvailabilityWidget } from './elasticsearch-availability-widget';
-import { ElasticSearchLatencyWidget } from './elasticsearch-latency-widget';
+import { Dashboard, DashboardProps, IWidget } from '@aws-cdk/aws-cloudwatch'
+import * as cdk from '@aws-cdk/core'
+import { ApiAvailabilityWidget } from './api-availability-widget'
+import { ApiLatencyWidget } from './api-latency-widget'
+import { AppSyncAvailabilityWidget } from './appsync-availability-widget'
+import { AppSyncLatencyWidget } from './appsync-latency-widget'
+import { CloudfrontAvailabilityWidget } from './cloudfront-availability-widget'
+import { CloudfrontLatencyWidget } from './cloudfront-latency-widget'
+import { CustomAvailabilityWidget } from './custom-availability-widget'
+import { CustomLatencyWidget } from './custom-latency-widget'
+import { ElasticSearchAvailabilityWidget } from './elasticsearch-availability-widget'
+import { ElasticSearchLatencyWidget } from './elasticsearch-latency-widget'
 import {
   AnySLO,
   ApiAvailabilitySLO,
@@ -22,15 +22,15 @@ import {
   CustomLatencySLO,
   ElasticSearchAvailabilitySLO,
   ElasticSearchLatencySLO,
-} from './types';
-import { Windows } from './windows';
+} from './types'
+import { Windows } from './windows'
 
 export interface ISLOPerformanceDashboardProps extends DashboardProps {
   /**
    * Array of slos to create widgets for. All items must match the properties defined
    * by one of the types in AnySLO
    */
-  readonly slos: AnySLO[];
+  readonly slos: AnySLO[]
 }
 
 /**
@@ -39,130 +39,130 @@ export interface ISLOPerformanceDashboardProps extends DashboardProps {
 export class SLOPerformanceDashboard extends Dashboard {
   constructor(scope: cdk.Construct, id: string, props: ISLOPerformanceDashboardProps) {
     const widgets = props.slos.reduce(
-      (result, slo) => {
+      (result: IWidget[][], slo) => {
         // Create rows with 4 widgets
-        let lastRow = result[result.length - 1];
+        let lastRow = result[result.length - 1]
         if (lastRow.length >= 4) {
-          lastRow = [];
-          result.push(lastRow);
+          lastRow = []
+          result.push(lastRow)
         }
 
         switch (slo.type) {
           case 'ApiAvailability':
-            const apiAvailabilitySlo = slo as ApiAvailabilitySLO;
+            const apiAvailabilitySlo = slo as ApiAvailabilitySLO
             lastRow.push(
               new ApiAvailabilityWidget({
                 ...apiAvailabilitySlo,
                 sloWindow: Windows.thirtyDays,
                 title: `${apiAvailabilitySlo.title} - Availability`,
               }),
-            );
-            break;
+            )
+            break
           case 'ApiLatency':
-            const apiLatencySlo = slo as ApiLatencySLO;
+            const apiLatencySlo = slo as ApiLatencySLO
             lastRow.push(
               new ApiLatencyWidget({
                 ...apiLatencySlo,
                 sloWindow: Windows.thirtyDays,
                 title: `${apiLatencySlo.title} - Latency ${apiLatencySlo.latencyThreshold}ms`,
               }),
-            );
-            break;
+            )
+            break
           case 'AppSyncAvailability':
-            const appSyncAvailabilitySlo = slo as AppSyncAvailabilitySLO;
+            const appSyncAvailabilitySlo = slo as AppSyncAvailabilitySLO
             lastRow.push(
               new AppSyncAvailabilityWidget({
                 ...appSyncAvailabilitySlo,
                 sloWindow: Windows.thirtyDays,
                 title: `${appSyncAvailabilitySlo.title} - Availability`,
               }),
-            );
-            break;
+            )
+            break
           case 'AppSyncLatency':
-            const appSyncLatencySlo = slo as AppSyncLatencySLO;
+            const appSyncLatencySlo = slo as AppSyncLatencySLO
             lastRow.push(
               new AppSyncLatencyWidget({
                 ...appSyncLatencySlo,
                 sloWindow: Windows.thirtyDays,
                 title: `${appSyncLatencySlo.title} - Latency ${appSyncLatencySlo.latencyThreshold}ms`,
               }),
-            );
-            break;
+            )
+            break
           case 'CloudfrontAvailability':
-            const cloudfrontAvailaiblitySlo = slo as CloudfrontAvailabilitySLO;
+            const cloudfrontAvailaiblitySlo = slo as CloudfrontAvailabilitySLO
             lastRow.push(
               new CloudfrontAvailabilityWidget({
                 ...cloudfrontAvailaiblitySlo,
                 sloWindow: Windows.thirtyDays,
                 title: `${slo.title} - Availability`,
               }),
-            );
-            break;
+            )
+            break
           case 'CloudfrontLatency':
-            const cloudfrontLatencySlo = slo as CloudfrontLatencySLO;
+            const cloudfrontLatencySlo = slo as CloudfrontLatencySLO
             lastRow.push(
               new CloudfrontLatencyWidget({
                 ...cloudfrontLatencySlo,
                 sloWindow: Windows.thirtyDays,
                 title: `${cloudfrontLatencySlo.title} - Latency ${cloudfrontLatencySlo.latencyThreshold}ms`,
               }),
-            );
-            break;
+            )
+            break
           case 'CustomAvailability':
-            const customAvailabilitySlo = slo as CustomAvailabilitySLO;
+            const customAvailabilitySlo = slo as CustomAvailabilitySLO
             lastRow.push(
               new CustomAvailabilityWidget({
                 ...customAvailabilitySlo,
                 sloWindow: Windows.thirtyDays,
                 title: `${customAvailabilitySlo.title} - Availability`,
               }),
-            );
-            break;
+            )
+            break
           case 'CustomLatency':
-            const customLatencySlo = slo as CustomLatencySLO;
+            const customLatencySlo = slo as CustomLatencySLO
             lastRow.push(
               new CustomLatencyWidget({
                 ...customLatencySlo,
                 sloWindow: Windows.thirtyDays,
                 title: `${customLatencySlo.title} - Latency ${customLatencySlo.latencyThreshold}ms`,
               }),
-            );
-            break;
+            )
+            break
           case 'ElasticSearchAvailability':
-            const elasticSearchAvailabilitySlo = slo as ElasticSearchAvailabilitySLO;
+            const elasticSearchAvailabilitySlo = slo as ElasticSearchAvailabilitySLO
             lastRow.push(
               new ElasticSearchAvailabilityWidget({
                 ...elasticSearchAvailabilitySlo,
                 sloWindow: Windows.thirtyDays,
                 title: `${elasticSearchAvailabilitySlo.title} - Availability`,
               }),
-            );
-            break;
+            )
+            break
           case 'ElasticSearchLatency':
-            const esLatencySlo = slo as ElasticSearchLatencySLO;
+            const esLatencySlo = slo as ElasticSearchLatencySLO
             lastRow.push(
               new ElasticSearchLatencyWidget({
                 ...esLatencySlo,
                 sloWindow: Windows.thirtyDays,
                 title: `${esLatencySlo.title} - Latency ${esLatencySlo.latencyThreshold}ms`,
               }),
-            );
-            break;
+            )
+            break
           default:
             throw new Error(
               `PerformanceDashboard creation encountered an unknown type for slo: ${JSON.stringify(slo)}.`,
-            );
+            )
         }
-        return result;
+        return result
       },
-      [[]] as any,
-    );
+      [[]] as IWidget[][],
+    )
 
     const defaultProps = {
       widgets,
       start: '-P360D',
-    };
+    }
 
-    super(scope, id, { ...defaultProps, ...props });
+    super(scope, id, { ...defaultProps, ...props })
   }
 }

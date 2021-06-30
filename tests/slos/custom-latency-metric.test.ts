@@ -1,6 +1,6 @@
-import { CustomLatencyMetric } from '../../src/slos/custom-latency-metric';
-import { Windows } from '../../src/slos/windows';
-import { Duration } from '@aws-cdk/core';
+import { CustomLatencyMetric } from '../../src/slos/custom-latency-metric'
+import { Windows } from '../../src/slos/windows'
+import { Duration } from '@aws-cdk/core'
 
 describe('CustomAvailabilityMetric', () => {
   const defaultProps = {
@@ -9,7 +9,7 @@ describe('CustomAvailabilityMetric', () => {
     sloThreshold: 0.99,
     latencyThreshold: 200,
     sloWindow: Windows.twoPercentLong,
-  };
+  }
 
   test('uses the window burn rate threshold for the statistic and puts the statistic in its label', () => {
     const expectations = [
@@ -33,7 +33,7 @@ describe('CustomAvailabilityMetric', () => {
         sloThreshold: 0.5,
         windows: [{ window: Windows.tenPercentLong, expectedStatistic: 'p50.00' }],
       },
-    ];
+    ]
     expectations.forEach(expectation => {
       expectation.windows.forEach(window => {
         const metric = new CustomLatencyMetric({
@@ -41,37 +41,37 @@ describe('CustomAvailabilityMetric', () => {
           latencyMetricName: 'testLatencyMetric',
           sloThreshold: expectation.sloThreshold,
           sloWindow: window.window,
-        });
-        expect(metric.statistic).toEqual(window.expectedStatistic);
-        expect(metric.label).toEqual(`Latency ${window.expectedStatistic}`);
-      });
-    });
-  });
+        })
+        expect(metric.statistic).toEqual(window.expectedStatistic)
+        expect(metric.label).toEqual(`Latency ${window.expectedStatistic}`)
+      })
+    })
+  })
 
   test('uses the given namespace', () => {
-    const metric = new CustomLatencyMetric(defaultProps);
-    expect(metric.namespace).toEqual('testNamespace');
-  });
+    const metric = new CustomLatencyMetric(defaultProps)
+    expect(metric.namespace).toEqual('testNamespace')
+  })
 
   test('uses given latency metric name', () => {
-    const metric = new CustomLatencyMetric(defaultProps);
-    expect(metric.metricName).toEqual('testLatencyMetric');
-  });
+    const metric = new CustomLatencyMetric(defaultProps)
+    expect(metric.metricName).toEqual('testLatencyMetric')
+  })
 
   test('uses no other dimensions in any metrics, since custom metrics cannot be pushed with dimensions', () => {
-    const metric = new CustomLatencyMetric(defaultProps);
-    expect(metric.dimensions).toEqual(undefined);
-  });
+    const metric = new CustomLatencyMetric(defaultProps)
+    expect(metric.dimensions).toEqual(undefined)
+  })
 
   test('uses the alert window size for the period', () => {
-    const metric = new CustomLatencyMetric(defaultProps);
-    expect(metric.period).toEqual(Duration.hours(1));
-  });
+    const metric = new CustomLatencyMetric(defaultProps)
+    expect(metric.period).toEqual(Duration.hours(1))
+  })
 
   test('uses p0 for the statistic when too small a window is used for the threshold', () => {
-    const props = defaultProps;
-    props.sloThreshold = 0.5;
-    const metric = new CustomLatencyMetric(props);
-    expect(metric.statistic).toEqual('p0.00');
-  });
-});
+    const props = defaultProps
+    props.sloThreshold = 0.5
+    const metric = new CustomLatencyMetric(props)
+    expect(metric.statistic).toEqual('p0.00')
+  })
+})

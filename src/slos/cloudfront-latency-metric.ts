@@ -1,21 +1,21 @@
-import { Metric } from '@aws-cdk/aws-cloudwatch';
-import { IAlertConfig } from './types';
+import { Metric } from '@aws-cdk/aws-cloudwatch'
+import { IAlertConfig } from './types'
 
 export interface ICloudfrontLatencyMetricProps {
   /**
    * Identifier of the Distribution for this metric
    */
-  readonly distributionId: string;
+  readonly distributionId: string
 
   /**
    * The SLO window that this metric will be used for.
    */
-  readonly sloWindow: IAlertConfig;
+  readonly sloWindow: IAlertConfig
 
   /**
    * The decimal value for the threshold of the SLO.
    */
-  readonly sloThreshold: number;
+  readonly sloThreshold: number
 }
 
 /**
@@ -24,10 +24,10 @@ export interface ICloudfrontLatencyMetricProps {
  */
 export class CloudfrontLatencyMetric extends Metric {
   constructor(props: ICloudfrontLatencyMetricProps) {
-    const sloBudget = 100 - props.sloThreshold * 100;
-    let alarmThreshold = 100 - props.sloWindow.burnRateThreshold * sloBudget;
-    alarmThreshold = Math.max(0, Math.min(alarmThreshold, 100));
-    const statistic = `p${alarmThreshold.toFixed(2)}`;
+    const sloBudget = 100 - props.sloThreshold * 100
+    let alarmThreshold = 100 - props.sloWindow.burnRateThreshold * sloBudget
+    alarmThreshold = Math.max(0, Math.min(alarmThreshold, 100))
+    const statistic = `p${alarmThreshold.toFixed(2)}`
     const myProps = {
       namespace: 'AWS/CloudFront',
       metricName: 'OriginLatency',
@@ -38,7 +38,7 @@ export class CloudfrontLatencyMetric extends Metric {
       statistic,
       label: `Latency ${statistic}`,
       period: props.sloWindow.alertWindow,
-    };
-    super({ ...props, ...myProps });
+    }
+    super({ ...props, ...myProps })
   }
 }

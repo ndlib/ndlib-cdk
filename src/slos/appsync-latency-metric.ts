@@ -1,21 +1,21 @@
-import { Metric } from '@aws-cdk/aws-cloudwatch';
-import { IAlertConfig } from './types';
+import { Metric } from '@aws-cdk/aws-cloudwatch'
+import { IAlertConfig } from './types'
 
 export interface IAppSyncLatencyMetricProps {
   /**
    * Id of the GraphQL API for this metric
    */
-  readonly apiId: string;
+  readonly apiId: string
 
   /**
    * The SLO window that this metric will be used for.
    */
-  readonly sloWindow: IAlertConfig;
+  readonly sloWindow: IAlertConfig
 
   /**
    * The decimal value for the threshold of the SLO.
    */
-  readonly sloThreshold: number;
+  readonly sloThreshold: number
 }
 
 export class AppSyncLatencyMetric extends Metric {
@@ -24,10 +24,10 @@ export class AppSyncLatencyMetric extends Metric {
    * Latency SLOs
    */
   constructor(props: IAppSyncLatencyMetricProps) {
-    const sloBudget = 100 - props.sloThreshold * 100;
-    let alarmThreshold = 100 - props.sloWindow.burnRateThreshold * sloBudget;
-    alarmThreshold = Math.max(0, Math.min(alarmThreshold, 100));
-    const statistic = `p${alarmThreshold.toFixed(2)}`;
+    const sloBudget = 100 - props.sloThreshold * 100
+    let alarmThreshold = 100 - props.sloWindow.burnRateThreshold * sloBudget
+    alarmThreshold = Math.max(0, Math.min(alarmThreshold, 100))
+    const statistic = `p${alarmThreshold.toFixed(2)}`
     const myProps = {
       namespace: 'AWS/AppSync',
       metricName: 'Latency',
@@ -37,7 +37,7 @@ export class AppSyncLatencyMetric extends Metric {
       statistic,
       label: `Latency ${statistic}`,
       period: props.sloWindow.alertWindow,
-    };
-    super({ ...props, ...myProps });
+    }
+    super({ ...props, ...myProps })
   }
 }

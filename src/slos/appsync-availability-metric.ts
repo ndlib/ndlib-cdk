@@ -1,16 +1,16 @@
-import { MathExpression, Metric } from '@aws-cdk/aws-cloudwatch';
-import { IAlertConfig } from './types';
+import { MathExpression, Metric } from '@aws-cdk/aws-cloudwatch'
+import { IAlertConfig } from './types'
 
 export interface IAppSyncAvailabilityMetricProps {
   /**
    * Id of the GraphQL API for this metric
    */
-  readonly apiId: string;
+  readonly apiId: string
 
   /**
    * The SLO window that this metric will be used for.
    */
-  readonly sloWindow: IAlertConfig;
+  readonly sloWindow: IAlertConfig
 }
 
 export class AppSyncAvailabilityMetric extends MathExpression {
@@ -27,7 +27,7 @@ export class AppSyncAvailabilityMetric extends MathExpression {
       },
       statistic: 'Sum',
       label: 'Error rate',
-    });
+    })
 
     // There is no direct request count metric. Have to get this from the sample
     // count for one of the error metrics.
@@ -40,14 +40,14 @@ export class AppSyncAvailabilityMetric extends MathExpression {
       },
       statistic: 'SampleCount',
       label: 'Requests',
-    });
+    })
 
     const myProps = {
       label: 'Availability',
       expression: '(requests - errors)/requests',
       usingMetrics: { requests, errors },
       period: props.sloWindow.alertWindow,
-    };
-    super({ ...props, ...myProps });
+    }
+    super({ ...props, ...myProps })
   }
 }

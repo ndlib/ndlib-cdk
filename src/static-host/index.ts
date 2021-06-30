@@ -1,1 +1,1 @@
-export * from './static-host';
+export * from './static-host'

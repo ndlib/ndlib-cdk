@@ -1,17 +1,17 @@
-import { expect as expectCDK, haveResourceLike } from '@aws-cdk/assert';
-import { CloudFrontAllowedMethods, LambdaEdgeEventType } from '@aws-cdk/aws-cloudfront';
-import { Bucket } from '@aws-cdk/aws-s3';
-import { Stack, Duration } from '@aws-cdk/core';
-import { TransclusionLambda } from '../../../src/edge-lambdas/transclusionLambda';
+import { expect as expectCDK, haveResourceLike } from '@aws-cdk/assert'
+import { CloudFrontAllowedMethods, LambdaEdgeEventType } from '@aws-cdk/aws-cloudfront'
+import { Bucket } from '@aws-cdk/aws-s3'
+import { Stack, Duration } from '@aws-cdk/core'
+import { TransclusionLambda } from '../../../src/edge-lambdas/transclusionLambda'
 
 describe('TransclusionLambda', () => {
   describe('with default props', () => {
-    const stack = new Stack();
-    const testBucket = new Bucket(stack, 'Bucket');
+    const stack = new Stack()
+    const testBucket = new Bucket(stack, 'Bucket')
     const testLambda = new TransclusionLambda(stack, 'Lambda', {
       isDefaultBehavior: false,
       originBucket: testBucket,
-    });
+    })
 
     test('creates function', () => {
       expectCDK(stack).to(
@@ -21,8 +21,8 @@ describe('TransclusionLambda', () => {
           Runtime: 'nodejs12.x',
           Timeout: 10,
         }),
-      );
-    });
+      )
+    })
 
     test('creates valid behavior configuration', () => {
       expect(testLambda.behavior).toMatchObject({
@@ -36,8 +36,8 @@ describe('TransclusionLambda', () => {
             lambdaFunction: testLambda.function.currentVersion,
           },
         ],
-      });
-    });
+      })
+    })
 
     test('grants bucket read permissions to the lambda execution role', () => {
       expectCDK(stack).to(
@@ -67,13 +67,13 @@ describe('TransclusionLambda', () => {
             },
           ],
         }),
-      );
-    });
-  });
+      )
+    })
+  })
 
   describe('with overridden props', () => {
-    const stack = new Stack();
-    const testBucket = new Bucket(stack, 'Bucket');
+    const stack = new Stack()
+    const testBucket = new Bucket(stack, 'Bucket')
     const testLambda = new TransclusionLambda(stack, 'Lambda', {
       description: 'My transclusion lambda for my fancy stack.',
       timeout: Duration.seconds(123),
@@ -83,7 +83,7 @@ describe('TransclusionLambda', () => {
       maxTtl: Duration.seconds(200),
       defaultTtl: Duration.seconds(150),
       originBucket: testBucket,
-    });
+    })
 
     test('overrides defaults on function', () => {
       expectCDK(stack).to(
@@ -93,8 +93,8 @@ describe('TransclusionLambda', () => {
           Runtime: 'nodejs12.x',
           Timeout: 123,
         }),
-      );
-    });
+      )
+    })
 
     test('overrides defaults on behavior', () => {
       expect(testLambda.behavior).toMatchObject({
@@ -111,7 +111,7 @@ describe('TransclusionLambda', () => {
         minTtl: Duration.seconds(100),
         maxTtl: Duration.seconds(200),
         defaultTtl: Duration.seconds(150),
-      });
-    });
-  });
-});
+      })
+    })
+  })
+})

@@ -20,6 +20,7 @@ describe('StaticHost', () => {
     hostedZoneId?: string;
     createLambdas?: boolean;
     errorConfig?: CfnDistribution.CustomErrorResponseProperty[];
+    indexFilename?: string;
   }
 
   const setup = (props: ISetupParams) => {
@@ -60,10 +61,10 @@ describe('StaticHost', () => {
         stack: myStack,
         node: myStack.node,
       },
-      indexFilename: 'index.html',
+      indexFilename: props.indexFilename,
       createDns: props.createDns,
       hostedZoneId: props.hostedZoneId,
-      edgeLambdas: edgeLambdas,
+      edgeLambdas: edgeLambdas.length ? edgeLambdas : undefined, // Make sure no error on undefined
       errorConfig: props.errorConfig,
     });
     return myStack;
@@ -153,6 +154,7 @@ describe('StaticHost', () => {
           errorCachingMinTtl: 300,
         },
       ],
+      indexFilename: '/test.html',
     });
 
     test('associates spaRedirect and transclusion lambdas with cloudfront', () => {

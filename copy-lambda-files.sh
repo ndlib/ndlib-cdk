@@ -1,11 +1,11 @@
 #!/bin/sh
-# This script will copy lambda source files into the lib output folder.
+# This script will copy lambda "src" folders into the lib output folder.
 # This should be run with the build to ensure that references to lambda code works in the published npm package.
-# It uses the pattern src/edge-lambdas/**/src, and copies everything under the lambda's src folder.
+# It uses the pattern src/(edge|internal)-lambdas/**/src, and copies everything in the src directory.
 
-files_list=`find "src/edge-lambdas" -type d -name "src" -exec find "{}" -type f -name "*" \;`
-for path in $files_list; do
+dir_list=`find "src/edge-lambdas" "src/internal-lambdas" -type d -regex ".*-lambdas/[^/\]*/src"`
+for dir in $dir_list; do
   # Changes the root folder "src" to "lib"
-  target_path=$(printf "%s" "$path" | sed -e 's@src@lib@')
-  mkdir -p "$(dirname "$target_path")" && cp "$path" "$target_path"
+  target_path=$(printf "%s" "$dir" | sed -e 's@src@lib@')
+  mkdir -p "$(dirname "$target_path")" && cp -R "$dir/." "$target_path"
 done

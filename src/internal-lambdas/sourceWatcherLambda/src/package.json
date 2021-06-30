@@ -1,0 +1,28 @@
+{
+  "name": "source-watcher-lambda",
+  "author": "Hesburgh Libraries - WSE <web-and-software-engineering-group@nd.edu> (https://library.nd.edu)",
+  "version": "1.0.0",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ndlib/ndlib-cdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ndlib/ndlib-cdk/issues"
+  },
+  "homepage": "https://github.com/ndlib/ndlib-cdk#readme",
+  "keywords": [
+    "aws",
+    "cdk",
+    "ndlib"
+  ],
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-codepipeline": "3.18.0",
+    "@aws-sdk/client-ssm": "3.18.0",
+    "glob": "^7.1.7",
+    "multimatch": "^5.0.0"
+  }
+}

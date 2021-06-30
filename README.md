@@ -356,3 +356,5 @@ new SourceWatcher(stack, 'TestProject', {
   webhookResourceStackName: 'github-webhook-custom-resource-prod',
 });
 ```
+
+NOTE: `webhookResourceStackName` refers to a stack which will manage contains the backend for a CustomResource webhook. Prior to using this construct, an instance of [ndlib/aws-github-webhook](https://github.com/ndlib/aws-github-webhook) should be deployed to the AWS account. One stack can be used for any number of SourceWatcher constructs.

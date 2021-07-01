@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
+    "postinstall": "subpkg install",
     "test": "jest --config jestconfig.json",
     "coverage": "jest --config jestconfig.json --coverage",
     "build": "tsc && ./copy-lambda-files.sh",

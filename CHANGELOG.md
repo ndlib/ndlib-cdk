@@ -1,6 +1,9 @@
 ## Change Log
 
-### 1.9.0 (2021/07/01 18:11 +00:00)
+### v1.9.1 (2021/07/01 18:49 +00:00)
+- [#73](https://github.com/ndlib/ndlib-cdk/pull/73) build: fix subpackage error downstream (#73) (@mlkirkpatrick)
+
+### v1.9.0 (2021/07/01 18:11 +00:00)
 - [#71](https://github.com/ndlib/ndlib-cdk/pull/71) chore: Migrate tslint -> eslint (#71) (@mlkirkpatrick)
 - [#70](https://github.com/ndlib/ndlib-cdk/pull/70) feat(source-watcher): add source watcher construct (#70) (@mlkirkpatrick)
 - [#67](https://github.com/ndlib/ndlib-cdk/pull/67) feat(pipeline-s3-sync): add pipeline-s3-sync construct (#67) (@mlkirkpatrick)

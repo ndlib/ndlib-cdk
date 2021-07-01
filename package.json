@@ -5,10 +5,9 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "postinstall": "subpkg install",
     "test": "jest --config jestconfig.json",
     "coverage": "jest --config jestconfig.json --coverage",
-    "build": "tsc && ./copy-lambda-files.sh",
+    "build": "subpkg install && tsc && ./copy-lambda-files.sh",
     "format": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "lint": "eslint '*/**/*.{js,ts,tsx}'",
     "generate-changelog": "github-changes -n ${npm_package_version} -o ndlib -r ndlib-cdk --only-pulls --use-commit-body",

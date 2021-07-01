@@ -1,12 +1,12 @@
-import { expect, haveResourceLike } from '@aws-cdk/assert';
-import { Topic } from '@aws-cdk/aws-sns';
-import { Stack } from '@aws-cdk/core';
-import { SlackApproval } from '../src/index';
+import { expect, haveResourceLike } from '@aws-cdk/assert'
+import { Topic } from '@aws-cdk/aws-sns'
+import { Stack } from '@aws-cdk/core'
+import { SlackApproval } from '../src/index'
 
 test('Subscribes the imported notifier lambda to the approval topic', () => {
-  const stack = new Stack();
-  const approvalTopic = new Topic(stack, 'TestApprovalTopic');
-  new SlackApproval(stack, 'TestPipelineSlackApproval', { approvalTopic, notifyStackName: 'TestNotifyStackName' });
+  const stack = new Stack()
+  const approvalTopic = new Topic(stack, 'TestApprovalTopic')
+  new SlackApproval(stack, 'TestPipelineSlackApproval', { approvalTopic, notifyStackName: 'TestNotifyStackName' })
   expect(stack).to(
     haveResourceLike('AWS::SNS::Subscription', {
       Protocol: 'lambda',
@@ -17,13 +17,13 @@ test('Subscribes the imported notifier lambda to the approval topic', () => {
         'Fn::ImportValue': 'TestNotifyStackName:LambdaArn',
       },
     }),
-  );
-});
+  )
+})
 
 test('Gives the approval topic permission to invoke the imported notifier lambda', () => {
-  const stack = new Stack();
-  const approvalTopic = new Topic(stack, 'TestApprovalTopic');
-  new SlackApproval(stack, 'TestPipelineSlackApproval', { approvalTopic, notifyStackName: 'TestNotifyStackName' });
+  const stack = new Stack()
+  const approvalTopic = new Topic(stack, 'TestApprovalTopic')
+  new SlackApproval(stack, 'TestPipelineSlackApproval', { approvalTopic, notifyStackName: 'TestNotifyStackName' })
   expect(stack).to(
     haveResourceLike('AWS::Lambda::Permission', {
       Action: 'lambda:InvokeFunction',
@@ -35,5 +35,5 @@ test('Gives the approval topic permission to invoke the imported notifier lambda
         Ref: 'TestApprovalTopic34C9492C',
       },
     }),
-  );
-});
+  )
+})

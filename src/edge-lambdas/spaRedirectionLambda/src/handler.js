@@ -1,11 +1,11 @@
-const path = require('path');
+const path = require('path')
 
 // https://medium.com/radon-dev/redirection-on-cloudfront-with-lambda-edge-e72fd633603e
 exports.handler = (event, context, callback) => {
-  const { request } = event.Records[0].cf;
+  const { request } = event.Records[0].cf
 
-  const parsedPath = path.parse(request.uri);
-  let newUri;
+  const parsedPath = path.parse(request.uri)
+  let newUri
 
   // Set a default list of file extensions which can be accessed directly.
   let validExtensions = [
@@ -25,7 +25,7 @@ exports.handler = (event, context, callback) => {
     '.webp',
     '.xml',
     '.zip',
-  ];
+  ]
   // If an origin request header exists for x-file-extensions, use that list instead.
   if (
     request.origin &&
@@ -34,22 +34,22 @@ exports.handler = (event, context, callback) => {
     request.origin.s3.customHeaders['x-file-extensions'] &&
     request.origin.s3.customHeaders['x-file-extensions'][0]
   ) {
-    const headerValue = request.origin.s3.customHeaders['x-file-extensions'][0].value;
+    const headerValue = request.origin.s3.customHeaders['x-file-extensions'][0].value
     if (headerValue) {
-      validExtensions = headerValue.split(',');
+      validExtensions = headerValue.split(',')
     }
   }
   // if there is no extension or it is not in one of the extensions we expect to find on the
   // server.
   if (parsedPath.ext === '' || !validExtensions.includes(parsedPath.ext)) {
-    newUri = path.join(parsedPath.dir, parsedPath.base, 'index.html');
+    newUri = path.join(parsedPath.dir, parsedPath.base, 'index.html')
   } else {
-    newUri = request.uri;
+    newUri = request.uri
   }
 
   // Replace the received URI with the URI that includes the index page
-  request.uri = newUri;
+  request.uri = newUri
 
   // Return to CloudFront
-  return callback(null, request);
-};
+  return callback(null, request)
+}

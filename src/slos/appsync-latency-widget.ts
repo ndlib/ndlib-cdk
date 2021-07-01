@@ -1,17 +1,17 @@
-import { AppSyncLatencyMetric } from './appsync-latency-metric';
-import { LatencyWidget } from './latency-widget';
-import { ISLOWidgetProps } from './types';
+import { AppSyncLatencyMetric } from './appsync-latency-metric'
+import { LatencyWidget } from './latency-widget'
+import { ISLOWidgetProps } from './types'
 
 export interface IAppSyncLatencyWidgetProps extends ISLOWidgetProps {
   /**
    * Id of the API for this metric
    */
-  readonly apiId: string;
+  readonly apiId: string
 
   /**
    * The integer value for the latency threshold in ms.
    */
-  readonly latencyThreshold: number;
+  readonly latencyThreshold: number
 }
 
 export class AppSyncLatencyWidget extends LatencyWidget {
@@ -23,7 +23,7 @@ export class AppSyncLatencyWidget extends LatencyWidget {
       apiId: props.apiId,
       sloThreshold: props.sloThreshold,
       sloWindow: props.sloWindow,
-    });
-    super({ latency, ...props });
+    })
+    super({ latency, ...props })
   }
 }

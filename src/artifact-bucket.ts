@@ -1,12 +1,12 @@
-import { AnyPrincipal, Effect, PolicyStatement } from '@aws-cdk/aws-iam';
-import s3 = require('@aws-cdk/aws-s3');
-import cdk = require('@aws-cdk/core');
-import { RemovalPolicy } from '@aws-cdk/core';
+import { AnyPrincipal, Effect, PolicyStatement } from '@aws-cdk/aws-iam'
+import s3 = require('@aws-cdk/aws-s3')
+import cdk = require('@aws-cdk/core')
+import { RemovalPolicy } from '@aws-cdk/core'
 
 const defaults = {
   blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
   removalPolicy: RemovalPolicy.DESTROY,
-};
+}
 
 export class ArtifactBucket extends s3.Bucket {
   /**
@@ -19,7 +19,7 @@ export class ArtifactBucket extends s3.Bucket {
    */
 
   constructor(scope: cdk.Construct, id: string, props: s3.BucketProps) {
-    super(scope, id, { ...defaults, ...props });
+    super(scope, id, { ...defaults, ...props })
     this.addToResourcePolicy(
       new PolicyStatement({
         principals: [new AnyPrincipal()],
@@ -30,6 +30,6 @@ export class ArtifactBucket extends s3.Bucket {
         },
         resources: [this.bucketArn + '/*'],
       }),
-    );
+    )
   }
 }

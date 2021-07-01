@@ -1,16 +1,16 @@
-import { MathExpression, Metric } from '@aws-cdk/aws-cloudwatch';
-import { IAlertConfig } from './types';
+import { MathExpression, Metric } from '@aws-cdk/aws-cloudwatch'
+import { IAlertConfig } from './types'
 
 export interface ICloudfrontAvailabilityMetricProps {
   /**
    * Identifier of the Distribution for this metric
    */
-  readonly distributionId: string;
+  readonly distributionId: string
 
   /**
    * The SLO window that this metric will be used for.
    */
-  readonly sloWindow: IAlertConfig;
+  readonly sloWindow: IAlertConfig
 }
 
 /**
@@ -28,15 +28,15 @@ export class CloudfrontAvailabilityMetric extends MathExpression {
       },
       statistic: 'Average',
       label: 'Error rate',
-    });
+    })
 
     const myProps = {
       label: 'Availability',
       expression: '1-(errorRate/100)',
       usingMetrics: { errorRate },
       period: props.sloWindow.alertWindow,
-    };
+    }
 
-    super({ ...props, ...myProps });
+    super({ ...props, ...myProps })
   }
 }

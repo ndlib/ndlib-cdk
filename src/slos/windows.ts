@@ -1,5 +1,5 @@
-import { Duration } from '@aws-cdk/core';
-import { IAlertConfig, Severity } from './types';
+import { Duration } from '@aws-cdk/core'
+import { IAlertConfig, Severity } from './types'
 
 /**
  * Encapsulates the properties of SLO alerting windows and provides a set of presets
@@ -14,12 +14,12 @@ export class Windows {
     period: Duration.days(30),
     alertWindow: Duration.minutes(5),
     get burnRateThreshold(): number {
-      return Windows.burnRate(Windows.twoPercentLong);
+      return Windows.burnRate(Windows.twoPercentLong)
     },
     get description(): string {
-      return Windows.description(this);
+      return Windows.description(this)
     },
-  };
+  }
 
   /**
    * 2% of 30 Day window in 1 hour
@@ -29,12 +29,12 @@ export class Windows {
     period: Duration.days(30),
     alertWindow: Duration.hours(1),
     get burnRateThreshold(): number {
-      return Windows.burnRate(this);
+      return Windows.burnRate(this)
     },
     get description(): string {
-      return Windows.description(this);
+      return Windows.description(this)
     },
-  };
+  }
 
   /**
    * Experimental!
@@ -45,12 +45,12 @@ export class Windows {
     period: Duration.days(30),
     alertWindow: Duration.hours(2),
     get burnRateThreshold(): number {
-      return Windows.burnRate(this);
+      return Windows.burnRate(this)
     },
     get description(): string {
-      return Windows.description(this);
+      return Windows.description(this)
     },
-  };
+  }
 
   /**
    * 5% of 30 Day window in 30 minutes
@@ -60,12 +60,12 @@ export class Windows {
     period: Duration.days(30),
     alertWindow: Duration.minutes(30),
     get burnRateThreshold(): number {
-      return Windows.burnRate(Windows.fivePercentLong);
+      return Windows.burnRate(Windows.fivePercentLong)
     },
     get description(): string {
-      return Windows.description(this);
+      return Windows.description(this)
     },
-  };
+  }
 
   /**
    * 5% of 30 Day window in 6 hours
@@ -75,12 +75,12 @@ export class Windows {
     period: Duration.days(30),
     alertWindow: Duration.hours(6),
     get burnRateThreshold(): number {
-      return Windows.burnRate(this);
+      return Windows.burnRate(this)
     },
     get description(): string {
-      return Windows.description(this);
+      return Windows.description(this)
     },
-  };
+  }
 
   /**
    * Experimental!
@@ -91,12 +91,12 @@ export class Windows {
     period: Duration.days(30),
     alertWindow: Duration.hours(12),
     get burnRateThreshold(): number {
-      return Windows.burnRate(this);
+      return Windows.burnRate(this)
     },
     get description(): string {
-      return Windows.description(this);
+      return Windows.description(this)
     },
-  };
+  }
 
   /**
    * Experimental!
@@ -108,12 +108,12 @@ export class Windows {
     period: Duration.days(30),
     alertWindow: Duration.days(1),
     get burnRateThreshold(): number {
-      return Windows.burnRate(this);
+      return Windows.burnRate(this)
     },
     get description(): string {
-      return Windows.description(this);
+      return Windows.description(this)
     },
-  };
+  }
 
   /**
    * 10% of 30 Day window in 6 hours.
@@ -123,12 +123,12 @@ export class Windows {
     period: Duration.days(30),
     alertWindow: Duration.hours(6),
     get burnRateThreshold(): number {
-      return Windows.burnRate(Windows.tenPercentLong);
+      return Windows.burnRate(Windows.tenPercentLong)
     },
     get description(): string {
-      return Windows.description(this);
+      return Windows.description(this)
     },
-  };
+  }
 
   /**
    * 10% of 30 Day window in 1 day.
@@ -141,12 +141,12 @@ export class Windows {
     period: Duration.days(30),
     alertWindow: Duration.days(1),
     get burnRateThreshold(): number {
-      return Windows.burnRate(Windows.tenPercentLong);
+      return Windows.burnRate(Windows.tenPercentLong)
     },
     get description(): string {
-      return Windows.description(this);
+      return Windows.description(this)
     },
-  };
+  }
 
   /**
    * 10% of 30 Day window in 3 days.
@@ -157,12 +157,12 @@ export class Windows {
     period: Duration.days(30),
     alertWindow: Duration.days(3),
     get burnRateThreshold(): number {
-      return Windows.burnRate(this);
+      return Windows.burnRate(this)
     },
     get description(): string {
-      return Windows.description(this);
+      return Windows.description(this)
     },
-  };
+  }
 
   /**
    * 100% of 30 Day window in 30 days.
@@ -173,17 +173,17 @@ export class Windows {
     period: Duration.days(30),
     alertWindow: Duration.days(30),
     get burnRateThreshold(): number {
-      return Windows.burnRate(this);
+      return Windows.burnRate(this)
     },
     get description(): string {
-      return Windows.description(this);
+      return Windows.description(this)
     },
-  };
+  }
 
   /**
    * The golden standards from Google.
    */
-  public static readonly standardWindows = [Windows.twoPercentLong, Windows.fivePercentLong, Windows.tenPercentLong];
+  public static readonly standardWindows = [Windows.twoPercentLong, Windows.fivePercentLong, Windows.tenPercentLong]
 
   /**
    * The multi-window golden standards from Google.
@@ -192,7 +192,7 @@ export class Windows {
     { windows: [Windows.twoPercentShort, Windows.twoPercentLong], severity: Severity.HIGH },
     { windows: [Windows.fivePercentShort, Windows.fivePercentLong], severity: Severity.HIGH },
     { windows: [Windows.tenPercentShort, Windows.tenPercentLong], severity: Severity.LOW },
-  ];
+  ]
 
   /**
    * The golden standards from Google, limited to one day for AWS alarms.
@@ -201,7 +201,7 @@ export class Windows {
     Windows.twoPercentLong,
     Windows.fivePercentLong,
     Windows.tenPercentMedium,
-  ];
+  ]
 
   /**
    * The multi-window golden standards from Google, limited to one day for AWS alarms.
@@ -210,7 +210,7 @@ export class Windows {
     { windows: [Windows.twoPercentShort, Windows.twoPercentLong], severity: Severity.HIGH },
     { windows: [Windows.fivePercentShort, Windows.fivePercentLong], severity: Severity.HIGH },
     { windows: [Windows.tenPercentShort, Windows.tenPercentMedium], severity: Severity.LOW },
-  ];
+  ]
 
   /**
    * Experimental!
@@ -220,7 +220,7 @@ export class Windows {
     Windows.twoPercentExtraLong,
     Windows.fivePercentExtraLong,
     Windows.tenPercentLong,
-  ];
+  ]
 
   /**
    * Experimental!
@@ -230,50 +230,50 @@ export class Windows {
     Windows.twoPercentExtraLong,
     Windows.fivePercentExtraLong,
     Windows.tenPercentShort,
-  ];
+  ]
 
   /**
    * Experimental!
    * Useful for SLOs like 70%, 50% etc. The smallest window we can use is one day here.
    */
-  public static readonly lowPercentWindows = [Windows.oneDaySensitive, Windows.tenPercentLong];
+  public static readonly lowPercentWindows = [Windows.oneDaySensitive, Windows.tenPercentLong]
 
   /**
    * Experimental!
    * Useful for SLOs like 70%, 50% etc, limited to one day for AWS alarms. The smallest window we can use is one day here.
    */
-  public static readonly lowPercentAlarmWindows = [Windows.oneDaySensitive];
+  public static readonly lowPercentAlarmWindows = [Windows.oneDaySensitive]
 
   /**
    * Calculates a target burn rate threshold for an alert config
    */
-  public static readonly burnRate = (alertConfig: IAlertConfig) =>
-    ((alertConfig.period.toHours() * (alertConfig.percent / 100)) / alertConfig.alertWindow.toMinutes()) * 60;
+  public static readonly burnRate = (alertConfig: IAlertConfig): number =>
+    ((alertConfig.period.toHours() * (alertConfig.percent / 100)) / alertConfig.alertWindow.toMinutes()) * 60
 
   /**
    * Ex: "X% of Y Day budget burned in Z hours"
    */
-  public static readonly description = (alertConfig: IAlertConfig) =>
+  public static readonly description = (alertConfig: IAlertConfig): string =>
     `${alertConfig.percent.toFixed(
       2,
-    )}% of ${alertConfig.period.toHumanString()} budget burned in ${alertConfig.alertWindow.toHumanString()}`;
+    )}% of ${alertConfig.period.toHumanString()} budget burned in ${alertConfig.alertWindow.toHumanString()}`
 
   /**
    * Allows defining a custom alert config if none of the predefined values work
    */
-  public static readonly custom = (percent: number, period: Duration, alertWindow: Duration) => {
+  public static readonly custom = (percent: number, period: Duration, alertWindow: Duration): IAlertConfig => {
     return {
       percent,
       period,
       alertWindow,
       get burnRateThreshold(): number {
-        return Windows.burnRate(this);
+        return Windows.burnRate(this)
       },
       get description(): string {
-        return Windows.description(this);
+        return Windows.description(this)
       },
-    };
-  };
+    }
+  }
 
   /**
    * Experimental!
@@ -281,36 +281,36 @@ export class Windows {
    * Their windows work well for 99.x%, but not for thresholds 93% and below. This will help generate a list of windows to use
    * based on the SLO.
    */
-  public static readonly alarmWindowSelector = (sloThreshold: number) => {
+  public static readonly alarmWindowSelector = (sloThreshold: number): IAlertConfig[] => {
     // This is the lowest threshold we can use before we exceed what can be measured for 2% of 30 day budget within a 1 hour window
-    const stdWindowLowerLimit = 1 - 1 / (0.02 * 30 * 24); // .930555...
+    const stdWindowLowerLimit = 1 - 1 / (0.02 * 30 * 24) // .930555...
     // This is the lowest threshold we can use before we exceed what can be measured for 2% of 30 day budget within a 2 hour window
-    const dblWindowLowerLimit = 1 - 2 / (0.02 * 30 * 24); // .86111...
+    const dblWindowLowerLimit = 1 - 2 / (0.02 * 30 * 24) // .86111...
     if (sloThreshold > stdWindowLowerLimit) {
-      return Windows.standardAlarmWindows;
+      return Windows.standardAlarmWindows
     } else if (sloThreshold > dblWindowLowerLimit) {
-      return Windows.doubleAlarmWindows;
+      return Windows.doubleAlarmWindows
     } else {
-      return Windows.lowPercentAlarmWindows;
+      return Windows.lowPercentAlarmWindows
     }
-  };
+  }
 
   /**
    * Helper for selecting what windows to use for a given threshold. We can't always use the standard windows that Google defines.
    * Their windows work well for 99.x%, but not for thresholds 93% and below. This will help generate a list of windows to use
    * based on the SLO.
    */
-  public static readonly dashWindowSelector = (sloThreshold: number) => {
+  public static readonly dashWindowSelector = (sloThreshold: number): IAlertConfig[] => {
     // This is the lowest threshold we can use before we exceed what can be measured for 2% of 30 day budget within a 1 hour window
-    const stdWindowLowerLimit = 1 - 1 / (0.02 * 30 * 24); // .930555...
+    const stdWindowLowerLimit = 1 - 1 / (0.02 * 30 * 24) // .930555...
     // This is the lowest threshold we can use before we exceed what can be measured for 2% of 30 day budget within a 2 hour window
-    const dblWindowLowerLimit = 1 - 2 / (0.02 * 30 * 24); // .86111...
+    const dblWindowLowerLimit = 1 - 2 / (0.02 * 30 * 24) // .86111...
     if (sloThreshold > stdWindowLowerLimit) {
-      return Windows.standardWindows;
+      return Windows.standardWindows
     } else if (sloThreshold > dblWindowLowerLimit) {
-      return Windows.doubleWindows;
+      return Windows.doubleWindows
     } else {
-      return Windows.lowPercentWindows;
+      return Windows.lowPercentWindows
     }
-  };
+  }
 }

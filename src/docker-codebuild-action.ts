@@ -1,6 +1,6 @@
-import { DockerImageOptions, IBuildImage, LinuxBuildImage, WindowsBuildImage } from '@aws-cdk/aws-codebuild';
-import { Secret } from '@aws-cdk/aws-secretsmanager';
-import cdk = require('@aws-cdk/core');
+import { DockerImageOptions, IBuildImage, LinuxBuildImage, WindowsBuildImage } from '@aws-cdk/aws-codebuild'
+import { Secret } from '@aws-cdk/aws-secretsmanager'
+import cdk = require('@aws-cdk/core')
 
 export interface IDockerCodeBuildAction extends DockerImageOptions {
   /**
@@ -8,19 +8,19 @@ export interface IDockerCodeBuildAction extends DockerImageOptions {
    *
    * Can be defined as `image` or `image:tag`
    */
-  readonly image: string;
+  readonly image: string
   /**
    * Defines the path in Secrets Manager where DockerHub Credentials are stored.
    *
    * @see  https://aws.amazon.com/premiumsupport/knowledge-center/codebuild-docker-pull-image-error/
    */
-  readonly credentialsContextKeyName: string;
+  readonly credentialsContextKeyName: string
 }
 export class DockerCodeBuildAction {
   public static fromLinuxDockerImage(scope: cdk.Construct, id: string, options: IDockerCodeBuildAction): IBuildImage {
     return LinuxBuildImage.fromDockerRegistry(options.image, {
       secretsManagerCredentials: Secret.fromSecretNameV2(scope, `${id}-Credentials`, options.credentialsContextKeyName),
-    });
+    })
   }
 
   /**
@@ -35,6 +35,6 @@ export class DockerCodeBuildAction {
   public static fromWindowsDockerImage(scope: cdk.Construct, id: string, options: IDockerCodeBuildAction): IBuildImage {
     return WindowsBuildImage.fromDockerRegistry(options.image, {
       secretsManagerCredentials: Secret.fromSecretNameV2(scope, `${id}-Credentials`, options.credentialsContextKeyName),
-    });
+    })
   }
 }

@@ -1,7 +1,8 @@
-import { CloudfrontLatencyMetric } from '../../src/slos/cloudfront-latency-metric';
-import { Windows } from '../../src/slos/windows';
-import { Duration } from '@aws-cdk/core';
+import { CloudfrontLatencyMetric } from '../../src/slos/cloudfront-latency-metric'
+import { Windows } from '../../src/slos/windows'
+import { Duration } from '@aws-cdk/core'
 
+// eslint-disable-next-line max-len
 test('CloudfrontLatencyMetric uses the window burn rate threshold for the statistic and puts the statistic in its label', () => {
   const expectations = [
     {
@@ -24,28 +25,28 @@ test('CloudfrontLatencyMetric uses the window burn rate threshold for the statis
       sloThreshold: 0.5,
       windows: [{ window: Windows.tenPercentLong, expectedStatistic: 'p50.00' }],
     },
-  ];
+  ]
   expectations.forEach(expectation => {
     expectation.windows.forEach(window => {
       const metric = new CloudfrontLatencyMetric({
         distributionId: 'distributionId',
         sloThreshold: expectation.sloThreshold,
         sloWindow: window.window,
-      });
-      expect(metric.statistic).toEqual(window.expectedStatistic);
-      expect(metric.label).toEqual(`Latency ${window.expectedStatistic}`);
-    });
-  });
-});
+      })
+      expect(metric.statistic).toEqual(window.expectedStatistic)
+      expect(metric.label).toEqual(`Latency ${window.expectedStatistic}`)
+    })
+  })
+})
 
 test('CloudfrontLatencyMetric uses the AWS/CloudFront namespace', () => {
   const metric = new CloudfrontLatencyMetric({
     distributionId: 'distributionId',
     sloThreshold: 0.999,
     sloWindow: Windows.twoPercentLong,
-  });
-  expect(metric.namespace).toEqual('AWS/CloudFront');
-});
+  })
+  expect(metric.namespace).toEqual('AWS/CloudFront')
+})
 
 // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/programming-cloudwatch-metrics.html
 test('CloudfrontLatencyMetric uses total latency of requests to the origin, not including cached requests', () => {
@@ -53,33 +54,33 @@ test('CloudfrontLatencyMetric uses total latency of requests to the origin, not 
     distributionId: 'distributionId',
     sloThreshold: 0.999,
     sloWindow: Windows.twoPercentLong,
-  });
-  expect(metric.metricName).toEqual('OriginLatency');
-});
+  })
+  expect(metric.metricName).toEqual('OriginLatency')
+})
 
 test('CloudfrontLatencyMetric uses the distributionId name for dimensions', () => {
   const metric = new CloudfrontLatencyMetric({
     distributionId: 'distributionId',
     sloThreshold: 0.999,
     sloWindow: Windows.twoPercentLong,
-  });
-  expect(metric.dimensions).toEqual({ Region: 'Global', DistributionId: 'distributionId' });
-});
+  })
+  expect(metric.dimensions).toEqual({ Region: 'Global', DistributionId: 'distributionId' })
+})
 
 test('CloudfrontLatencyMetric uses the alert window size for the period', () => {
   const metric = new CloudfrontLatencyMetric({
     distributionId: 'distributionId',
     sloThreshold: 0.999,
     sloWindow: Windows.twoPercentLong,
-  });
-  expect(metric.period).toEqual(Duration.hours(1));
-});
+  })
+  expect(metric.period).toEqual(Duration.hours(1))
+})
 
 test('CloudfrontLatencyMetric uses p0 for the statistic when too small a window is used for the threshold', () => {
   const metric = new CloudfrontLatencyMetric({
     distributionId: 'distributionId',
     sloThreshold: 0.5,
     sloWindow: Windows.twoPercentLong,
-  });
-  expect(metric.statistic).toEqual('p0.00');
-});
+  })
+  expect(metric.statistic).toEqual('p0.00')
+})

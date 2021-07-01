@@ -1,9 +1,9 @@
-import { expect as expectCDK, haveResourceLike } from '@aws-cdk/assert';
-import { Stack } from '@aws-cdk/core';
-import { SourceWatcher } from '../src';
+import { expect as expectCDK, haveResourceLike } from '@aws-cdk/assert'
+import { Stack } from '@aws-cdk/core'
+import { SourceWatcher } from '../src'
 
 describe('SourceWatcher', () => {
-  const stack = new Stack();
+  const stack = new Stack()
   new SourceWatcher(stack, 'TestProject', {
     triggers: [
       {
@@ -19,7 +19,7 @@ describe('SourceWatcher', () => {
     targetBranch: 'main',
     gitTokenPath: 'secret/path/here',
     webhookResourceStackName: 'aws-github-webhook',
-  });
+  })
 
   test('creates a lambda function with expected props', () => {
     expectCDK(stack).to(
@@ -33,8 +33,8 @@ describe('SourceWatcher', () => {
           },
         },
       }),
-    );
-  });
+    )
+  })
 
   test('creates ssm params for each trigger', () => {
     expectCDK(stack).to(
@@ -43,7 +43,7 @@ describe('SourceWatcher', () => {
         Name: '/all/stacks/Default/triggers/pipeline-a',
         Value: 'my/test/**/pattern.js,example/*.*',
       }),
-    );
+    )
 
     expectCDK(stack).to(
       haveResourceLike('AWS::SSM::Parameter', {
@@ -51,12 +51,12 @@ describe('SourceWatcher', () => {
         Name: '/all/stacks/Default/triggers/pipeline-b',
         Value: 'src/anotherExample.ts',
       }),
-    );
-  });
+    )
+  })
 
   test('creates an api gateway', () => {
-    expectCDK(stack).to(haveResourceLike('AWS::ApiGateway::RestApi'));
-  });
+    expectCDK(stack).to(haveResourceLike('AWS::ApiGateway::RestApi'))
+  })
 
   test('creates a custom resource for webhook', () => {
     expectCDK(stack).to(
@@ -88,6 +88,6 @@ describe('SourceWatcher', () => {
           ],
         },
       }),
-    );
-  });
-});
+    )
+  })
+})

@@ -1,32 +1,32 @@
-import { expect as expectCDK, haveResourceLike } from '@aws-cdk/assert';
-import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline';
-import { Role, ServicePrincipal } from '@aws-cdk/aws-iam';
-import { Stack } from '@aws-cdk/core';
-import { NewmanRunner } from '../src';
-import { FakeSourceAction } from './fake-source-action';
+import { expect as expectCDK, haveResourceLike } from '@aws-cdk/assert'
+import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline'
+import { Role, ServicePrincipal } from '@aws-cdk/aws-iam'
+import { Stack } from '@aws-cdk/core'
+import { NewmanRunner } from '../src'
+import { FakeSourceAction } from './fake-source-action'
 
 describe('NewmanRunner', () => {
   test('does not error with minimal props', () => {
-    const stack = new Stack();
+    const stack = new Stack()
     new NewmanRunner(stack, 'TestProject', {
       sourceArtifact: new Artifact(),
       collectionPath: 'collection.json',
       collectionVariables: {},
-    });
+    })
     expectCDK(stack).to(
       haveResourceLike('AWS::CodeBuild::Project', {
         Source: {
-          BuildSpec:
+          BuildSpec: // eslint-disable-next-line max-len
             '{\n  "version": "0.2",\n  "phases": {\n    "install": {\n      "runtime-versions": {\n        "nodejs": "14.x"\n      },\n      "commands": [\n        "npm install -g newman@5.2.2",\n        "echo \\"Ensure that the Newman spec is readable\\"",\n        "chmod 755 collection.json"\n      ]\n    },\n    "build": {\n      "commands": [\n        "newman run collection.json "\n      ]\n    }\n  }\n}',
           Type: 'CODEPIPELINE',
         },
       }),
-    );
-  });
+    )
+  })
 
   describe('with more props', () => {
-    const stack = new Stack();
-    const sourceArtifact = new Artifact();
+    const stack = new Stack()
+    const sourceArtifact = new Artifact()
     const pipeline = new Pipeline(stack, 'CodePipeline', {
       stages: [
         {
@@ -39,7 +39,7 @@ describe('NewmanRunner', () => {
           ],
         },
       ],
-    });
+    })
 
     const newmanRunner = new NewmanRunner(stack, 'TestProject', {
       sourceArtifact: sourceArtifact,
@@ -53,11 +53,11 @@ describe('NewmanRunner', () => {
       role: new Role(stack, 'ExampleRole', {
         assumedBy: new ServicePrincipal('codebuild.amazonaws.com'),
       }),
-    });
+    })
     pipeline.addStage({
       stageName: 'Stage',
       actions: [newmanRunner.action],
-    });
+    })
 
     test('creates a codebuild project with props', () => {
       expectCDK(stack).to(
@@ -69,13 +69,13 @@ describe('NewmanRunner', () => {
             'Fn::GetAtt': ['ExampleRole576372CE', 'Arn'],
           },
           Source: {
-            BuildSpec:
+            BuildSpec: // eslint-disable-next-line max-len
               '{\n  "version": "0.2",\n  "phases": {\n    "install": {\n      "runtime-versions": {\n        "nodejs": "14.x"\n      },\n      "commands": [\n        "npm install -g newman@5.2.2",\n        "echo \\"Ensure that the Newman spec is readable\\"",\n        "chmod 755 test/newman/collection.json"\n      ]\n    },\n    "build": {\n      "commands": [\n        "newman run test/newman/collection.json --env-var hostname=\\"https://www.example.com\\" --env-var foo=\\"bar\\""\n      ]\n    }\n  }\n}',
             Type: 'CODEPIPELINE',
           },
         }),
-      );
-    });
+      )
+    })
 
     test('creates an action for the codebuild project in a pipeline', () => {
       expectCDK(stack).to(
@@ -113,7 +113,7 @@ describe('NewmanRunner', () => {
             },
           ],
         }),
-      );
-    });
-  });
-});
+      )
+    })
+  })
+})

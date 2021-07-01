@@ -1,6 +1,6 @@
-import { CfnPermission } from '@aws-cdk/aws-lambda';
-import { Subscription, SubscriptionProtocol, Topic } from '@aws-cdk/aws-sns';
-import { Construct, Fn } from '@aws-cdk/core';
+import { CfnPermission } from '@aws-cdk/aws-lambda'
+import { Subscription, SubscriptionProtocol, Topic } from '@aws-cdk/aws-sns'
+import { Construct, Fn } from '@aws-cdk/core'
 
 export interface ISlackApprovalProps {
   /**
@@ -8,14 +8,14 @@ export interface ISlackApprovalProps {
    *
    * @default - No description.
    */
-  readonly approvalTopic: Topic;
+  readonly approvalTopic: Topic
   /**
    * The stack that manages the channel notifier
    *
    * @default - No description.
    * @see https://github.com/ndlib/codepipeline-approvals/blob/master/slack_approval.md#deploy-the-notifier-lambda
    */
-  readonly notifyStackName: string;
+  readonly notifyStackName: string
 }
 
 /**
@@ -24,19 +24,19 @@ export interface ISlackApprovalProps {
  */
 export class SlackApproval extends Construct {
   constructor(scope: Construct, id: string, props: ISlackApprovalProps) {
-    super(scope, id);
-    const importedNotifyLambdaArn = Fn.importValue(`${props.notifyStackName}:LambdaArn`);
+    super(scope, id)
+    const importedNotifyLambdaArn = Fn.importValue(`${props.notifyStackName}:LambdaArn`)
 
     new Subscription(this, 'NotifyLambdaSNSSubscription', {
       endpoint: importedNotifyLambdaArn,
       protocol: SubscriptionProtocol.LAMBDA,
       topic: props.approvalTopic,
-    });
+    })
     new CfnPermission(this, 'NotifyLambdaSNSPermission', {
       action: 'lambda:InvokeFunction',
       principal: 'sns.amazonaws.com',
       sourceArn: props.approvalTopic.topicArn,
       functionName: importedNotifyLambdaArn,
-    });
+    })
   }
 }

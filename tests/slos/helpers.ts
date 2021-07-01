@@ -6,13 +6,15 @@
  *
  * @param dashBody The captured DashboardBody that contains the Fn::Join
  */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export const collapseJoin = (dashBody: any): string => {
-  const joinParams = dashBody['Fn::Join'];
-  return Object.values(joinParams[1]).reduce((previous: string, current: any) => {
-    let val = current;
+  const joinParams = dashBody['Fn::Join']
+  return Object.values(joinParams[1]).reduce<any>((previous: string, current: any) => {
+    let val = current
     if (typeof val === 'object' && val['Ref'] !== undefined)
       // Replace the object { Ref: ABC123 } with the literal string '${ABC123}'
-      val = `\${${val['Ref']}}`;
-    return previous + val;
-  }, '');
-};
+      val = `\${${val['Ref']}}`
+    return previous + val
+  }, '')
+}

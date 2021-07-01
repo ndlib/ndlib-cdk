@@ -1,17 +1,17 @@
-import { Capture, expect as cdkExpect, haveResourceLike } from '@aws-cdk/assert';
-import { SLOAlarmsDashboard } from '../../src/slos/alarms-dashboard';
-import { Stack } from '@aws-cdk/core';
-import { collapseJoin } from './helpers';
+import { Capture, expect as cdkExpect, haveResourceLike } from '@aws-cdk/assert'
+import { SLOAlarmsDashboard } from '../../src/slos/alarms-dashboard'
+import { Stack } from '@aws-cdk/core'
+import { collapseJoin } from './helpers'
 
 describe('SLOAlarmsDashboard', () => {
-  const invalidSlos = [{ type: 'SomeUndefined', apiName: 'apiName', title: 'My Made Up SLO', sloThreshold: 0.999 }];
+  const invalidSlos = [{ type: 'SomeUndefined', apiName: 'apiName', title: 'My Made Up SLO', sloThreshold: 0.999 }]
 
   it('throws an exception if theres an unknown type', () => {
-    const stack = new Stack();
-    expect(() => new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos: invalidSlos })).toThrow(
+    const stack = new Stack()
+    expect(() => new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos: invalidSlos })).toThrow(  // eslint-disable-next-line max-len
       'AlarmsDashboard creation encountered an unknown type for slo: {"type":"SomeUndefined","apiName":"apiName","title":"My Made Up SLO","sloThreshold":0.999}.',
-    );
-  });
+    )
+  })
 
   it('allows overriding the period', () => {
     const slos = [
@@ -21,27 +21,27 @@ describe('SLOAlarmsDashboard', () => {
         title: 'My Cloudfront',
         sloThreshold: 0.999,
       },
-    ];
-    const stack = new Stack();
+    ]
+    const stack = new Stack()
     new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', {
       slos,
       dashboardName: 'TestAlarmsDashboard',
       start: '-P1234D',
-    });
-    const dashBody = Capture.anyType();
+    })
+    const dashBody = Capture.anyType()
     cdkExpect(stack).to(
       haveResourceLike('AWS::CloudWatch::Dashboard', {
         DashboardBody: dashBody.capture(),
         DashboardName: 'TestAlarmsDashboard',
       }),
-    );
-    const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+    )
+    const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue))
     expect(dashObj).toEqual(
       expect.objectContaining({
         start: '-P1234D',
       }),
-    );
-  });
+    )
+  })
 
   describe('CloudfrontAvailability', () => {
     const slos = [
@@ -51,25 +51,25 @@ describe('SLOAlarmsDashboard', () => {
         title: 'My Cloudfront',
         sloThreshold: 0.999,
       },
-    ];
+    ]
 
     it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
-      const stack = new Stack();
-      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
-      const dashBody = Capture.anyType();
+      const stack = new Stack()
+      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' })
+      const dashBody = Capture.anyType()
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::Dashboard', {
           DashboardBody: dashBody.capture(),
           DashboardName: 'TestAlarmsDashboard',
         }),
-      );
-      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      )
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue))
       expect(dashObj).toEqual(
         expect.objectContaining({
           widgets: expect.arrayContaining([
             expect.objectContaining({
               properties: expect.objectContaining({
-                title: `My Cloudfront - 60 minutes`,
+                title: 'My Cloudfront - 60 minutes',
                 metrics: expect.arrayContaining([
                   [expect.objectContaining({ label: 'Availability', expression: '1-(errorRate/100)' })],
                   [
@@ -137,9 +137,9 @@ describe('SLOAlarmsDashboard', () => {
             }),
           ]),
         }),
-      );
-    });
-  });
+      )
+    })
+  })
 
   describe('CloudfrontLatency', () => {
     const slos = [
@@ -150,25 +150,25 @@ describe('SLOAlarmsDashboard', () => {
         sloThreshold: 0.95,
         latencyThreshold: 200,
       },
-    ];
+    ]
 
     it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
-      const stack = new Stack();
-      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
-      const dashBody = Capture.anyType();
+      const stack = new Stack()
+      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' })
+      const dashBody = Capture.anyType()
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::Dashboard', {
           DashboardBody: dashBody.capture(),
           DashboardName: 'TestAlarmsDashboard',
         }),
-      );
-      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      )
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue))
       expect(dashObj).toEqual(
         expect.objectContaining({
           widgets: expect.arrayContaining([
             expect.objectContaining({
               properties: expect.objectContaining({
-                title: `My Cloudfront - 60 minutes`,
+                title: 'My Cloudfront - 60 minutes',
                 metrics: expect.arrayContaining([
                   [
                     'AWS/CloudFront',
@@ -232,30 +232,30 @@ describe('SLOAlarmsDashboard', () => {
             }),
           ]),
         }),
-      );
-    });
-  });
+      )
+    })
+  })
 
   describe('ApiAvailability', () => {
-    const slos = [{ type: 'ApiAvailability', apiName: 'myApiName', title: 'My API', sloThreshold: 0.99 }];
+    const slos = [{ type: 'ApiAvailability', apiName: 'myApiName', title: 'My API', sloThreshold: 0.99 }]
 
     it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
-      const stack = new Stack();
-      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
-      const dashBody = Capture.anyType();
+      const stack = new Stack()
+      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' })
+      const dashBody = Capture.anyType()
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::Dashboard', {
           DashboardBody: dashBody.capture(),
           DashboardName: 'TestAlarmsDashboard',
         }),
-      );
-      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      )
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue))
       expect(dashObj).toEqual(
         expect.objectContaining({
           widgets: expect.arrayContaining([
             expect.objectContaining({
               properties: expect.objectContaining({
-                title: `My API - 60 minutes`,
+                title: 'My API - 60 minutes',
                 metrics: expect.arrayContaining([
                   [
                     expect.objectContaining({
@@ -411,32 +411,32 @@ describe('SLOAlarmsDashboard', () => {
             }),
           ]),
         }),
-      );
-    });
-  });
+      )
+    })
+  })
 
   describe('ApiLatency', () => {
     const slos = [
       { type: 'ApiLatency', apiName: 'myApiName', title: 'My API', sloThreshold: 0.99, latencyThreshold: 2000 },
-    ];
+    ]
 
     it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
-      const stack = new Stack();
-      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
-      const dashBody = Capture.anyType();
+      const stack = new Stack()
+      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' })
+      const dashBody = Capture.anyType()
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::Dashboard', {
           DashboardBody: dashBody.capture(),
           DashboardName: 'TestAlarmsDashboard',
         }),
-      );
-      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      )
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue))
       expect(dashObj).toEqual(
         expect.objectContaining({
           widgets: expect.arrayContaining([
             expect.objectContaining({
               properties: expect.objectContaining({
-                title: `My API - 60 minutes`,
+                title: 'My API - 60 minutes',
                 metrics: expect.arrayContaining([
                   [
                     'AWS/ApiGateway',
@@ -492,30 +492,30 @@ describe('SLOAlarmsDashboard', () => {
             }),
           ]),
         }),
-      );
-    });
-  });
+      )
+    })
+  })
 
   describe('AppSyncAvailability', () => {
-    const slos = [{ type: 'AppSyncAvailability', apiId: 'myApiId', title: 'My API', sloThreshold: 0.99 }];
+    const slos = [{ type: 'AppSyncAvailability', apiId: 'myApiId', title: 'My API', sloThreshold: 0.99 }]
 
     it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
-      const stack = new Stack();
-      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
-      const dashBody = Capture.anyType();
+      const stack = new Stack()
+      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' })
+      const dashBody = Capture.anyType()
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::Dashboard', {
           DashboardBody: dashBody.capture(),
           DashboardName: 'TestAlarmsDashboard',
         }),
-      );
-      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      )
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue))
       expect(dashObj).toEqual(
         expect.objectContaining({
           widgets: expect.arrayContaining([
             expect.objectContaining({
               properties: expect.objectContaining({
-                title: `My API - 60 minutes`,
+                title: 'My API - 60 minutes',
                 metrics: expect.arrayContaining([
                   [expect.objectContaining({ label: 'Availability', expression: '(requests - errors)/requests' })],
                   [
@@ -651,32 +651,32 @@ describe('SLOAlarmsDashboard', () => {
             }),
           ]),
         }),
-      );
-    });
-  });
+      )
+    })
+  })
 
   describe('AppSyncLatency', () => {
     const slos = [
       { type: 'AppSyncLatency', apiId: 'myApiId', title: 'My API', sloThreshold: 0.99, latencyThreshold: 2000 },
-    ];
+    ]
 
     it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
-      const stack = new Stack();
-      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
-      const dashBody = Capture.anyType();
+      const stack = new Stack()
+      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' })
+      const dashBody = Capture.anyType()
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::Dashboard', {
           DashboardBody: dashBody.capture(),
           DashboardName: 'TestAlarmsDashboard',
         }),
-      );
-      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      )
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue))
       expect(dashObj).toEqual(
         expect.objectContaining({
           widgets: expect.arrayContaining([
             expect.objectContaining({
               properties: expect.objectContaining({
-                title: `My API - 60 minutes`,
+                title: 'My API - 60 minutes',
                 metrics: expect.arrayContaining([
                   [
                     'AWS/AppSync',
@@ -732,9 +732,9 @@ describe('SLOAlarmsDashboard', () => {
             }),
           ]),
         }),
-      );
-    });
-  });
+      )
+    })
+  })
 
   describe('ElasticSearchAvailability', () => {
     const slos = [
@@ -745,25 +745,25 @@ describe('SLOAlarmsDashboard', () => {
         title: 'My ES Domain',
         sloThreshold: 0.99,
       },
-    ];
+    ]
 
     it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
-      const stack = new Stack();
-      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
-      const dashBody = Capture.anyType();
+      const stack = new Stack()
+      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' })
+      const dashBody = Capture.anyType()
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::Dashboard', {
           DashboardBody: dashBody.capture(),
           DashboardName: 'TestAlarmsDashboard',
         }),
-      );
-      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      )
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue))
       expect(dashObj).toEqual(
         expect.objectContaining({
           widgets: expect.arrayContaining([
             expect.objectContaining({
               properties: expect.objectContaining({
-                title: `My ES Domain - 60 minutes`,
+                title: 'My ES Domain - 60 minutes',
                 metrics: expect.arrayContaining([
                   [
                     expect.objectContaining({
@@ -959,9 +959,9 @@ describe('SLOAlarmsDashboard', () => {
             }),
           ]),
         }),
-      );
-    });
-  });
+      )
+    })
+  })
 
   describe('ElasticSearchLatency', () => {
     const slos = [
@@ -973,25 +973,25 @@ describe('SLOAlarmsDashboard', () => {
         sloThreshold: 0.99,
         latencyThreshold: 2000,
       },
-    ];
+    ]
 
     it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
-      const stack = new Stack();
-      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
-      const dashBody = Capture.anyType();
+      const stack = new Stack()
+      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' })
+      const dashBody = Capture.anyType()
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::Dashboard', {
           DashboardBody: dashBody.capture(),
           DashboardName: 'TestAlarmsDashboard',
         }),
-      );
-      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      )
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue))
       expect(dashObj).toEqual(
         expect.objectContaining({
           widgets: expect.arrayContaining([
             expect.objectContaining({
               properties: expect.objectContaining({
-                title: `My ES Domain - 60 minutes`,
+                title: 'My ES Domain - 60 minutes',
                 metrics: expect.arrayContaining([
                   [
                     'AWS/ES',
@@ -1055,9 +1055,9 @@ describe('SLOAlarmsDashboard', () => {
             }),
           ]),
         }),
-      );
-    });
-  });
+      )
+    })
+  })
 
   describe('CustomAvailability', () => {
     const slos = [
@@ -1069,25 +1069,25 @@ describe('SLOAlarmsDashboard', () => {
         title: 'My Custom Availability',
         sloThreshold: 0.99,
       },
-    ];
+    ]
 
     it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
-      const stack = new Stack();
-      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
-      const dashBody = Capture.anyType();
+      const stack = new Stack()
+      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' })
+      const dashBody = Capture.anyType()
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::Dashboard', {
           DashboardBody: dashBody.capture(),
           DashboardName: 'TestAlarmsDashboard',
         }),
-      );
-      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      )
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue))
       expect(dashObj).toEqual(
         expect.objectContaining({
           widgets: expect.arrayContaining([
             expect.objectContaining({
               properties: expect.objectContaining({
-                title: `My Custom Availability - 60 minutes`,
+                title: 'My Custom Availability - 60 minutes',
                 metrics: expect.arrayContaining([
                   [expect.objectContaining({ label: 'Availability', expression: '(requests - errors)/requests' })],
                   [
@@ -1207,9 +1207,9 @@ describe('SLOAlarmsDashboard', () => {
             }),
           ]),
         }),
-      );
-    });
-  });
+      )
+    })
+  })
 
   describe('CustomLatency', () => {
     const slos = [
@@ -1221,25 +1221,25 @@ describe('SLOAlarmsDashboard', () => {
         sloThreshold: 0.99,
         latencyThreshold: 2000,
       },
-    ];
+    ]
 
     it('constructs a dashboard with all four windows: 2%, 5%, 10%, and 100%', () => {
-      const stack = new Stack();
-      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' });
-      const dashBody = Capture.anyType();
+      const stack = new Stack()
+      new SLOAlarmsDashboard(stack, 'TestAlarmsDashboard', { slos, dashboardName: 'TestAlarmsDashboard' })
+      const dashBody = Capture.anyType()
       cdkExpect(stack).to(
         haveResourceLike('AWS::CloudWatch::Dashboard', {
           DashboardBody: dashBody.capture(),
           DashboardName: 'TestAlarmsDashboard',
         }),
-      );
-      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue));
+      )
+      const dashObj = JSON.parse(collapseJoin(dashBody.capturedValue))
       expect(dashObj).toEqual(
         expect.objectContaining({
           widgets: expect.arrayContaining([
             expect.objectContaining({
               properties: expect.objectContaining({
-                title: `My Custom Latency - 60 minutes`,
+                title: 'My Custom Latency - 60 minutes',
                 metrics: expect.arrayContaining([
                   [
                     'CustomNamespace',
@@ -1287,7 +1287,7 @@ describe('SLOAlarmsDashboard', () => {
             }),
           ]),
         }),
-      );
-    });
-  });
-});
+      )
+    })
+  })
+})

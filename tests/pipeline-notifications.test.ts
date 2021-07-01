@@ -1,13 +1,13 @@
-import { beASupersetOfTemplate, expect, haveResourceLike } from '@aws-cdk/assert';
-import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline';
-import { FakeBuildAction } from './fake-build-action';
-import { FakeSourceAction } from './fake-source-action';
-import { Stack } from '@aws-cdk/core';
-import { PipelineNotifications } from '../src/index';
+import { beASupersetOfTemplate, expect, haveResourceLike } from '@aws-cdk/assert'
+import { Artifact, Pipeline } from '@aws-cdk/aws-codepipeline'
+import { FakeBuildAction } from './fake-build-action'
+import { FakeSourceAction } from './fake-source-action'
+import { Stack } from '@aws-cdk/core'
+import { PipelineNotifications } from '../src/index'
 
 // Helper for creating the pipeline
 const fakePipeline = (stack: Stack) => {
-  const sourceOutput = new Artifact();
+  const sourceOutput = new Artifact()
   return new Pipeline(stack, 'Pipeline', {
     stages: [
       {
@@ -29,16 +29,16 @@ const fakePipeline = (stack: Stack) => {
         ],
       },
     ],
-  });
-};
+  })
+}
 
 test('Creates execution state change rule', () => {
-  const stack = new Stack();
-  const pipeline = fakePipeline(stack);
-  const notifications = new PipelineNotifications(stack, 'TestPipelineNotifications', {
+  const stack = new Stack()
+  const pipeline = fakePipeline(stack)
+  new PipelineNotifications(stack, 'TestPipelineNotifications', {
     pipeline,
     receivers: 'testreceivers',
-  });
+  })
   expect(stack).to(
     haveResourceLike('AWS::Events::Rule', {
       EventPattern: {
@@ -46,16 +46,16 @@ test('Creates execution state change rule', () => {
         'detail-type': ['CodePipeline Pipeline Execution State Change'],
       },
     }),
-  );
-});
+  )
+})
 
 test('Renders a default message', () => {
-  const stack = new Stack();
-  const pipeline = fakePipeline(stack);
-  const notifications = new PipelineNotifications(stack, 'TestPipelineNotifications', {
+  const stack = new Stack()
+  const pipeline = fakePipeline(stack)
+  new PipelineNotifications(stack, 'TestPipelineNotifications', {
     pipeline,
     receivers: 'testreceivers',
-  });
+  })
   expect(stack).to(
     haveResourceLike('AWS::Events::Rule', {
       Targets: [
@@ -85,17 +85,17 @@ test('Renders a default message', () => {
         },
       ],
     }),
-  );
-});
+  )
+})
 
 test('Allows customizing the message', () => {
-  const stack = new Stack();
-  const pipeline = fakePipeline(stack);
-  const notifications = new PipelineNotifications(stack, 'TestPipelineNotifications', {
+  const stack = new Stack()
+  const pipeline = fakePipeline(stack)
+  new PipelineNotifications(stack, 'TestPipelineNotifications', {
     pipeline,
     receivers: 'testreceivers',
     messageText: 'My message for test pipeline.',
-  });
+  })
   expect(stack).to(
     haveResourceLike('AWS::Events::Rule', {
       Targets: [
@@ -107,16 +107,16 @@ test('Allows customizing the message', () => {
         },
       ],
     }),
-  );
-});
+  )
+})
 
 test('Creates an SNS topic specifically for these notifications', () => {
-  const stack = new Stack();
-  const pipeline = fakePipeline(stack);
-  const notifications = new PipelineNotifications(stack, 'TestPipelineNotifications', {
+  const stack = new Stack()
+  const pipeline = fakePipeline(stack)
+  new PipelineNotifications(stack, 'TestPipelineNotifications', {
     pipeline,
     receivers: 'testreceivers',
-  });
+  })
   expect(stack).to(
     beASupersetOfTemplate({
       Resources: {
@@ -125,16 +125,16 @@ test('Creates an SNS topic specifically for these notifications', () => {
         },
       },
     }),
-  );
-});
+  )
+})
 
 test('Adds an email based SNS subscription', () => {
-  const stack = new Stack();
-  const pipeline = fakePipeline(stack);
-  const notifications = new PipelineNotifications(stack, 'TestPipelineNotifications', {
+  const stack = new Stack()
+  const pipeline = fakePipeline(stack)
+  new PipelineNotifications(stack, 'TestPipelineNotifications', {
     pipeline,
     receivers: 'testreceivers',
-  });
+  })
   expect(stack).to(
     haveResourceLike('AWS::SNS::Subscription', {
       Protocol: 'email',
@@ -143,5 +143,5 @@ test('Adds an email based SNS subscription', () => {
       },
       Endpoint: 'testreceivers',
     }),
-  );
-});
+  )
+})

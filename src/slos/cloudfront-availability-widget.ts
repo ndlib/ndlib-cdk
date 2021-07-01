@@ -1,12 +1,12 @@
-import { AvailabilityWidget } from './availability-widget';
-import { CloudfrontAvailabilityMetric } from './cloudfront-availability-metric';
-import { ISLOWidgetProps } from './types';
+import { AvailabilityWidget } from './availability-widget'
+import { CloudfrontAvailabilityMetric } from './cloudfront-availability-metric'
+import { ISLOWidgetProps } from './types'
 
 export interface ICloudfrontAvailabilityWidgetProps extends ISLOWidgetProps {
   /**
    * Identifier of the Distribution for this metric
    */
-  readonly distributionId: string;
+  readonly distributionId: string
 }
 
 /**
@@ -18,7 +18,7 @@ export class CloudfrontAvailabilityWidget extends AvailabilityWidget {
     const availability = new CloudfrontAvailabilityMetric({
       distributionId: props.distributionId,
       sloWindow: props.sloWindow,
-    });
-    super({ availability, ...props });
+    })
+    super({ availability, ...props })
   }
 }

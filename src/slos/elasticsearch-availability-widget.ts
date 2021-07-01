@@ -1,17 +1,17 @@
-import { AvailabilityWidget } from './availability-widget';
-import { ElasticSearchAvailabilityMetric } from './elasticsearch-availability-metric';
-import { ISLOWidgetProps } from './types';
+import { AvailabilityWidget } from './availability-widget'
+import { ElasticSearchAvailabilityMetric } from './elasticsearch-availability-metric'
+import { ISLOWidgetProps } from './types'
 
 export interface IElasticSearchAvailabilityWidgetProps extends ISLOWidgetProps {
   /**
    * The Account ID for the ES domain
    */
-  readonly accountId: string;
+  readonly accountId: string
 
   /**
    * The ES Domain Name for this metric
    */
-  readonly domainName: string;
+  readonly domainName: string
 }
 
 /**
@@ -23,7 +23,7 @@ export class ElasticSearchAvailabilityWidget extends AvailabilityWidget {
       accountId: props.accountId,
       domainName: props.domainName,
       sloWindow: props.sloWindow,
-    });
-    super({ availability, ...props });
+    })
+    super({ availability, ...props })
   }
 }

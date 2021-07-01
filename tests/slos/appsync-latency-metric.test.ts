@@ -1,6 +1,6 @@
-import { AppSyncLatencyMetric } from '../../src/slos/appsync-latency-metric';
-import { Windows } from '../../src/slos/windows';
-import { Duration } from '@aws-cdk/core';
+import { AppSyncLatencyMetric } from '../../src/slos/appsync-latency-metric'
+import { Windows } from '../../src/slos/windows'
+import { Duration } from '@aws-cdk/core'
 
 describe('AppSyncLatencyMetric', () => {
   test('uses the window burn rate threshold for the statistic and puts the statistic in its label', () => {
@@ -25,42 +25,42 @@ describe('AppSyncLatencyMetric', () => {
         sloThreshold: 0.5,
         windows: [{ window: Windows.tenPercentLong, expectedStatistic: 'p50.00' }],
       },
-    ];
+    ]
     expectations.forEach(expectation => {
       expectation.windows.forEach(window => {
         const metric = new AppSyncLatencyMetric({
           apiId: 'apiId',
           sloThreshold: expectation.sloThreshold,
           sloWindow: window.window,
-        });
-        expect(metric.statistic).toEqual(window.expectedStatistic);
-        expect(metric.label).toEqual(`Latency ${window.expectedStatistic}`);
-      });
-    });
-  });
+        })
+        expect(metric.statistic).toEqual(window.expectedStatistic)
+        expect(metric.label).toEqual(`Latency ${window.expectedStatistic}`)
+      })
+    })
+  })
 
   test('uses the AWS/AppSync namespace', () => {
-    const metric = new AppSyncLatencyMetric({ apiId: 'apiId', sloThreshold: 0.999, sloWindow: Windows.twoPercentLong });
-    expect(metric.namespace).toEqual('AWS/AppSync');
-  });
+    const metric = new AppSyncLatencyMetric({ apiId: 'apiId', sloThreshold: 0.999, sloWindow: Windows.twoPercentLong })
+    expect(metric.namespace).toEqual('AWS/AppSync')
+  })
 
   test('uses total latency of the client request', () => {
-    const metric = new AppSyncLatencyMetric({ apiId: 'apiId', sloThreshold: 0.999, sloWindow: Windows.twoPercentLong });
-    expect(metric.metricName).toEqual('Latency');
-  });
+    const metric = new AppSyncLatencyMetric({ apiId: 'apiId', sloThreshold: 0.999, sloWindow: Windows.twoPercentLong })
+    expect(metric.metricName).toEqual('Latency')
+  })
 
   test('uses the api name for dimensions', () => {
-    const metric = new AppSyncLatencyMetric({ apiId: 'apiId', sloThreshold: 0.999, sloWindow: Windows.twoPercentLong });
-    expect(metric.dimensions).toEqual({ GraphQLAPIId: 'apiId' });
-  });
+    const metric = new AppSyncLatencyMetric({ apiId: 'apiId', sloThreshold: 0.999, sloWindow: Windows.twoPercentLong })
+    expect(metric.dimensions).toEqual({ GraphQLAPIId: 'apiId' })
+  })
 
   test('uses the alert window size for the period', () => {
-    const metric = new AppSyncLatencyMetric({ apiId: 'apiId', sloThreshold: 0.999, sloWindow: Windows.twoPercentLong });
-    expect(metric.period).toEqual(Duration.hours(1));
-  });
+    const metric = new AppSyncLatencyMetric({ apiId: 'apiId', sloThreshold: 0.999, sloWindow: Windows.twoPercentLong })
+    expect(metric.period).toEqual(Duration.hours(1))
+  })
 
   test('uses p0 for the statistic when too small a window is used for the threshold', () => {
-    const metric = new AppSyncLatencyMetric({ apiId: 'apiId', sloThreshold: 0.5, sloWindow: Windows.twoPercentLong });
-    expect(metric.statistic).toEqual('p0.00');
-  });
-});
+    const metric = new AppSyncLatencyMetric({ apiId: 'apiId', sloThreshold: 0.5, sloWindow: Windows.twoPercentLong })
+    expect(metric.statistic).toEqual('p0.00')
+  })
+})

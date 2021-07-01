@@ -1,12 +1,12 @@
-import { expect, haveResource, haveResourceLike } from '@aws-cdk/assert';
-import { Stack } from '@aws-cdk/core';
-import { BuildSpec, Project, PipelineProject } from '@aws-cdk/aws-codebuild';
-import { DockerCodeBuildAction } from '../src/index';
+import { expect, haveResourceLike } from '@aws-cdk/assert'
+import { Stack } from '@aws-cdk/core'
+import { BuildSpec, Project, PipelineProject } from '@aws-cdk/aws-codebuild'
+import { DockerCodeBuildAction } from '../src/index'
 
 describe('PipelineProject Behavior', () => {
   test('Dont break default behavior', () => {
-    const stack = new Stack();
-    new PipelineProject(stack, 'Action');
+    const stack = new Stack()
+    new PipelineProject(stack, 'Action')
     expect(stack).to(
       haveResourceLike('AWS::CodeBuild::Project', {
         Environment: {
@@ -17,24 +17,24 @@ describe('PipelineProject Behavior', () => {
           Type: 'LINUX_CONTAINER',
         },
       }),
-    );
-  });
+    )
+  })
 
   describe('Linux BuildImages', () => {
     test('Factory Method pulls provided image', () => {
       // given
-      const stack = new Stack();
-      const image = 'test-image:1.0.1';
+      const stack = new Stack()
+      const image = 'test-image:1.0.1'
 
       // when
-      new PipelineProject(stack, `test-project`, {
+      new PipelineProject(stack, 'test-project', {
         environment: {
           buildImage: DockerCodeBuildAction.fromLinuxDockerImage(stack, 'test-docker', {
             image: image,
             credentialsContextKeyName: '/test/credentials/path',
           }),
         },
-      });
+      })
 
       // then
       expect(stack).to(
@@ -44,13 +44,13 @@ describe('PipelineProject Behavior', () => {
             Type: 'LINUX_CONTAINER',
           },
         }),
-      );
-    });
+      )
+    })
 
     test('Factory method uses provided Secrets Manager path', () => {
       //given
-      const secretsManagerPath = '/test/credentials/path';
-      const stack = new Stack();
+      const secretsManagerPath = '/test/credentials/path'
+      const stack = new Stack()
 
       //when
       new PipelineProject(stack, 'test-pipeline-project', {
@@ -60,7 +60,7 @@ describe('PipelineProject Behavior', () => {
             credentialsContextKeyName: secretsManagerPath,
           }),
         },
-      });
+      })
 
       //then
       expect(stack).to(
@@ -73,15 +73,15 @@ describe('PipelineProject Behavior', () => {
             Type: 'LINUX_CONTAINER',
           },
         }),
-      );
-    });
-  });
+      )
+    })
+  })
 
   describe('Windows BuildImages', () => {
     test('Factory method pulls provided image', () => {
       //given
-      const image = 'test-image:1.0.1';
-      const stack = new Stack();
+      const image = 'test-image:1.0.1'
+      const stack = new Stack()
 
       //when
       new PipelineProject(stack, 'test-pipeline-project', {
@@ -91,7 +91,7 @@ describe('PipelineProject Behavior', () => {
             credentialsContextKeyName: '/test/credentials/path',
           }),
         },
-      });
+      })
 
       //then
       expect(stack).to(
@@ -101,13 +101,13 @@ describe('PipelineProject Behavior', () => {
             Type: 'WINDOWS_CONTAINER',
           },
         }),
-      );
-    });
+      )
+    })
 
     test('Factory method uses provided Secrets Manager path', () => {
       //given
-      const secretsManagerPath = '/test/credentials/path';
-      const stack = new Stack();
+      const secretsManagerPath = '/test/credentials/path'
+      const stack = new Stack()
 
       //when
       new PipelineProject(stack, 'test-project', {
@@ -117,7 +117,7 @@ describe('PipelineProject Behavior', () => {
             credentialsContextKeyName: secretsManagerPath,
           }),
         },
-      });
+      })
 
       //then
       expect(stack).to(
@@ -130,14 +130,14 @@ describe('PipelineProject Behavior', () => {
             Type: 'WINDOWS_CONTAINER',
           },
         }),
-      );
-    });
-  });
-});
+      )
+    })
+  })
+})
 
 describe('Project Behavior', () => {
   test('Dont break default behavior', () => {
-    const stack = new Stack();
+    const stack = new Stack()
     new Project(stack, 'Action', {
       buildSpec: BuildSpec.fromObject({
         phases: {
@@ -147,7 +147,7 @@ describe('Project Behavior', () => {
         },
         version: '0.2',
       }),
-    });
+    })
     expect(stack).to(
       haveResourceLike('AWS::CodeBuild::Project', {
         Environment: {
@@ -158,14 +158,14 @@ describe('Project Behavior', () => {
           Type: 'LINUX_CONTAINER',
         },
       }),
-    );
-  });
+    )
+  })
 
   describe('Linux BuildImages', () => {
     test('Factory method pulls provided image', () => {
       //given
-      const image = 'test-image:1.0.1';
-      const stack = new Stack();
+      const image = 'test-image:1.0.1'
+      const stack = new Stack()
 
       //when
       new Project(stack, 'test-project', {
@@ -183,7 +183,7 @@ describe('Project Behavior', () => {
             credentialsContextKeyName: '/test/credentials',
           }),
         },
-      });
+      })
 
       //then
       expect(stack).to(
@@ -196,12 +196,12 @@ describe('Project Behavior', () => {
             Type: 'LINUX_CONTAINER',
           },
         }),
-      );
-    });
+      )
+    })
     test('Factory method uses provided Secrets Manager path', () => {
       //given
-      const secretsManagerPath = '/test/credentials/path';
-      const stack = new Stack();
+      const secretsManagerPath = '/test/credentials/path'
+      const stack = new Stack()
 
       //when
       new Project(stack, 'test-project', {
@@ -219,7 +219,7 @@ describe('Project Behavior', () => {
             credentialsContextKeyName: secretsManagerPath,
           }),
         },
-      });
+      })
 
       //then
       expect(stack).to(
@@ -236,14 +236,14 @@ describe('Project Behavior', () => {
             Type: 'LINUX_CONTAINER',
           },
         }),
-      );
-    });
-  });
+      )
+    })
+  })
   describe('Windows BuildImages', () => {
     test('Factory method pulls provided image', () => {
       //given
-      const image = 'test-image:1.0.1';
-      const stack = new Stack();
+      const image = 'test-image:1.0.1'
+      const stack = new Stack()
 
       //when
       new Project(stack, 'test-pipeline-project', {
@@ -261,7 +261,7 @@ describe('Project Behavior', () => {
             credentialsContextKeyName: '/test/credentials/path',
           }),
         },
-      });
+      })
 
       //then
       expect(stack).to(
@@ -271,13 +271,13 @@ describe('Project Behavior', () => {
             Type: 'WINDOWS_CONTAINER',
           },
         }),
-      );
-    });
+      )
+    })
 
     test('Factory method uses provided Secrets Manager path', () => {
       //given
-      const secretsManagerPath = '/test/credentials/path';
-      const stack = new Stack();
+      const secretsManagerPath = '/test/credentials/path'
+      const stack = new Stack()
 
       //when
       new Project(stack, 'test-project', {
@@ -295,7 +295,7 @@ describe('Project Behavior', () => {
             credentialsContextKeyName: secretsManagerPath,
           }),
         },
-      });
+      })
 
       //then
       expect(stack).to(
@@ -308,7 +308,7 @@ describe('Project Behavior', () => {
             Type: 'WINDOWS_CONTAINER',
           },
         }),
-      );
-    });
-  });
-});
+      )
+    })
+  })
+})

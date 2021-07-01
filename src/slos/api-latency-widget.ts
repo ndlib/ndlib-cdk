@@ -1,17 +1,17 @@
-import { ApiLatencyMetric } from './api-latency-metric';
-import { LatencyWidget } from './latency-widget';
-import { ISLOWidgetProps } from './types';
+import { ApiLatencyMetric } from './api-latency-metric'
+import { LatencyWidget } from './latency-widget'
+import { ISLOWidgetProps } from './types'
 
 export interface IApiLatencyWidgetProps extends ISLOWidgetProps {
   /**
    * Name of the API for this metric
    */
-  readonly apiName: string;
+  readonly apiName: string
 
   /**
    * The integer value for the latency threshold in ms.
    */
-  readonly latencyThreshold: number;
+  readonly latencyThreshold: number
 }
 
 /**
@@ -23,7 +23,7 @@ export class ApiLatencyWidget extends LatencyWidget {
       apiName: props.apiName,
       sloThreshold: props.sloThreshold,
       sloWindow: props.sloWindow,
-    });
-    super({ latency, ...props });
+    })
+    super({ latency, ...props })
   }
 }

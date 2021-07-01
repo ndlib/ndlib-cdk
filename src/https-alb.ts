@@ -1,11 +1,11 @@
-import elbv2 = require('@aws-cdk/aws-elasticloadbalancingv2');
-import cdk = require('@aws-cdk/core');
+import elbv2 = require('@aws-cdk/aws-elasticloadbalancingv2')
+import cdk = require('@aws-cdk/core')
 
 export interface IHttpsAlbProps extends elbv2.ApplicationLoadBalancerProps {
   /**
    * The certificate used to terminate SSL at the ALB
    */
-  readonly certificateArns: string[];
+  readonly certificateArns: string[]
 }
 
 export class HttpsAlb extends elbv2.ApplicationLoadBalancer {
@@ -13,7 +13,7 @@ export class HttpsAlb extends elbv2.ApplicationLoadBalancer {
    * This is the default SSL listener. Attach additional rules
    * to this listener using new elbv2.ApplicationListenerRule.
    */
-  public readonly defaultListener: elbv2.ApplicationListener;
+  public readonly defaultListener: elbv2.ApplicationListener
 
   /**
    * Defines a public Application Load Balancer with an SSL listener that 404's by default,
@@ -26,9 +26,9 @@ export class HttpsAlb extends elbv2.ApplicationLoadBalancer {
    * @param props IHttpsAlbProps properties.
    */
   constructor(scope: cdk.Construct, id: string, props: IHttpsAlbProps) {
-    super(scope, id, props);
+    super(scope, id, props)
 
-    this.addHttpRedirect();
+    this.addHttpRedirect()
 
     // Add https listener that by default 404s until other rules are added.
     this.defaultListener = this.addListener('HttpsListener', {
@@ -37,17 +37,17 @@ export class HttpsAlb extends elbv2.ApplicationLoadBalancer {
       port: 443,
       protocol: elbv2.ApplicationProtocol.HTTPS,
       sslPolicy: elbv2.SslPolicy.RECOMMENDED,
-    });
+    })
     this.defaultListener.addFixedResponse('Default404', {
       statusCode: '404',
-    });
+    })
 
     // Adding an output of the dns name for convenience when looking at this
     // in the console/cli.
-    const dnsNameOutput = new cdk.CfnOutput(scope, 'PublicLoadBalancerDNSName', {
+    new cdk.CfnOutput(scope, 'PublicLoadBalancerDNSName', {
       description: 'The DNS name of the load balancer',
       value: this.loadBalancerDnsName,
-    });
+    })
   }
 
   private addHttpRedirect() {
@@ -56,14 +56,14 @@ export class HttpsAlb extends elbv2.ApplicationLoadBalancer {
       open: true,
       port: 80,
       protocol: elbv2.ApplicationProtocol.HTTP,
-    });
+    })
     // Ideally this can be removed, and the CfnListener below can be rewritten once
     // cdk adds support for adding a redirect rule as the default.
     // See https://github.com/aws/aws-cdk/issues/2563.
     httpListener.addFixedResponse('Default404', {
       statusCode: '404',
-    });
-    const cfnHttpListener = httpListener.node.defaultChild as elbv2.CfnListener;
+    })
+    const cfnHttpListener = httpListener.node.defaultChild as elbv2.CfnListener
     cfnHttpListener.defaultActions = [
       {
         redirectConfig: {
@@ -76,6 +76,6 @@ export class HttpsAlb extends elbv2.ApplicationLoadBalancer {
         },
         type: 'redirect',
       },
-    ];
+    ]
   }
 }

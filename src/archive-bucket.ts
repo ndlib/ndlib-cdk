@@ -1,18 +1,18 @@
-import s3 = require('@aws-cdk/aws-s3');
-import cdk = require('@aws-cdk/core');
+import s3 = require('@aws-cdk/aws-s3')
+import cdk = require('@aws-cdk/core')
 
 export interface IArchiveBucketProps extends s3.BucketProps {
   /**
    * When false (default), will use standard Glacier. If true, will use deep archive.
    * See https://aws.amazon.com/s3/storage-classes/#Archive for a comparison.
    */
-  readonly deepArchive?: boolean;
+  readonly deepArchive?: boolean
 }
 
 const defaults = {
   blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
   deepArchive: false,
-};
+}
 
 export class ArchiveBucket extends s3.Bucket {
   /**
@@ -23,8 +23,8 @@ export class ArchiveBucket extends s3.Bucket {
    * into an Archive, which could be via console, CLI, or an API
    */
   constructor(scope: cdk.Construct, id: string, props?: IArchiveBucketProps) {
-    super(scope, id, { ...defaults, ...props });
-    const storageClass = props && props.deepArchive === true ? s3.StorageClass.DEEP_ARCHIVE : s3.StorageClass.GLACIER;
+    super(scope, id, { ...defaults, ...props })
+    const storageClass = props && props.deepArchive === true ? s3.StorageClass.DEEP_ARCHIVE : s3.StorageClass.GLACIER
     this.addLifecycleRule({
       transitions: [
         {
@@ -32,6 +32,6 @@ export class ArchiveBucket extends s3.Bucket {
           transitionAfter: cdk.Duration.hours(0),
         },
       ],
-    });
+    })
   }
 }

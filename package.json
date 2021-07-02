@@ -1,6 +1,6 @@
 {
   "name": "@ndlib/ndlib-cdk",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "description": "Reusable CDK modules used within Hesburgh Libraries of Notre Dame",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

@@ -86,6 +86,16 @@ export class StaticHost extends cdk.Construct {
   public readonly hostname: string
 
   /**
+   * Parameter in SSM which will store the name of the site content s3 bucket.
+   */
+  public readonly bucketNameParam: StringParameter
+
+  /**
+   * Parameter in SSM which will store the id of the cloudfront distribution.
+   */
+  public readonly distributionIdParam: StringParameter
+
+  /**
    * Props passed to constructor. Used for validation.
    */
   private readonly inProps: IStaticHostProps
@@ -210,13 +220,13 @@ export class StaticHost extends cdk.Construct {
       })
     }
 
-    new StringParameter(this, 'BucketParameter', {
+    this.bucketNameParam = new StringParameter(this, 'BucketParameter', {
       parameterName: `/all/stacks/${stack.stackName}/site-bucket-name`,
       description: 'Bucket where the stack website deploys to.',
       stringValue: this.bucket.bucketName,
     })
 
-    new StringParameter(this, 'DistributionParameter', {
+    this.distributionIdParam = new StringParameter(this, 'DistributionParameter', {
       parameterName: `/all/stacks/${stack.stackName}/distribution-id`,
       description: 'ID of the CloudFront distribution.',
       stringValue: this.cloudfront.distributionId,

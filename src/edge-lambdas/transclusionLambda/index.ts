@@ -2,7 +2,7 @@
 import { Behavior, CloudFrontAllowedMethods, LambdaEdgeEventType } from '@aws-cdk/aws-cloudfront'
 import { PolicyStatement } from '@aws-cdk/aws-iam'
 import * as lambda from '@aws-cdk/aws-lambda'
-import { Bucket } from '@aws-cdk/aws-s3'
+import { IBucket } from '@aws-cdk/aws-s3'
 import * as cdk from '@aws-cdk/core'
 import * as path from 'path'
 import { IEdgeLambda, IEdgeLambdaProps } from '../index'
@@ -10,8 +10,9 @@ import { IEdgeLambda, IEdgeLambdaProps } from '../index'
 export interface ITransclusionLambdaProps extends IEdgeLambdaProps {
   /**
    * The bucket where site files are hosted. Needed to grant permissions so the lambda can fetch objects.
+   * If omitted, you can add the permissions later by calling grantBucketAccess.
    */
-  originBucket: Bucket
+  originBucket?: IBucket
 }
 
 export class TransclusionLambda extends cdk.Construct implements IEdgeLambda {
@@ -29,12 +30,6 @@ export class TransclusionLambda extends cdk.Construct implements IEdgeLambda {
       timeout: cdk.Duration.seconds(10),
       ...props,
     })
-    this.function.addToRolePolicy(
-      new PolicyStatement({
-        resources: [props.originBucket.bucketArn + '/*'],
-        actions: ['s3:GetObject*'],
-      }),
-    )
 
     this.behavior = {
       allowedMethods: CloudFrontAllowedMethods.GET_HEAD_OPTIONS,
@@ -51,5 +46,21 @@ export class TransclusionLambda extends cdk.Construct implements IEdgeLambda {
       maxTtl: props.maxTtl,
       defaultTtl: props.defaultTtl,
     }
+
+    if (props.originBucket) {
+      this.grantBucketAccess(props.originBucket)
+    }
+  }
+
+  /**
+   * Add permissions for the transclusion lambda to access the supplied bucket.
+   */
+  public grantBucketAccess(bucket: IBucket): void {
+    this.function.addToRolePolicy(
+      new PolicyStatement({
+        resources: [bucket.bucketArn + '/*'],
+        actions: ['s3:GetObject*'],
+      }),
+    )
   }
 }

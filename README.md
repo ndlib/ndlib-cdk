@@ -227,10 +227,8 @@ import { Certificate } from '@aws-cdk/aws-certificatemanager'
 import { StaticHost, TransclusionLambda } from '@ndlib/ndlib-cdk'
 
 const stack = new cdk.Stack()
-const siteBucket = new Bucket(stack, 'Bucket')
 const transclusionLambda = new TransclusionLambda(stack, 'Transclusion', {
   isDefaultBehavior: true,
-  originBucket: siteBucket,
 })
 const host = new StaticHost(stack, 'MyStaticHost', {
   hostnamePrefix: 'my-site',

@@ -1,11 +1,13 @@
 ## Change Log
 
-### v1.9.1 (2021/07/01 18:49 +00:00)
-- [#73](https://github.com/ndlib/ndlib-cdk/pull/73) build: fix subpackage error downstream (#73) (@mlkirkpatrick)
+### v1.9.2 (2021/07/02 17:24 +00:00)
+- [#76](https://github.com/ndlib/ndlib-cdk/pull/76) feat(transclusion-lambda): change originBucket param to be optional (#76) (@mlkirkpatrick)
 
-### v1.9.0 (2021/07/01 18:11 +00:00)
+### v1.9.1 (2021/07/02 12:48 +00:00)
+- [#75](https://github.com/ndlib/ndlib-cdk/pull/75) 1.9.1 (@mlkirkpatrick)
+
+### v1.9.0 (2021/07/01 18:49 +00:00)
 - [#71](https://github.com/ndlib/ndlib-cdk/pull/71) chore: Migrate tslint -> eslint (#71) (@mlkirkpatrick)
-- [#70](https://github.com/ndlib/ndlib-cdk/pull/70) feat(source-watcher): add source watcher construct (#70) (@mlkirkpatrick)
 - [#67](https://github.com/ndlib/ndlib-cdk/pull/67) feat(pipeline-s3-sync): add pipeline-s3-sync construct (#67) (@mlkirkpatrick)
 - [#69](https://github.com/ndlib/ndlib-cdk/pull/69) chore(dependencies): bump cdk and jest packages (@jgondron)
 - [#68](https://github.com/ndlib/ndlib-cdk/pull/68) chore(slo): add expanded readme (@jgondron)

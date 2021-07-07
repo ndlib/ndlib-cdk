@@ -1,6 +1,10 @@
 ## Change Log
 
-### v1.9.2 (2021/07/02 17:24 +00:00)
+### 1.9.3 (2021/07/07 13:42 +00:00)
+- [#78](https://github.com/ndlib/ndlib-cdk/pull/78) fix(pipeline-s3-sync): fix invalidation command (cloudFront -> cloudfront) (#78) (@mlkirkpatrick)
+- [#77](https://github.com/ndlib/ndlib-cdk/pull/77) 1.9.2 (#77) (@mlkirkpatrick)
+
+### v1.9.2 (2021/07/02 17:31 +00:00)
 - [#76](https://github.com/ndlib/ndlib-cdk/pull/76) feat(transclusion-lambda): change originBucket param to be optional (#76) (@mlkirkpatrick)
 
 ### v1.9.1 (2021/07/02 12:48 +00:00)

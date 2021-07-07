@@ -123,7 +123,7 @@ export class PipelineS3Sync extends Construct {
           post_build: {
             commands:
               props.invalidateCache ?? true
-                ? ['aws cloudFront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"']
+                ? ['aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"']
                 : [],
           },
         },

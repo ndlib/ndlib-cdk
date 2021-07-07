@@ -31,7 +31,7 @@ describe('PipelineS3Sync', () => {
           },
           Source: {
             BuildSpec: // eslint-disable-next-line max-len
-              '{\n  "phases": {\n    "pre_build": {\n      "commands": [\n        "aws s3 rm s3://$DEST_BUCKET --recursive"\n      ]\n    },\n    "build": {\n      "commands": [\n        "cd .",\n        "aws s3 cp --recursive . s3://$DEST_BUCKET/ --include \\"*\\""\n      ]\n    },\n    "post_build": {\n      "commands": [\n        "aws cloudFront create-invalidation --distribution-id $DISTRIBUTION_ID --paths \\"/*\\""\n      ]\n    }\n  },\n  "version": "0.2"\n}',
+              '{\n  "phases": {\n    "pre_build": {\n      "commands": [\n        "aws s3 rm s3://$DEST_BUCKET --recursive"\n      ]\n    },\n    "build": {\n      "commands": [\n        "cd .",\n        "aws s3 cp --recursive . s3://$DEST_BUCKET/ --include \\"*\\""\n      ]\n    },\n    "post_build": {\n      "commands": [\n        "aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths \\"/*\\""\n      ]\n    }\n  },\n  "version": "0.2"\n}',
             Type: 'CODEPIPELINE',
           },
         }),
